@@ -3,6 +3,33 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@ba/core/http-client/*": [
+        "projects/core/src/lib/http-client/*",
+        "projects/core/src/lib/http-client"
+      ],
+      "@ba/core/http-client": [
+        "dist/core/src/lib/http-client/*",
+        "dist/core/src/lib/http-client"
+      ],
+      "@ba/core/forms/*": [
+        "projects/core/src/lib/forms/*",
+        "projects/core/src/lib/forms"
+      ],
+      "@ba/core/forms": [
+        "dist/core/src/lib/forms/*",
+        "dist/core/src/lib/forms"
+      ],
+      "@ba/core/data-access/*": [
+        "projects/core/src/lib/data-access/*",
+        "projects/core/src/lib/data-access"
+      ],
+      "@ba/core/data-access": [
+        "dist/core/src/lib/data-access/*",
+        "dist/core/src/lib/data-access"
+      ],
+    },
     "outDir": "./dist/out-tsc",
     "strict": true,
     "noImplicitOverride": true,
