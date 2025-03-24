@@ -29,6 +29,14 @@
         "dist/core/src/lib/data-access/*",
         "dist/core/src/lib/data-access"
       ],
+      "@ba/core/toaster/*": [
+        "projects/core/src/lib/toaster/*",
+        "projects/core/src/lib/toaster"
+      ],
+      "@ba/core/toaster": [
+        "dist/core/src/lib/toaster/*",
+        "dist/core/src/lib/toaster"
+      ],
     },
     "outDir": "./dist/out-tsc",
     "strict": true,

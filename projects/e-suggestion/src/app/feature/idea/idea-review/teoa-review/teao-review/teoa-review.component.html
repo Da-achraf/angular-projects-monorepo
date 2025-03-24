@@ -1,0 +1,50 @@
+<div
+  class="relative bg-white py-3 px-4 border-b border-primary-50 flex items-center justify-between"
+>
+  <span class="text-lg font-semibold uppercase tracking-wide text-primary">
+    TEOA Review
+  </span>
+
+  <div class="flex items-center gap-x-2">
+    @if (store.canInitiate()) {
+    <ba-button
+      title="Initiate the review"
+      icon="fa-flag-checkered animate-[bounce_.5s_ease-in-out_infinite] group-hover:animate-none"
+      iconPosition="right"
+      [isLoading]="store.isInitiatingReview()"
+      buttonClass="bg-white text-gray-500 border border-gray-200 !ring-gray-300 hover:animate-none group"
+      (onClick)="store.showInitiateReviewDialog(ideaId())"
+    />
+    } @if (store.canDelete()) {
+    <ba-button
+      title="Delete review"
+      icon="fa-trash"
+      iconPosition="right"
+      [isLoading]="store.isDeletingReview()"
+      [disabled]="!store.isReviewAvailable()"
+      buttonClass="bg-gray-50 text-red-400 border border-red-50 hover:bg-gray-100 hover:border-red-300 !ring-red-400"
+      (onClick)="store.showDeleteReviewDialog()"
+    />
+    } @if (store.canClose()) {
+    <ba-button
+      title="Close review"
+      icon="fa-lock"
+      buttonClass="w-fit text-sm bg-gray-50 ring-primary-100 text-primary border border-gray-200 hover:border-gray-300 hover:bg-gray-100"
+      class="w-fit"
+      (onClick)="store.showCloseReviewDialog(ideaId())"
+    />
+    }
+  </div>
+</div>
+
+@if (store.isReviewAvailable()) {
+<div class="px-4 py-6 flex flex-col space-y-10">
+  <ba-teoa-comments
+    [comments]="store.reviewComments()"
+    [teaoReviewId]="store.reviewId()"
+    [viewMode]="!store.isTeoaMember()"
+  />
+</div>
+} @else {
+  <ba-teoa-review-not-initialized [isTeoa]="store.isTeoaMember()" />
+}

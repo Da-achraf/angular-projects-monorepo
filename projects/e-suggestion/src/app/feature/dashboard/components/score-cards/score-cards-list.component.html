@@ -1,0 +1,47 @@
+<div class="flex flex-col gap-3 rounded-md bg-white p-3 shadow-md">
+  <div class="mb-8 flex items-center gap-4">
+    <h4
+      class="text-xl font-semibold tracking-tighter text-gray-400 xl:text-2xl">
+      Ideas statistics
+    </h4>
+
+    <div>
+      <button
+        type="button"
+        class="relative mr-auto inline-flex cursor-pointer items-center rounded-full border border-gray-200 bg-white px-5 py-2 text-center text-sm font-medium text-gray-800 hover:bg-gray-100 focus:shadow sm:mr-0">
+        <span
+          class="absolute right-0 top-0 h-2 w-2 rounded-full bg-red-500"></span>
+        <i class="fa-solid fa-filter mr-2"></i>
+        Filter
+      </button>
+    </div>
+
+    <!-- <ba-date-filter /> -->
+  </div>
+
+  <div class="flex flex-wrap gap-x-4 gap-y-12">
+    <ba-score-card
+      label="Total Ideas"
+      [score]="1400"
+      color="#3b82f6"
+      icon="fa-comments" />
+
+    <ba-score-card
+      label="Implemented Ideas"
+      [score]="69"
+      color="#22c55e"
+      icon="fa-list-check" />
+
+    <ba-score-card
+      label="Pending Ideas"
+      [score]="800"
+      color="#fb923c"
+      icon="fa-hourglass-half" />
+
+    <ba-score-card
+      label="Rejected Ideas"
+      [score]="300"
+      color="#f87171"
+      icon="fa-xmark" />
+  </div>
+</div>

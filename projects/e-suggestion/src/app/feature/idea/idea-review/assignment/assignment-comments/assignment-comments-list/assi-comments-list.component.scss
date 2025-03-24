@@ -1,0 +1,35 @@
+#style-4::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+#style-4::-webkit-scrollbar
+{
+	width: .3rem;
+	background-color: #F5F5F5;
+}
+
+#style-4::-webkit-scrollbar-thumb
+{
+  @apply bg-blue-400
+}
+
+
+
+#style-4-h::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+#style-4-h::-webkit-scrollbar
+{
+	height: .3rem;
+	background-color: #F5F5F5;
+}
+
+#style-4-h::-webkit-scrollbar-thumb
+{
+  @apply bg-blue-400
+}

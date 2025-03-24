@@ -1,0 +1,13 @@
+<ba-comments
+  [comments]="store.comments()"
+  [connectedUserId]="store.connectedUserId()"
+  [sortingOrder]="store.sortingOrder()"
+  (addComment)="store.addComment($event)"
+  (deleteComment)="store.deleteComment($event)"
+  (sortingOrderChange)="store.setSortingOrder($event)"
+>
+  <ba-radio-filter
+    [options]="radioFilterOptions"
+    (optionSelected)="store.setFilter($event)"
+  />
+</ba-comments>

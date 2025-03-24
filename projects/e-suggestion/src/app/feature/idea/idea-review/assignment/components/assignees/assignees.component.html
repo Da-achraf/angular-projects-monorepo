@@ -1,0 +1,28 @@
+<div class="flex flex-col gap-y-2">
+  <div class="flex items-center gap-x-2">
+    <span class="text-sm font-semibold uppercase tracking-wide text-primary"
+      >Assignees</span
+    >
+    <span class="h-[.4px] flex-1 bg-gray-300"></span>
+  </div>
+  <p-multiselect
+    #assigneesMultiSelect
+    [disabled]="disabled()"
+    [options]="possibleAssignees()"
+    [(ngModel)]="selectedAssignees"
+    [dataKey]="'id'"
+    optionLabel="full_name"
+    placeholder="Select Assignees"
+    appendTo="body"
+    display="chip"
+    styleClass="w-full"
+    (onChange)="onAssigneesChange()"
+    (onPanelHide)="onAssigneesPanelHide()">
+    <ng-template #empty>
+      <div class="flex flex-col items-center justify-center gap-y-2">
+        <i class="fa-solid fa-circle-exclamation text-red-400"></i>
+        <span class="text-sm font-semibold text-gray-500">No data found!</span>
+      </div>
+    </ng-template>
+  </p-multiselect>
+</div>

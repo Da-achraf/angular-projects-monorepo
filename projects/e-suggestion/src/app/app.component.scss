@@ -1,0 +1,27 @@
+/*
+  Styling the lists produced by quill text editor
+*/
+// :host ::ng-deep ol:not(.exclude-other-styles), ul:not(.exclude-other-styles) {
+// 	list-style-type: decimal !important; /* Show numbers for ordered lists */
+// 	padding-left: 40px !important; /* Add proper indentation */
+// }
+
+// :host ::ng-deep ul:not(.exclude-other-styles) {
+//   list-style-type: decimal !important; /* Show numbers for ordered lists */
+// }
+
+// :host ::ng-deep ul:not(.exclude-other-styles) {
+//   list-style-type: square !important; /* Show numbers for ordered lists */
+// }
+
+
+
+:host ::ng-deep .exclude-other-styles ol,
+:host ::ng-deep .exclude-other-styles ul {
+  list-style-type: decimal !important; /* Show numbers for ordered lists */
+  padding-left: 40px !important; /* Add proper indentation */
+}
+
+:host ::ng-deep .exclude-other-styles ul {
+  list-style-type: square !important; /* Show squares for unordered lists */
+}

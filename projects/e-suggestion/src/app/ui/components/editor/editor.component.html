@@ -1,0 +1,68 @@
+@defer {
+  <p-editor
+    [formControlName]="formControlName()"
+    [placeholder]="placeholder()"
+    [readonly]="readOnly()"
+    (onTextChange)="onTextChange($event)"
+    styleClass="custom-editor w-full shadow-xl border-[2px] border-transparent rounded-md overflow-hidden transition-all duration-300 hover:border-gray-200 focus-within:border-primary focus-within:hover:border-primary"
+    [style.--editor-min-height]="editorMinHeight()"
+    [style.--editor-max-height]="editorMaxHeight()">
+    <ng-template #header>
+      <!-- Text Formatting -->
+      <span class="ql-formats">
+        <button type="button" class="ql-bold" aria-label="Bold"></button>
+        <button type="button" class="ql-italic" aria-label="Italic"></button>
+        <button
+          type="button"
+          class="ql-underline"
+          aria-label="Underline"></button>
+        <button
+          type="button"
+          class="ql-strike"
+          aria-label="Strikethrough"></button>
+      </span>
+
+      <!-- Headers & Text Size -->
+      <span class="ql-formats">
+        <select class="ql-header text-xs">
+          <option value="1">Heading 1</option>
+          <option value="2">Heading 2</option>
+          <option value="3">Heading 3</option>
+          <option selected>Normal</option>
+        </select>
+      </span>
+
+      <!-- Colors -->
+      <span class="ql-formats text-xs">
+        <select class="ql-color"></select>
+      </span>
+
+      <!-- Alignment -->
+      <span class="ql-formats">
+        <select class="ql-align"></select>
+      </span>
+
+      <!-- Lists & Indentation -->
+      <span class="ql-formats">
+        <button
+          type="button"
+          class="ql-list"
+          value="ordered"
+          aria-label="Ordered List"></button>
+      </span>
+
+      <!-- Block Formatting -->
+      <span class="ql-formats">
+        <button
+          type="button"
+          class="ql-blockquote"
+          aria-label="Blockquote"></button>
+      </span>
+    </ng-template>
+  </p-editor>
+
+} @placeholder (minimum 800ms) {
+  <div class="flex h-full w-full items-center justify-center p-6">
+    <ba-loading />
+  </div>
+}

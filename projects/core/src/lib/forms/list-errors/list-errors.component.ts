@@ -1,5 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, effect, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  OnDestroy,
+  inject,
+} from '@angular/core';
 import { FormErrorsStore } from '../forms-errors.store';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'ba-list-errors',
@@ -8,32 +15,23 @@ import { FormErrorsStore } from '../forms-errors.store';
   template: `
     @if (formErrorsStore.errors().length > 0) {
     <ul class="list-container">
-        @for (error of formErrorsStore.errors(); track error) {
-        <li class="list-item">
-            {{ error }}
-        </li>
-        }
+      @for (error of formErrorsStore.errors(); track error) {
+      <li class="list-item">
+        {{ error }}
+      </li>
+      }
     </ul>
     }
   `,
-  host: { 'hostID': crypto.randomUUID().toString() },
-  styleUrl: './list-error.component.scss'
+  styleUrl: './list-error.component.scss',
 })
-export class ListErrorsComponent implements OnInit, OnDestroy {
+export class ListErrorsComponent implements OnDestroy {
   protected readonly formErrorsStore = inject(FormErrorsStore);
 
-  errorsEffect = effect(() => {
-    const errors = this.formErrorsStore.errors()
-
-    console.log('Errors from effect inside ListErrorsComponent: ', errors)
-  })
-
-  ngOnInit(): void {
-    console.log('initiating ListErrorsComponent, errors: ', this.formErrorsStore.errors())
-  }
+  @HostBinding('attr.hostID') // <-- Add HostBinding
+  hostId = uuidv4();
 
   ngOnDestroy() {
-    console.log('destroying ListErrorsComponent, errors: ', this.formErrorsStore.errors())
     this.formErrorsStore.setErrors({});
   }
 }

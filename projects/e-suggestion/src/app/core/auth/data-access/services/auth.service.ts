@@ -8,13 +8,13 @@ import { LoginUser, RegisterUser, User } from '../auth.model';
 export class AuthService {
   private readonly apiService = inject(ApiService);
 
-  register(credentials: RegisterUser): Observable<User & {token: string}> {
-    return this.apiService.post<User, RegisterUser>('/auth/register', credentials ).pipe(
-        map(resp => resp.data as User & {token: string})
-    );
+  register(credentials: RegisterUser): Observable<User & { token: string }> {
+    return this.apiService
+      .post<User, RegisterUser>('/auth/register', credentials)
+      .pipe(map((resp) => resp.data as User & { token: string }));
   }
 
-  login(credentials: LoginUser): Observable<User & {token: string}> {
+  login(credentials: LoginUser): Observable<User & { token: string }> {
     const headers = new HttpHeaders().set(
       'Content-Type',
       'application/x-www-form-urlencoded'
@@ -28,13 +28,22 @@ export class AuthService {
     body.set('client_id', '');
     body.set('client_secret', '');
 
-    return this.apiService.post<User, string>('/auth/login', body.toString(), { headers } ).pipe(
-        map(resp => resp.data as User & {token: string})
-    );
+    return this.apiService
+      .post<User, string>('/auth/login', body.toString(), { headers })
+      .pipe(map((resp) => resp.data as User & { token: string }));
+  }
+
+  // Get user alongside with jwt token
+  getUser(id: number) {
+    return this.apiService
+      .get<User & { token: string }>('/users/:id/with-token', {
+        pathParams: { id },
+      })
+      .pipe(map((resp) => resp.data as User & { token: string }));
   }
 
   logout() {
-    return of(null)
-    throw new Error("Logout not implemented");
+    return of(null);
+    throw new Error('Logout not implemented');
   }
 }

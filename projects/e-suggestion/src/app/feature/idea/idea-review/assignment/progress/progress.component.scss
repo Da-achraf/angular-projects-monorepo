@@ -1,0 +1,117 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.slider {
+  --track-height: 6px;
+  --track-bg: #e4e4e4;
+  --progress-bg: #086f9e;
+  --thumb-size: 13px;
+  --thumb-bg: #0d6b96;
+  --thumb-hover-scale: 1.2;
+  --focus-ring: 0 0 0 3px rgba(255, 162, 86, 0.5);
+
+  position: relative;
+  width: 100%;
+  padding: 8px 0;
+
+  .slider-input {
+    width: 100%;
+    height: var(--thumb-size);
+    margin: 0;
+    cursor: pointer;
+    background: transparent;
+    -webkit-appearance: none;
+    appearance: none;
+
+    // Track styling
+    &::-webkit-slider-runnable-track {
+      height: var(--track-height);
+      background: linear-gradient(
+        to right,
+        var(--progress-bg) 0%,
+        var(--progress-bg) var(--progress),
+        var(--track-bg) var(--progress),
+        var(--track-bg) 100%
+      );
+      border-radius: 999px;
+    }
+
+    &::-moz-range-track {
+      height: var(--track-height);
+      background: var(--track-bg);
+      border-radius: 999px;
+    }
+
+    // Thumb styling
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: var(--thumb-size);
+      height: var(--thumb-size);
+      background: var(--thumb-bg);
+      border-radius: 50%;
+      margin-top: -3px; 
+      transition: transform 0.2s ease;
+    }
+
+    &::-moz-range-thumb {
+      width: var(--thumb-size);
+      height: var(--thumb-size);
+      background: var(--thumb-bg);
+      border: none;
+      border-radius: 50%;
+      transition: transform 0.2s ease;
+    }
+
+    // Hover states
+    &:hover::-webkit-slider-thumb {
+      transform: scale(var(--thumb-hover-scale));
+    }
+
+    &:hover::-moz-range-thumb {
+      transform: scale(var(--thumb-hover-scale));
+    }
+
+    // Focus states
+    &:focus {
+      outline: none;
+      
+      &::-webkit-slider-thumb {
+        box-shadow: var(--focus-ring);
+      }
+      
+      &::-moz-range-thumb {
+        box-shadow: var(--focus-ring);
+      }
+    }
+
+    // Disabled state
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+      
+      &::-webkit-slider-thumb {
+        transform: none !important;
+      }
+      
+      &::-moz-range-thumb {
+        transform: none !important;
+      }
+    }
+  }
+}
+
+// Firefox progress fill
+@supports (-moz-appearance: none) {
+  .slider-input {
+    background: linear-gradient(
+      to right,
+      var(--progress-bg) 0%,
+      var(--progress-bg) var(--progress),
+      transparent var(--progress),
+      transparent 100%
+    );
+  }
+}

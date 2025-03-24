@@ -1,0 +1,181 @@
+<div class="relative bg-gray-100 py-4 h-24">
+  <button
+    class="absolute right-2 top-2 fa-solid p-1 fa-xmark text-xl text-gray-400 transition-all duration-200 ring-gray-400 hover:text-gray-500"
+    (click)="cancel()"
+  ></button>
+  <img
+    class="absolute bottom-[-20%] translate-x-[-50%] left-[50%] p-[.5px] rounded-full border-2 border-primary-200"
+    src="user-profile.png"
+    width="70"
+    height="70"
+    alt="User Profile"
+  />
+</div>
+<div class="p-4">
+  <div class="border-b border-b-gray-300 py-3">
+    @if (user(); as user) {
+    <p class="text-[1em] font-semibold text-gray-700">
+      {{ user.first_name | titlecase }} {{ user.last_name | titlecase }}
+    </p>
+    <p class="text-gray-500">{{ user.email }}</p>
+    }
+  </div>
+
+  @defer {
+  <form class="flex flex-col gap-y-3 items-stretch py-4" [formGroup]="form">
+    <div class="flex items-center gap-x-2 border-b border-b-gray-300 py-3">
+      <span class="font-semibold w-1/6 text-gray-600">Name</span>
+      <div class="flex items-center gap-x-3 w-5/6">
+        <ba-input class="flex-1" [control]="form.controls.first_name">
+          <input
+            type="text"
+            formControlName="first_name"
+            placeholder="First name"
+          />
+        </ba-input>
+
+        <ba-input class="flex-1" [control]="form.controls.last_name">
+          <input
+            type="text"
+            formControlName="last_name"
+            placeholder="Last name"
+          />
+        </ba-input>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-x-2 border-b border-b-gray-300 py-3">
+      <span class="font-semibold w-1/6 text-gray-600">TE Id</span>
+      <ba-input class="flex-1" [control]="form.controls.te_id">
+        <input
+          type="text"
+          id="te-id"
+          formControlName="te_id"
+          placeholder="TEXXXXXX"
+          value="TE"
+          pattern="TE\d{6}"
+          title="TE Id should be in the format TEXXXXXX where X is a number."
+        />
+      </ba-input>
+    </div>
+
+    <div class="flex items-center gap-x-2 border-b border-b-gray-300 py-3">
+      <span class="font-semibold w-1/6 text-gray-600">Email</span>
+      <ba-input class="flex-1" [control]="form.controls.email">
+        <input type="email" formControlName="email" placeholder="Email" />
+      </ba-input>
+    </div>
+
+    <div class="flex items-center gap-x-2 border-b border-b-gray-300 py-3">
+      <span class="font-semibold w-1/6 text-gray-600">Role</span>
+
+      <p-select
+        [options]="roles()"
+        formControlName="role_id"
+        optionLabel="name"
+        optionValue="id"
+        [filter]="false"
+        filterBy="name"
+        [showClear]="true"
+        placeholder="Select a Role"
+        class="flex-1"
+        appendTo="body"
+      >
+        <ng-template #selectedItem let-selectedOption>
+          <div class="flex items-center gap-2">
+            <div>{{ selectedOption.name | rolename }}</div>
+          </div>
+        </ng-template>
+        <ng-template let-role #item>
+          <div class="flex items-center gap-2">
+            <div>{{ role.name | rolename }}</div>
+          </div>
+        </ng-template>
+      </p-select>
+    </div>
+
+    <div class="flex items-center gap-x-2">
+      <span class="font-semibold w-1/6 text-gray-600">BU & Plant</span>
+      <div class="flex items-center gap-x-2 flex-1">
+        <p-select
+          [options]="bus()"
+          formControlName="bu_id"
+          optionLabel="name"
+          optionValue="id"
+          [filter]="false"
+          [showClear]="true"
+          placeholder="Select a BU"
+          class="flex-1"
+          appendTo="body"
+        >
+          <!-- <ng-template #selectedItem let-selectedOption>
+            <div class="flex items-center gap-2">
+              <div>{{ selectedOption.name }}</div>
+            </div>
+          </ng-template>
+          <ng-template let-bu #item>
+            <div class="flex items-center gap-2">
+              <div>{{ bu.name }}</div>
+            </div>
+          </ng-template> -->
+        </p-select>
+
+        <p-select
+          [options]="plants()"
+          formControlName="plant_id"
+          optionLabel="name"
+          optionValue="id"
+          [filter]="false"
+          filterBy="name"
+          [showClear]="true"
+          placeholder="Select a Plant"
+          class="flex-1"
+          appendTo="body"
+        >
+          <!-- <ng-template #selectedItem let-selectedOption>
+            <div class="flex items-center gap-2">
+              <div>{{ selectedOption.name }}</div>
+            </div>
+          </ng-template>
+          <ng-template let-plant #item>
+            <div class="flex items-center gap-2">
+              <div>{{ plant.name }}</div>
+            </div>
+          </ng-template> -->
+        </p-select>
+      </div>
+    </div>
+  </form>
+
+  <!-- Actions -->
+  <div
+    class="flex items-center justify-between w-full border-t border-t-gray-300 py-3"
+  >
+    <ba-button
+      label="Delete User"
+      icon="fa-trash"
+      buttonClass="text-sm bg-red-50 ring-red-400 text-red-500 border border-red-100 hover:border-red-300 hover:bg-red-100"
+      (onClick)="delete()"
+    ></ba-button>
+
+    <div class="flex items-center gap-x-2">
+      <ba-button
+        label="Save Changes"
+        icon="fa-floppy-disk"
+        [disabled]="!form.valid"
+        buttonClass="text-sm border border-gray-400 bg-primary-200 hover:bg-primary text-gray-50"
+        (onClick)="saveChanges()"
+      />
+      <ba-button
+        label="Cancel"
+        buttonClass="text-sm text-gray-500 border border-gray-400 bg-neutral-50 hover:bg-neutral-100"
+        (onClick)="cancel()"
+      />
+    </div>
+  </div>
+  } @placeholder (minimum 500ms) {
+  <div class="p-10 text-center">
+    <ba-loading />
+  </div>
+  }
+</div>

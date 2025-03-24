@@ -1,0 +1,134 @@
+<div id="style-4" class="">
+  <div class="mx-auto flex max-w-[80rem] flex-col gap-y-5 p-4">
+    <div
+      class="flex flex-col gap-y-2 sm:flex-row sm:items-center sm:justify-end">
+      <ba-button
+        label="Create Idea"
+        [isLoading]="store.isSaving()"
+        icon="fa-plus"
+        [disabled]="!form.valid"
+        buttonClass="text-sm border border-gray-400 bg-primary-200 hover:bg-primary text-gray-50"
+        (onClick)="onSubmit()" />
+    </div>
+
+    <div class="mb-5 flex items-center gap-x-3">
+      <i class="fa-solid fa-circle-info text-secondary"></i>
+      <p class="text-lg font-semibold text-gray-500">Create a new idea here</p>
+    </div>
+
+    @defer {
+      <form
+        [formGroup]="form"
+        class="flex flex-col gap-4 gap-x-[5vw] md:flex-row md:items-start">
+        <div class="mb-3 flex flex-1 flex-col gap-y-10">
+          <div class="flex flex-col gap-y-2">
+            <div class="flex items-center gap-x-2">
+              <span
+                class="text-sm font-semibold uppercase tracking-wide text-primary"
+                >Idea title</span
+              >
+              <span class="h-[.4px] flex-1 bg-gray-300"></span>
+            </div>
+            <ba-input [control]="form.controls.title">
+              <input
+                type="text"
+                formControlName="title"
+                placeholder="Type a title" />
+            </ba-input>
+          </div>
+
+          <div class="flex flex-col gap-y-2">
+            <div class="flex items-center gap-x-2">
+              <span
+                class="text-sm font-semibold uppercase tracking-wide text-primary"
+                >Current situation</span
+              >
+              <span class="h-[.4px] flex-1 bg-gray-300"></span>
+            </div>
+            <ba-editor
+              formControlName="actual_situation"
+              placeholder="Describe the current situation here..." />
+          </div>
+          <div class="flex flex-col gap-y-2">
+            <div class="flex items-center gap-x-2">
+              <span
+                class="text-sm font-semibold uppercase tracking-wide text-primary"
+                >Idea description</span
+              >
+              <span class="h-[.4px] flex-1 bg-gray-300"></span>
+            </div>
+            <ba-editor
+              formControlName="description"
+              placeholder="Describe your idea here.." />
+          </div>
+        </div>
+
+        <div class="w-full md:w-[40%] lg:w-5/12">
+          <div class="flex flex-col gap-y-2">
+            <div class="flex items-center gap-x-2">
+              <span
+                class="text-sm font-semibold uppercase tracking-wide text-primary"
+                >Category</span
+              >
+              <span class="h-[.4px] flex-1 bg-gray-300"></span>
+            </div>
+            <p-select
+              [options]="categories()"
+              formControlName="category"
+              [filter]="true"
+              [showClear]="true"
+              placeholder="Select a category"
+              class="flex-1">
+              <ng-template #selectedItem let-selectedOption>
+                <div class="flex items-center gap-2">
+                  <div>{{ selectedOption | titlecase }}</div>
+                </div>
+              </ng-template>
+              <ng-template let-category #item>
+                <div class="flex items-center gap-2">
+                  <div>{{ category | titlecase }}</div>
+                </div>
+              </ng-template>
+            </p-select>
+          </div>
+
+          <div class="flex flex-col gap-y-2 mt-10">
+            <div class="flex items-center gap-x-2">
+              <span
+                class="text-sm font-semibold uppercase tracking-wide text-primary"
+                >Department</span
+              >
+              <span class="h-[.4px] flex-1 bg-gray-300"></span>
+            </div>
+            <p-select
+              [options]="departments()"
+              formControlName="department"
+              [filter]="true"
+              [showClear]="true"
+              placeholder="Select a department"
+              class="flex-1">
+              <ng-template #selectedItem let-selectedOption>
+                <div class="flex items-center gap-2">
+                  <div>{{ selectedOption | titlecase }}</div>
+                </div>
+              </ng-template>
+              <ng-template let-department #item>
+                <div class="flex items-center gap-2">
+                  <div>{{ department | titlecase }}</div>
+                </div>
+              </ng-template>
+            </p-select>
+          </div>
+
+          <ba-attachment-upload
+            class="mt-10"
+            (filesChanged)="handleFiles($event)" />
+        </div>
+      </form>
+    } @placeholder (minimum 500ms) {
+      <div class="p-10 text-center">
+        <ba-loading />
+      </div>
+    }
+  </div>
+</div>

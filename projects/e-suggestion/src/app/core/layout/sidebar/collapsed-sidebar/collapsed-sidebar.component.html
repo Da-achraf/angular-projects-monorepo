@@ -1,0 +1,100 @@
+<div
+  id="style-4"
+  class="flex h-full flex-col items-center gap-y-2 overflow-y-auto bg-[var(--sidebar-bg-color)] py-1 text-[var(--sidebar-text-color)] shadow-2xl">
+  <!-- class="flex flex-col gap-y-2 py-1 items-center h-full overflow-y-auto shadow-2xl border-r border-r-neutral-300  text-primary bg-background"> -->
+  @for (item of filteredItems(); track item.link) {
+    @if (!item.isMenu) {
+      <button
+        (click)="$event.stopPropagation()"
+        [routerLink]="item.link"
+        routerLinkActive="text-[var(--sidebar-active-color)] shadow shadow-[var(--sidebar-active-color)]"
+        class="flex h-12 w-12 cursor-pointer items-center justify-center rounded transition-all duration-200 hover:text-[var(--sidebar-hover-color)]"
+        #tooltip="matTooltip"
+        [matTooltip]="item.label | titlecase"
+        [matTooltipPosition]="'right'"
+        matTooltipShowDelay="500"
+        matTooltipHideDelay="100">
+        <i [ngClass]="item.icon" class="fa-solid text-lg"></i>
+      </button>
+    } @else {
+      <button
+        (mouseenter)="onMouseEnter(item, $event)"
+        (mouseleave)="onMouseLeave(item, $event)"
+        (click)="$event.stopPropagation()"
+        [ngClass]="{
+          'text-[var(--sidebar-active-color)] shadow shadow-[var(--sidebar-active-color)]':
+            (menuHovered() && openedItem()?.label === item.label) ||
+            navigatedToMenu()?.label === item.label,
+        }"
+        class="flex h-12 w-12 cursor-pointer items-center justify-center rounded transition-all duration-200"
+        #tooltip="matTooltip"
+        [matTooltip]="item.label | titlecase"
+        [matTooltipPosition]="'above'"
+        matTooltipShowDelay="500"
+        matTooltipHideDelay="100">
+        <i [ngClass]="item.icon" class="fa-solid text-lg"></i>
+      </button>
+      @if (item.menuVisible) {
+        <ng-container
+          [ngTemplateOutlet]="sidebarItemWithChildren"
+          [ngTemplateOutletContext]="{
+            items: item.children,
+            parentItem: item,
+          }" />
+      }
+    }
+  }
+
+  <a
+    class="mt-auto flex w-full items-center justify-center border-t-2 border-t-[var(--sidebar-text-color)] p-2 text-orange-300/90"
+    #tooltip="matTooltip"
+    [matTooltip]="userFullName() | titlecase"
+    [matTooltipPosition]="'right'"
+    matTooltipShowDelay="500"
+    matTooltipHideDelay="100">
+    <button class="hover:text-orange-300/80">
+      <i class="fa-solid fa-circle-user text-2xl"></i>
+    </button>
+  </a>
+</div>
+
+<!-- Template for sidebar item with children -->
+<ng-template #sidebarItemWithChildren let-items="items" let-parentItem="item">
+  <div
+    id="style-4"
+    (mouseenter)="onMouseEnterMenu(parentItem, $event)"
+    (mouseleave)="onMouseLeaveMenu(parentItem, $event)"
+    [style.top.px]="openedItemY()"
+    class="absolute left-[85%] z-50 flex max-h-48 w-[20rem] flex-wrap items-center gap-3 rounded bg-[var(--sidebar-bg-color)] p-2 text-[var(--sidebar-text-color)] shadow-md">
+    @for (item of items; track item.link) {
+      <!-- Item without children -->
+      @if (!item.isMenu) {
+        <button
+          (click)="$event.stopPropagation()"
+          [routerLink]="item.link"
+          routerLinkActive="text-[var(--sidebar-active-color)] shadow shadow-[var(--sidebar-active-color)]"
+          class="flex h-12 w-12 cursor-pointer items-center justify-center rounded p-1 transition-all duration-200 hover:text-[var(--sidebar-hover-color)]"
+          #tooltip="matTooltip"
+          [matTooltip]="item.label | titlecase"
+          [matTooltipPosition]="'above'"
+          matTooltipShowDelay="500"
+          matTooltipHideDelay="100">
+          <div class="flex flex-col">
+            <i [ngClass]="item.icon" class="fa-solid text-lg"></i>
+          </div>
+        </button>
+      } @else {
+        <!-- Item with children -->
+        <button
+          (click)="$event.stopPropagation()"
+          [routerLink]="item.link"
+          routerLinkActive="text-secondary"
+          class="flex h-12 w-12 cursor-pointer items-center justify-center rounded transition-all duration-200"
+          matTooltipShowDelay="500"
+          matTooltipHideDelay="100">
+          <i [ngClass]="item.icon" class="fa-solid text-lg"></i>
+        </button>
+      }
+    }
+  </div>
+</ng-template>

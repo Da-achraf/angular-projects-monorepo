@@ -1,0 +1,78 @@
+<div id="style-4" class="overflow-y-auto decorative-pattern">
+  <div class="relative py-4">
+    <button
+      class="absolute right-2 top-2 fa-solid p-1 fa-xmark text-xl text-gray-400 transition-all duration-200 ring-gray-400 hover:text-gray-500"
+      (click)="cancel()"
+    ></button>
+  </div>
+
+  <div class="flex flex-col gap-y-5 p-4 max-w-[80rem] mx-auto">
+    <div class="flex items-center justify-between">
+      <p class="font-semibold text-lg text-gray-600">Idea Details</p>
+
+      <div class="flex items-center gap-x-3">
+        <ba-button
+          label="Edit Idea"
+          icon="fa-pen"
+          buttonClass="text-sm bg-transparent ring-primary-200 text-primary border border-primary-100 hover:border-primary-200 hover:bg-gray-50"
+          (onClick)="edit()"
+        ></ba-button>
+        <ba-button
+          label="Delete Idea"
+          icon="fa-trash"
+          buttonClass="text-sm bg-red-50 ring-red-400 text-red-500 border border-red-100 hover:border-red-300 hover:bg-red-100"
+          (onClick)="delete()"
+        ></ba-button>
+      </div>
+    </div>
+
+    <form [formGroup]="form" class="flex flex-col gap-y-10 mb-3">
+      @defer (on immediate) {
+      <div class="flex flex-col gap-y-2">
+        <div class="flex items-center gap-x-2">
+          <span class="text-gray-500">Idea title</span>
+          <span class="flex-1 h-[.4px] bg-gray-300"></span>
+        </div>
+        <ba-input [control]="form.controls.title">
+          <input
+            [readonly]="true"
+            type="text"
+            formControlName="title"
+            placeholder="Type a title"
+          />
+        </ba-input>
+      </div>
+
+      <div class="flex flex-col gap-y-2">
+        <div class="flex items-center gap-x-2">
+          <span class="text-gray-400">Current situation</span>
+          <span class="flex-1 h-[.4px] bg-gray-300"></span>
+        </div>
+        <p-editor
+          [readonly]="true"
+          class="flex-1 content"
+          formControlName="actual_situation"
+          styleClass=""
+        />
+      </div>
+
+      <div class="flex flex-col gap-y-2">
+        <div class="flex items-center gap-x-2">
+          <span class="text-gray-400">Idea description</span>
+          <span class="flex-1 h-[.4px] bg-gray-300"></span>
+        </div>
+        <p-editor
+          [readonly]="true"
+          class="flex-1 content"
+          formControlName="description"
+          styleClass="custom-editor hide-header"
+        />
+      </div>
+      } @placeholder (minimum 500ms) {
+      <div class="p-10 text-center">
+        <ba-loading />
+      </div>
+      }
+    </form>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+<div class="flex flex-col gap-0">
+  <app-header />
+
+  <div class="flex h-[calc(100vh-var(--header-height))]">
+    <div
+      class="min-h-[calc(100vh-var(--header-height))] transition-all duration-300 ease-in-out  relative"
+      [style.width]="
+        isOpen()
+          ? 'var(--expanded-sidebar-width)'
+          : 'var(--collapsed-sidebar-width)'
+      "
+    >
+      @if (isOpen()) {
+      <app-expanded-sidebar />
+      }@else {
+      <app-collapsed-sidebar />
+      }
+    </div>
+
+    <div class="min-h-[calc(100vh-var(--header-height))] overflow-auto w-full">
+      <div class="h-full w-full bg-white mx-auto">
+        <ba-breadcrumb class="sticky top-0 backdrop-blur-[.5rem] z-[200]" />
+
+        <router-outlet />
+      </div>
+    </div>
+  </div>
+</div>

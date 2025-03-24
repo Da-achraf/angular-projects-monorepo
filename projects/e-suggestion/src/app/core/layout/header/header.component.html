@@ -1,0 +1,53 @@
+<div class="flex items-center">
+  <div
+    class="h-[var(--header-height)] bg-primary flex items-center border-b border-b-gray-400 transition-all duration-300"
+    [ngClass]="{
+      'w-[var(--expanded-sidebar-width)] justify-between pr-2': sidebarOpened(),
+      'w-[var(--collapsed-sidebar-width)] justify-center': !sidebarOpened()
+    }"
+  >
+    <button
+      (click)="toggleSidebar()"
+      class="fa-solid fa-bars p-3 text-xl font-bold transition duration-300 text-gray-300 hover:text-gray-100"
+    ></button>
+    @if (sidebarOpened()) {
+    <ba-logo bg="dark" />
+    }
+  </div>
+  
+  <div
+    class="h-[var(--header-height)] w-full border-b border-b-neutral-300 shadow-md bg-white/30 backdrop-blur-sm sticky top-0 z-[200]"
+  >
+    <div
+      class="flex items-center px-3 py-2"
+      [ngClass]="{
+        'justify-between': !sidebarOpened(),
+        'justify-end': sidebarOpened()
+      }"
+    >
+      @if (!sidebarOpened()) {
+      <ba-logo />
+      }
+      <div class="flex items-center gap-x-3">
+        <span>
+          <i class="fa-solid fa-bell text-2xl text-primary"></i>
+        </span>
+        <button
+          (click)="logout()"
+          class="group flex items-center justify-start text-neutral-50 w-10 h-10 text-base bg-red-500 rounded-full cursor-pointer relative overflow-hidden transition-all duration-200 shadow-lg hover:w-28 hover:rounded-lg active:translate-x-1 active:translate-y-1"
+        >
+          <div
+            class="flex items-center justify-center w-full transition-all duration-300 group-hover:justify-start group-hover:px-3"
+          >
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          </div>
+          <div
+            class="absolute right-5 transform translate-x-full opacity-0 text-white font-semibold transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+          >
+            Logout
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

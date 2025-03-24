@@ -1,3 +1,70 @@
+@use '@angular/material' as mat;
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.mat-mdc-dialog-container .mdc-dialog__surface {
+    @apply rounded-md;
+}
+
+
+// fonts
+@font-face {
+  font-family: "Quicksand";
+  src: url('../public/fonts/quicksand/Quicksand-VariableFont_wght.ttf') format('truetype');
+}
+
+:root {
+  @include mat.snack-bar-overrides((
+    container-color: rgb(39, 217, 104),
+    supporting-text-color: rgb(226, 225, 225),
+  ));
+}
+
+:root {
+    --header-height: 3.5rem;
+    --collapsed-sidebar-width: 4rem;
+    --expanded-sidebar-width: 17rem;
+
+    --sidebar-bg-color: #3c5d9e;
+    --sidebar-text-color: #d1d5db;
+    --sidebar-active-color: #fbf8f8;
+    --sidebar-hover-color: #eee;
+
+    @include mat.divider-overrides((
+    color: rgb(223, 220, 220),
+  ));
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-optical-sizing: auto;
+    font-family: "Quicksand", serif;
+}
+
+
+// Angular material snackbar classes
+.snackbar-success {
+  background-color: #4caf50 !important; /* Green for success */
+  color: white !important;
+}
+
+.snackbar-error {
+  background-color: #f44336 !important; /* Red for error */
+  color: white !important;
+}
+
+
+.content img {
+  max-width: 100%;
+  max-height: 400px;
+  height: auto;
+  width: auto;
+}

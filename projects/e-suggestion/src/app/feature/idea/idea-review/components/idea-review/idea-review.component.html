@@ -1,0 +1,101 @@
+<!-- 
+ If you want the buttons to be steaky,
+ add these classes to the div having the id "_buttons":
+ sticky top-[var(--header-height)] z-10
+-->
+
+@if (idea(); as idea) {
+  <div id="style-4" class="min-h-full bg-gray-50/80">
+    <div class="mx-auto flex max-w-[95rem] flex-col gap-y-5 px-10 py-4">
+      <div
+        id="_buttons"
+        class="relative flex flex-col gap-y-2 py-2 sm:flex-row sm:items-center sm:justify-end">
+        @if (id(); as id) {
+          <div class="flex items-center gap-x-3">
+            @if (store.canApprove()) {
+              <ba-button
+                label="Approve"
+                icon="fa-circle-check"
+                [isLoading]="store.isApprovingIdea()"
+                buttonClass="text-sm bg-primary-200 !text-gray-50 !ring-primary-200 hover:bg-primary-200"
+                (onClick)="store.showApproveDialog()" />
+            }
+            @if (store.canReject()) {
+              <ba-button
+                label=""
+                title="Reject the idea"
+                icon="fa-xmark"
+                [isLoading]="store.isRejectingIdea()"
+                buttonClass="text-sm !bg-transparent ring-red-300 text-red-500 border border-red-100 hover:border-red-300 hover:bg-red-100"
+                (onClick)="store.showRejectDialog()" />
+            }
+            @if (store.canRate()) {
+              <ba-button
+                label=""
+                title="Rate the idea"
+                icon="fa-table-cells"
+                [isLoading]="store.isRatingIdea()"
+                buttonClass="relative text-sm !bg-transparent !ring-cyan-400 text-cyan-500 border border-cyan-100 hover:border-cyan-300 hover:bg-cyan-100"
+                [ngClass]="{
+                  'has-rating': store.isRated(),
+                }"
+                [ngStyle]="{
+                  '--rating-content': store.isRated()
+                    ? '\'' + store.rating() + '\''
+                    : 'none',
+                }"
+                (onClick)="store.setRatingMatrixVisibility(true)" />
+            }
+          </div>
+        }
+      </div>
+
+      <ba-idea-caption [idea]="idea">Review page of idea</ba-idea-caption>
+
+      @defer {
+        <div
+          class="review-container"
+          [class.desktop-default]="!store.isTeoaMember()"
+          [class.desktop-alternate]="store.isTeoaMember()">
+          <ba-assignment
+            [assignment]="idea.assignment"
+            [ideaId]="idea.id"
+            class="assignment blur-[.01rem]" />
+
+          <ba-teoa-review
+            [ideaId]="idea.id"
+            [teoaReview]="idea.teoa_review"
+            class="teoa-review" />
+
+          <ba-idea-comments
+            [ideaId]="idea.id"
+            [comments]="idea.comments"
+            class="comments" />
+        </div>
+      } @placeholder (minimum 500ms) {
+        <div class="p-10 text-center">
+          <ba-loading />
+        </div>
+      }
+    </div>
+  </div>
+
+  @if (store.ratingMatrixVisible(); as ratingVisible) {
+    <div class="card flex justify-center">
+      <p-drawer
+        header="Rating Matrix"
+        position="right"
+        [visible]="ratingVisible"
+        (visibleChange)="store.setRatingMatrixVisibility($event)"
+        styleClass="!w-full lg:!w-[65rem]">
+        <ba-rating-matrix
+          [ideaId]="idea.id"
+          [isRated]="store.isRated()"
+          [loading]="store.isRatingIdea()"
+          [data]="idea.rating_matrix"
+          (createRating)="store.rateIdea($event)"
+          (updateRating)="store.updateIdeaRating($event)" />
+      </p-drawer>
+    </div>
+  }
+}

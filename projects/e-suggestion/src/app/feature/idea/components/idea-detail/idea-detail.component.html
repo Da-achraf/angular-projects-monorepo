@@ -1,0 +1,100 @@
+@if (idea(); as idea) {
+  <div id="style-4" class="">
+    <div class="mx-auto flex max-w-[80rem] flex-col gap-y-5 p-4">
+      <div
+        class="sticky top-[var(--header-height)] z-10 flex flex-col gap-y-2 py-2 sm:flex-row sm:items-center sm:justify-end">
+        @if (id(); as id) {
+          <div class="flex items-center gap-x-3">
+            @if (store.withIdeaEdit()) {
+              <ba-button
+                label="Edit Idea"
+                icon="fa-pen"
+                buttonClass="text-sm bg-white ring-primary-200 text-primary border border-primary-100 hover:border-primary-200 hover:bg-gray-50"
+                (onClick)="edit(id)"></ba-button>
+            }
+            @if (store.withIdeaDelete()) {
+              <ba-button
+                label="Delete Idea"
+                icon="fa-trash"
+                buttonClass="text-sm bg-red-50 ring-red-400 text-red-500 border border-red-100 hover:border-red-300 hover:bg-red-100"
+                (onClick)="delete(id)"></ba-button>
+            }
+          </div>
+        }
+      </div>
+
+      <ba-idea-caption [idea]="idea" class="mb-5">
+        You're viewing the details of idea
+      </ba-idea-caption>
+
+      @defer {
+        <div class="flex flex-col gap-4 gap-x-[5vw] md:flex-row md:items-start">
+          <form [formGroup]="form" class="mb-3 flex flex-1 flex-col gap-y-10">
+            <div class="flex flex-col gap-y-2">
+              <div class="flex items-center gap-x-2">
+                <span
+                  class="text-sm font-semibold uppercase tracking-wide text-primary"
+                  >Idea title</span
+                >
+                <span class="h-[.4px] flex-1 bg-gray-300"></span>
+              </div>
+              <ba-content-display [content]="idea.title" />
+            </div>
+
+            <div class="flex flex-col gap-y-2">
+              <div class="flex items-center gap-x-2">
+                <span
+                  class="text-sm font-semibold uppercase tracking-wide text-primary"
+                  >Current situation</span
+                >
+                <span class="h-[.4px] flex-1 bg-gray-300"></span>
+              </div>
+              <ba-content-display [content]="idea.actual_situation" />
+            </div>
+            <div class="flex flex-col gap-y-2">
+              <div class="flex items-center gap-x-2">
+                <span
+                  class="text-sm font-semibold uppercase tracking-wide text-primary"
+                  >Idea description</span
+                >
+                <span class="h-[.4px] flex-1 bg-gray-300"></span>
+              </div>
+              <ba-content-display [content]="idea.description" />
+            </div>
+          </form>
+
+          <div class="w-full md:w-[40%] lg:w-5/12">
+            <div class="flex flex-col gap-y-2">
+              <div class="flex items-center gap-x-2">
+                <span
+                  class="text-sm font-semibold uppercase tracking-wide text-primary"
+                  >Department</span
+                >
+                <span class="h-[.4px] flex-1 bg-gray-300"></span>
+              </div>
+              <ba-content-display [content]="idea.department" />
+            </div>
+            <div class="flex flex-col gap-y-2 mt-10">
+              <div class="flex items-center gap-x-2">
+                <span
+                  class="text-sm font-semibold uppercase tracking-wide text-primary"
+                  >Category</span
+                >
+                <span class="h-[.4px] flex-1 bg-gray-300"></span>
+              </div>
+              <ba-content-display [content]="idea.category" />
+            </div>
+            <ba-attachment-upload
+              [attachments]="attachments()"
+              [viewOnly]="true"
+              class="mt-10" />
+          </div>
+        </div>
+      } @placeholder (minimum 500ms) {
+        <div class="p-10 text-center">
+          <ba-loading />
+        </div>
+      }
+    </div>
+  </div>
+}

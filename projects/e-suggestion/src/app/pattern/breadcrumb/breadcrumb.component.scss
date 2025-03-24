@@ -1,0 +1,21 @@
+ul {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+ul li {
+  display: flex;
+  align-items: center;
+}
+
+ul li:before {
+  content: '/';
+  font-weight: 500;
+  margin: 0 1rem;
+}
+
+ul li:first-child:before {
+  content: '';
+  margin: 0;
+}

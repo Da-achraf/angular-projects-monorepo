@@ -8,7 +8,8 @@
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss",
-          "skipTests": true
+          "skipTests": true,
+          "changeDetection": "OnPush"
         },
         "@schematics/angular:class": {
           "skipTests": true
@@ -54,6 +55,8 @@
               }
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/azure-blue.css",
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "projects/e-suggestion/src/styles.scss"
             ],
             "scripts": []
@@ -69,7 +72,7 @@
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "2kB",
-                  "maximumError": "4kB"
+                  "maximumError": "50kB"
                 }
               ],
               "outputHashing": "all"
@@ -119,108 +122,11 @@
               }
             ],
             "styles": [
-              "projects/e-suggestion/src/styles.scss"
+              "@angular/material/prebuilt-themes/azure-blue.css",
+              "projects/e-suggestion/src/styles.scss",
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
             ],
             "scripts": []
-          }
-        }
-      }
-    },
-    "ba-core": {
-      "projectType": "library",
-      "root": "libs/ba-core",
-      "sourceRoot": "libs/ba-core/src",
-      "prefix": "ba-core",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "project": "libs/ba-core/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/ba-core/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "libs/ba-core/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "tsConfig": "libs/ba-core/tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
-          }
-        }
-      }
-    },
-    "http-client": {
-      "projectType": "library",
-      "root": "libs/ba-core/http-client",
-      "sourceRoot": "libs/ba-core/http-client/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "project": "libs/ba-core/http-client/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/ba-core/http-client/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "libs/ba-core/http-client/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "tsConfig": "libs/ba-core/http-client/tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
-          }
-        }
-      }
-    },
-    "forms": {
-      "projectType": "library",
-      "root": "libs/ba-core/forms",
-      "sourceRoot": "libs/ba-core/forms/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "project": "libs/ba-core/forms/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/ba-core/forms/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "libs/ba-core/forms/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "tsConfig": "libs/ba-core/forms/tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
           }
         }
       }

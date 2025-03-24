@@ -1,14 +1,19 @@
 
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_URL } from './api-url.token';
 
-// Define the standardized response interface with a generic type
-export type ApiResponse<T> = {
+type ApiResponse<T> = {
+  /**
+   * This is the standard response structure 
+   * 
+  */
   message?: string;
   data?: T | T[] | null; // Data can be T, T[], or null
 }
+
+
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -18,13 +23,15 @@ export class ApiService {
   // GET method with query and path parameters
   get<T>(
     url: string,
-    queryParams: { [key: string]: any } = {},
-    pathParams: { [key: string]: any } = {}
+    options: {
+      queryParams?: { [key: string]: any },
+      pathParams?: { [key: string]: any }
+    } = {}
   ): Observable<ApiResponse<T>> {
-    // Replace path parameters in the URL
+    const { queryParams = {}, pathParams = {} } = options;
+
     const finalUrl = this.replacePathParams(url, pathParams);
 
-    // Convert query parameters to HttpParams
     let params = new HttpParams();
     for (const key in queryParams) {
       if (queryParams.hasOwnProperty(key)) {
@@ -40,7 +47,7 @@ export class ApiService {
   }
 
   // POST method
-  post<T, D>(url: string, data?: D, options?: {[key: string]: any}): Observable<ApiResponse<T>> {
+  post<T, D>(url: string, data?: D, options?: { [key: string]: any }): Observable<ApiResponse<T>> {
     let _options = options
     if (!_options) {
       _options = {
@@ -70,7 +77,7 @@ export class ApiService {
   // DELETE method [Patch delete]
   batchDelete<T>(url: string, ids: number[]): Observable<ApiResponse<T>> {
     return this.http.delete<ApiResponse<T>>(`${this.api_url}${url}`, {
-      body: {ids},
+      body: { ids },
       headers: this.headers,
       withCredentials: true,
     });

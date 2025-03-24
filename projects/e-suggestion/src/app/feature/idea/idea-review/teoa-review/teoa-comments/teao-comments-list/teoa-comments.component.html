@@ -1,0 +1,9 @@
+<ba-comments
+  [viewMode]="viewMode()"
+  [comments]="store.comments()"
+  [connectedUserId]="store.connectedUserId()"
+  (addComment)="store.addComment($event)"
+  (deleteComment)="store.deleteComment($event)"
+  (sortingOrderChange)="store.setSortingOrder($event)"
+>
+</ba-comments>

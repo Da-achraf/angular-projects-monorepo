@@ -1,0 +1,38 @@
+<div class="max-w-[80rem] p-10">
+  <ba-generic-table
+    [data]="store.entities()"
+    [total]="store.total()"
+    [columns]="columns()"
+    [globalFilterFields]="globalFilterFields()"
+    [loading]="store.isLoading()"
+    [withCreate]="store.withIdeaCreate()"
+    [withExport]="store.withIdeaExport()"
+    [withEdit]="store.withIdeaEdit()"
+    [withDelete]="store.withIdeaDelete()"
+    [withViewDetail]="true"
+    [withReview]="store.withIdeaReview()"
+    (page)="store.setPage($event)"
+    (pageSize)="store.setPageSize($event)"
+    (create)="onCreate()"
+    (edit)="onEdit($event)"
+    (delete)="store.showDeleteIdeaDialog($event)"
+    (view)="onView($event)"
+    (review)="onReview($event)">
+    <ng-template #sumbitterTemplate let-idea>
+      <div class="flex items-center gap-x-2">
+        <span
+          >{{ idea.submitter?.first_name | titlecase }}
+          {{ idea.submitter?.last_name | titlecase }}</span
+        >
+      </div>
+    </ng-template>
+
+    <ng-template #statusTemplate let-idea>
+      <ba-idea-status [status]="idea.status" />
+    </ng-template>
+
+    <ng-template #categoryTemplate let-idea>
+      <span class="italic font-medium">{{ idea.category | titlecase }}</span>
+    </ng-template>
+  </ba-generic-table>
+</div>

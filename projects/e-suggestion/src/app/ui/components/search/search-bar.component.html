@@ -1,0 +1,11 @@
+<p-iconField iconPosition="left">
+    <p-inputIcon>
+        <i 
+            [ngClass]="{
+                'fa-spinner animate-spin': isLoading(),
+                'fa-magnifying-glass': !isLoading()
+            }" 
+        class="fa-solid"></i>
+    </p-inputIcon>
+    <input pInputText type="text" [(ngModel)]="searchValue" (input)="onChange()" placeholder="Search..." />
+</p-iconField>
