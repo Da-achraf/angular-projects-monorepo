@@ -10,7 +10,7 @@
       class="flex items-center font-medium justify-start gap-x-4 p-2 rounded cursor-pointer transition-all duration-200 hover:text-[var(--sidebar-hover-color)]"
     >
       <i [ngClass]="item.icon" class="w-4 fa-solid text-md"></i>
-      <span>{{ item.label | titlecase }}</span>
+      <span>{{ item.label | translate }}</span>
     </button>
     } @else {
     <div class="relative">
@@ -24,7 +24,7 @@
       >
         <div class="flex items-center justify-start gap-x-4">
           <i [ngClass]="item.icon" class="w-4 fa-solid text-md"></i>
-          <span>{{ item.label | titlecase }}</span>
+          <span>{{ item.label | translate }}</span>
         </div>
         <i
           class="fa-solid text-xs transition-transform duration-200"
@@ -45,7 +45,7 @@
           class="flex items-center w-full justify-start gap-x-4 p-2 rounded cursor-pointer transition-all duration-200 border border-transparent hover:border-neutral-100"
         >
           <i [ngClass]="child.icon" class="w-4 fa-solid text-md"></i>
-          <span>{{ child.label | titlecase }}</span>
+          <span>{{ child.label | translate }}</span>
         </button>
         }
       </div>

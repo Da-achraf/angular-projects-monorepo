@@ -11,18 +11,23 @@
   <p-table
     #dt1
     [value]="data()"
-    [globalFilterFields]="globalFilterFields()"
+    [globalFilterFields]="[]"
+    [lazy]="true"
     (onFilter)="onFilter($event)">
     <ng-template #caption>
       <div class="flex items-center justify-between">
-        <div class="flex items-center gap-x-3">
-          <ng-content select="ba-radio-filter"></ng-content>
-          <ba-search-bar (search)="dt1.filterGlobal($event, 'contains')" />
-          <p-button [outlined]="true" (click)="clear(dt1)" label="Clear">
-            <ng-template pTemplate="icon">
-              <i class="fa-solid fa-filter-circle-xmark bg-pr"></i>
-            </ng-template>
-          </p-button>
+        <div class="flex items-center gap-x-5">
+          <ba-search-bar (search)="onSearch($event)" />
+          @if (showClearButton()) {
+            <p-button [outlined]="true" (click)="clear(dt1)" label="Clear">
+              <ng-template pTemplate="icon">
+                <i class="fa-solid fa-filter-circle-xmark bg-pr"></i>
+              </ng-template>
+            </p-button>
+          }
+          <div class="flex items-center gap-x-3">
+            <ng-content select=".additional-filters"></ng-content>
+          </div>
         </div>
         <div class="flex items-center gap-x-2">
           @if (withExport()) {
@@ -34,7 +39,7 @@
           }
           @if (withCreate()) {
             <ba-button
-              label="Create"
+              [label]="'create' | translate"
               icon="fa-plus"
               buttonClass="text-gray-50 bg-primary-200 border border-primary-200 hover:bg-primary hover:text-neutral-50"
               (onClick)="create.emit()" />
@@ -54,7 +59,7 @@
             } @else {
               <div class="flex items-center">
                 <span>
-                  {{ col.header }}
+                  {{ col.header | translate }}
                 </span>
                 @if (col.sortable) {
                   <p-sortIcon [field]="col.sortField"></p-sortIcon>
@@ -63,13 +68,16 @@
                   <p-columnFilter
                     [type]="filter.type"
                     [field]="filter.field"
+                    [hideOnClear]="true"
                     display="menu"></p-columnFilter>
                 }
               </div>
             }
           </th>
         }
-        <th [style.minWidth]="'auto'">Actions</th>
+        @if (showActionsColumn()) {
+          <th [style.minWidth]="'auto'">Actions</th>
+        }
       </tr>
     </ng-template>
 
@@ -89,51 +97,58 @@
               @case ('text') {
                 {{ row[col.field] | titlecase }}
               }
+              @case ('numeric') {
+                {{ row[col.field] }}
+              }
             }
           </td>
         }
-        <td class="flex items-center text-gray-400">
-          @if (withEdit()) {
-            <button
-              matTooltip="Edit"
-              matTooltipPosition="above"
-              matTooltipShowDelay="500"
-              class="rounded-md p-2 transition-all duration-150 hover:bg-blue-50 hover:text-primary-200"
-              (click)="edit.emit(row['id'])">
-              <i class="fa-solid fa-edit"></i>
-            </button>
-          }
-          @if (withDelete()) {
-            <button
-              matTooltip="Delete"
-              matTooltipPosition="above"
-              matTooltipShowDelay="500"
-              class="rounded-md p-2 transition-all duration-150 hover:bg-red-50 hover:text-red-400"
-              (click)="delete.emit(row['id'])">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          }
-          @if (withViewDetail()) {
-            <button
-              matTooltip="View Details"
-              matTooltipPosition="above"
-              matTooltipShowDelay="500"
-              class="rounded-md p-2 transition-all duration-150 hover:bg-teal-50 hover:text-primary-200"
-              (click)="view.emit(row['id'])">
-              <i class="fa-solid fa-eye"></i>
-            </button>
-          }
-          @if (withReview()) {
-            <button
-              matTooltip="Review Details"
-              matTooltipPosition="above"
-              matTooltipShowDelay="500"
-              class="rounded-md p-2 transition-all duration-150 hover:bg-cyan-50 hover:text-cyan-600"
-              (click)="review.emit(row['id'])">
-              <i class="fa-solid fa-clipboard"></i>
-            </button>
-          }
-        </td>
+
+        <!-- Actions Column -->
+        @if (showActionsColumn()) {
+          <td class="flex items-center text-gray-400">
+            @if (withEdit()) {
+              <button
+                [matTooltip]="'edit' | translate"
+                matTooltipPosition="above"
+                matTooltipShowDelay="500"
+                class="rounded-md p-2 transition-all duration-150 hover:bg-blue-50 hover:text-primary-200"
+                (click)="edit.emit(row['id'])">
+                <i class="fa-solid fa-edit"></i>
+              </button>
+            }
+            @if (withDelete()) {
+              <button
+                [matTooltip]="'delete' | translate"
+                matTooltipPosition="above"
+                matTooltipShowDelay="500"
+                class="rounded-md p-2 transition-all duration-150 hover:bg-red-50 hover:text-red-400"
+                (click)="delete.emit(row['id'])">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            }
+            @if (withViewDetail()) {
+              <button
+                [matTooltip]="'view-details' | translate"
+                matTooltipPosition="above"
+                matTooltipShowDelay="500"
+                class="rounded-md p-2 transition-all duration-150 hover:bg-teal-50 hover:text-primary-200"
+                (click)="view.emit(row['id'])">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            }
+            @if (withReview()) {
+              <button
+                [matTooltip]="'review-page' | translate"
+                matTooltipPosition="above"
+                matTooltipShowDelay="500"
+                class="rounded-md p-2 transition-all duration-150 hover:bg-cyan-50 hover:text-cyan-600"
+                (click)="review.emit(row['id'])">
+                <i class="fa-solid fa-clipboard"></i>
+              </button>
+            }
+          </td>
+        }
       </tr>
     </ng-template>
 
@@ -143,9 +158,9 @@
           <td [attr.colspan]="columnsLength() + 1">
             <div class="flex flex-col items-center justify-center gap-y-2">
               <i class="fa-solid fa-ban text-lg text-red-400"></i>
-              <span class="text-sm font-semibold text-gray-500"
-                >No data found!</span
-              >
+              <span class="text-sm font-semibold text-gray-500">{{
+                'no-data' | translate
+              }}</span>
             </div>
           </td>
         </tr>

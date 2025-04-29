@@ -1,0 +1,116 @@
+<!-- <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"> -->
+<div class="flex flex-col gap-6">
+  <!-- Quick Filters -->
+  <div class="space-y-3">
+    <h3
+      class="text-nowrap text-sm font-semibold uppercase tracking-wide text-gray-700">
+      quick date filters
+    </h3>
+    <div class="flex flex-wrap gap-3">
+      <!-- All Time Button -->
+      <button
+        (click)="setAllTime()"
+        class="flex items-center gap-2 rounded-lg px-4 py-2 transition-all"
+        [class.bg-sky-500]="activeFilter === 'all'"
+        [class.text-white]="activeFilter === 'all'"
+        [class.bg-gray-100]="activeFilter !== 'all'"
+        [class.text-gray-600]="activeFilter !== 'all'"
+        [class.hover:bg-gray-200]="activeFilter !== 'all'">
+        <i class="fas fa-clock"></i>
+        All Time
+      </button>
+
+      <!-- Last 30 days Button -->
+      <button
+        (click)="setLast30Days()"
+        class="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all"
+        [class.bg-sky-500]="activeFilter === 'last-30-days'"
+        [class.text-white]="activeFilter === 'last-30-days'"
+        [class.bg-gray-100]="activeFilter !== 'last-30-days'"
+        [class.text-gray-600]="activeFilter !== 'last-30-days'"
+        [class.hover:bg-gray-200]="activeFilter !== 'last-30-days'">
+        <i class="fas fa-calendar-alt"></i>
+        Last 30 Days
+      </button>
+
+      <!-- Last Month Button -->
+      <button
+        (click)="setLastMonth()"
+        class="flex items-center gap-2 rounded-lg px-4 py-2 transition-all"
+        [class.bg-sky-500]="activeFilter === 'last-month'"
+        [class.text-white]="activeFilter === 'last-month'"
+        [class.bg-gray-100]="activeFilter !== 'last-month'"
+        [class.text-gray-600]="activeFilter !== 'last-month'"
+        [class.hover:bg-gray-200]="activeFilter !== 'last-month'">
+        <i class="fas fa-calendar-alt"></i>
+        Last Month
+      </button>
+
+      <!-- Last 60 days Button -->
+      <button
+        (click)="setLast60Days()"
+        class="flex items-center gap-2 rounded-lg px-4 py-2 transition-all"
+        [class.bg-sky-500]="activeFilter === 'last-60-days'"
+        [class.text-white]="activeFilter === 'last-60-days'"
+        [class.bg-gray-100]="activeFilter !== 'last-60-days'"
+        [class.text-gray-600]="activeFilter !== 'last-60-days'"
+        [class.hover:bg-gray-200]="activeFilter !== 'last-60-days'">
+        <i class="fas fa-calendar-alt"></i>
+        Last 60 Days
+      </button>
+    </div>
+  </div>
+
+  <!-- Date Range Section -->
+  <div class="space-y-3">
+    <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-700">
+      custom date range
+    </h3>
+    <div class="flex flex-col items-end gap-4 md:flex-row">
+      <div class="flex w-full flex-col gap-4 md:flex-row">
+        <div class="flex flex-1 flex-col gap-4 md:flex-row">
+          <div class="flex-1">
+            <label class="mb-2 block text-sm font-medium text-gray-700"
+              >Start Date</label
+            >
+            <p-datepicker
+              styleClass="w-full"
+              [(ngModel)]="startDate"
+              [iconDisplay]="'input'"
+              appendTo="body"
+              [showIcon]="true"
+              inputId="icondisplay"
+              hourFormat="24"
+              [showTime]="true"
+              [showButtonBar]="true" />
+          </div>
+
+          <div class="flex-1">
+            <label class="mb-2 block text-sm font-medium text-gray-700"
+              >End Date</label
+            >
+            <p-datepicker
+              styleClass="w-full"
+              [(ngModel)]="endDate"
+              [iconDisplay]="'input'"
+              appendTo="body"
+              [showIcon]="true"
+              inputId="icondisplay"
+              hourFormat="24"
+              [showTime]="true"
+              [showButtonBar]="true" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    @if (dateError) {
+      <div
+        class="mt-2 flex items-center gap-2 rounded-md border border-red-100 bg-red-50 px-4 py-2 text-sm text-red-600">
+        <i class="fas fa-exclamation-triangle h-5 w-5 flex-shrink-0"></i>
+        End date must be after start date
+      </div>
+    }
+  </div>
+</div>

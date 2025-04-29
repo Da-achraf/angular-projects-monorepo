@@ -1,5 +1,5 @@
 @if (idea(); as idea) {
-  <div id="style-4" class="">
+  <div [dir]="translationService.dir()" id="style-4" class="">
     <div class="mx-auto flex max-w-[80rem] flex-col gap-y-5 p-4">
       <div
         class="sticky top-[var(--header-height)] z-10 flex flex-col gap-y-2 py-2 sm:flex-row sm:items-center sm:justify-end">
@@ -7,14 +7,14 @@
           <div class="flex items-center gap-x-3">
             @if (store.withIdeaEdit()) {
               <ba-button
-                label="Edit Idea"
+                [label]="'edit-idea' | translate"
                 icon="fa-pen"
                 buttonClass="text-sm bg-white ring-primary-200 text-primary border border-primary-100 hover:border-primary-200 hover:bg-gray-50"
                 (onClick)="edit(id)"></ba-button>
             }
             @if (store.withIdeaDelete()) {
               <ba-button
-                label="Delete Idea"
+                [label]="'delete-idea' | translate"
                 icon="fa-trash"
                 buttonClass="text-sm bg-red-50 ring-red-400 text-red-500 border border-red-100 hover:border-red-300 hover:bg-red-100"
                 (onClick)="delete(id)"></ba-button>
@@ -24,7 +24,7 @@
       </div>
 
       <ba-idea-caption [idea]="idea" class="mb-5">
-        You're viewing the details of idea
+        {{ 'showing-idea-details' | translate }}
       </ba-idea-caption>
 
       @defer {
@@ -34,7 +34,7 @@
               <div class="flex items-center gap-x-2">
                 <span
                   class="text-sm font-semibold uppercase tracking-wide text-primary"
-                  >Idea title</span
+                  >{{ 'idea-title' | translate }}</span
                 >
                 <span class="h-[.4px] flex-1 bg-gray-300"></span>
               </div>
@@ -45,7 +45,7 @@
               <div class="flex items-center gap-x-2">
                 <span
                   class="text-sm font-semibold uppercase tracking-wide text-primary"
-                  >Current situation</span
+                  >{{ 'current-situation' | translate }}</span
                 >
                 <span class="h-[.4px] flex-1 bg-gray-300"></span>
               </div>
@@ -55,7 +55,7 @@
               <div class="flex items-center gap-x-2">
                 <span
                   class="text-sm font-semibold uppercase tracking-wide text-primary"
-                  >Idea description</span
+                  >{{ 'idea-description' | translate }}</span
                 >
                 <span class="h-[.4px] flex-1 bg-gray-300"></span>
               </div>
@@ -68,17 +68,17 @@
               <div class="flex items-center gap-x-2">
                 <span
                   class="text-sm font-semibold uppercase tracking-wide text-primary"
-                  >Department</span
+                  >{{ 'department' | translate }}</span
                 >
                 <span class="h-[.4px] flex-1 bg-gray-300"></span>
               </div>
               <ba-content-display [content]="idea.department" />
             </div>
-            <div class="flex flex-col gap-y-2 mt-10">
+            <div class="mt-10 flex flex-col gap-y-2">
               <div class="flex items-center gap-x-2">
                 <span
                   class="text-sm font-semibold uppercase tracking-wide text-primary"
-                  >Category</span
+                  >{{ 'category' | translate }}</span
                 >
                 <span class="h-[.4px] flex-1 bg-gray-300"></span>
               </div>

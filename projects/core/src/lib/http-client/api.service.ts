@@ -1,4 +1,3 @@
-
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -6,14 +5,12 @@ import { API_URL } from './api-url.token';
 
 type ApiResponse<T> = {
   /**
-   * This is the standard response structure 
-   * 
-  */
+   * This is the standard response structure
+   *
+   */
   message?: string;
   data?: T | T[] | null; // Data can be T, T[], or null
-}
-
-
+};
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -24,8 +21,8 @@ export class ApiService {
   get<T>(
     url: string,
     options: {
-      queryParams?: { [key: string]: any },
-      pathParams?: { [key: string]: any }
+      queryParams?: { [key: string]: any };
+      pathParams?: { [key: string]: any };
     } = {}
   ): Observable<ApiResponse<T>> {
     const { queryParams = {}, pathParams = {} } = options;
@@ -34,7 +31,12 @@ export class ApiService {
 
     let params = new HttpParams();
     for (const key in queryParams) {
-      if (queryParams.hasOwnProperty(key)) {
+      if (
+        queryParams.hasOwnProperty(key) &&
+        queryParams[key] !== null &&
+        queryParams[key] !== undefined &&
+        queryParams[key] !== ''
+      ) {
         params = params.set(key, queryParams[key]);
       }
     }
@@ -47,23 +49,35 @@ export class ApiService {
   }
 
   // POST method
-  post<T, D>(url: string, data?: D, options?: { [key: string]: any }): Observable<ApiResponse<T>> {
-    let _options = options
+  post<T, D>(
+    url: string,
+    data?: D,
+    options?: { [key: string]: any }
+  ): Observable<ApiResponse<T>> {
+    let _options = options;
     if (!_options) {
       _options = {
         headers: this.headers,
         withCredentials: true,
-      }
+      };
     }
-    return this.http.post<ApiResponse<T>>(`${this.api_url}${url}`, JSON.stringify(data), _options);
+    return this.http.post<ApiResponse<T>>(
+      `${this.api_url}${url}`,
+      JSON.stringify(data),
+      _options
+    );
   }
 
   // PUT method
   put<T>(url: string, data: any): Observable<ApiResponse<T>> {
-    return this.http.put<ApiResponse<T>>(`${this.api_url}${url}`, JSON.stringify(data), {
-      headers: this.headers,
-      withCredentials: true,
-    });
+    return this.http.put<ApiResponse<T>>(
+      `${this.api_url}${url}`,
+      JSON.stringify(data),
+      {
+        headers: this.headers,
+        withCredentials: true,
+      }
+    );
   }
 
   // DELETE method
@@ -94,11 +108,17 @@ export class ApiService {
   }
 
   // Helper method to replace path parameters in the URL
-  private replacePathParams(url: string, pathParams: { [key: string]: any }): string {
+  private replacePathParams(
+    url: string,
+    pathParams: { [key: string]: any }
+  ): string {
     let finalUrl = url;
     for (const key in pathParams) {
       if (pathParams.hasOwnProperty(key)) {
-        finalUrl = finalUrl.replace(`:${key}`, encodeURIComponent(pathParams[key]));
+        finalUrl = finalUrl.replace(
+          `:${key}`,
+          encodeURIComponent(pathParams[key])
+        );
       }
     }
     return finalUrl;

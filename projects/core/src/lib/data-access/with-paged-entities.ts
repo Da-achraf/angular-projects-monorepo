@@ -31,6 +31,7 @@ export interface WithPagedEntityState<T> {
   item?: T;
   trigger: number;
   queryParams: { [key: string]: any };
+  initialQueryParams: { [key: string]: any };
 }
 
 // Token to provide the initial page size for pagination
@@ -65,6 +66,7 @@ export function withPagedEntities<
       pageSize: 0,
       trigger: 0,
       queryParams: {},
+      initialQueryParams: {},
     }),
 
     withProps(() => ({
@@ -139,18 +141,17 @@ export function withPagedEntities<
         save: rxMethod<C>(
           pipe(
             tap(() => startLoading('save')), // Start loading for 'save'
-            switchMap(
-              async body =>
-                await loader.save(body).pipe(
-                  tapResponse({
-                    next: response => {
-                      _showSuccess('Created successfully.');
-                      patchState(state, setEntity(response.data as Entity));
-                    },
-                    error: () => _showError(),
-                    finalize: () => stopLoading('save'),
-                  })
-                )
+            switchMap(body =>
+              loader.save(body).pipe(
+                tapResponse({
+                  next: response => {
+                    _showSuccess('Created successfully.');
+                    patchState(state, setEntity(response.data as Entity));
+                  },
+                  error: () => _showError(),
+                  finalize: () => stopLoading('save'),
+                })
+              )
             )
           )
         ),
@@ -221,12 +222,23 @@ export function withPagedEntities<
         },
 
         initializeQueryParams: (queryParams: { [key: string]: any }) => {
-          patchState(state, { queryParams, trigger: state.trigger() + 1 });
+          patchState(state, {
+            queryParams,
+            initialQueryParams: queryParams,
+            trigger: state.trigger() + 1,
+          });
         },
 
         setQueryParams: (params: { [key: string]: any }) => {
           patchState(state, {
             queryParams: { ...state.queryParams(), ...params },
+            trigger: state.trigger() + 1,
+          });
+        },
+
+        resetQueryParams: () => {
+          patchState(state, {
+            queryParams: { ...state.initialQueryParams() }, // Restore initial params
             trigger: state.trigger() + 1,
           });
         },

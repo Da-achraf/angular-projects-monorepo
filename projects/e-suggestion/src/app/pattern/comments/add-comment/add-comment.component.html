@@ -1,7 +1,7 @@
 <form [formGroup]="form" class="flex flex-col gap-y-3" (ngSubmit)="onSumit()">
   <ba-editor
     formControlName="comment"
-    placeholder="Write your comment here..."
+    [placeholder]="'write-comment-here' | translate"
     minHeight="120px"
     maxHeight="300px"
   />  
@@ -9,7 +9,7 @@
   <div class="flex justify-end">
     <ba-button
       [disabled]="!form.valid"
-      label="Submit"
+      [label]="'submit' | translate"
       type="submit"
       icon="fa-comment"
       buttonClass="w-fit text-xs ring-primary text-primary border border-primary-100 hover:border-primary-200 hover:bg-primary-200 hover:text-gray-100"

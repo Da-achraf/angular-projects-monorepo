@@ -9,7 +9,7 @@ export interface TableColumn {
   sortable?: boolean;
   sortField?: string;
   filter?: ColumnFilter;
-  type?: 'date' | 'text' | 'custom' | 'boolean';
+  type?: 'date' | 'text' | 'custom' | 'boolean'| 'numeric';
   
   /**
    * 

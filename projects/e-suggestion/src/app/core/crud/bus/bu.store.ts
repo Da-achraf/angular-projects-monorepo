@@ -8,7 +8,6 @@ const initialState: BuState = {};
 
 export const BUStore = signalStore(
   { providedIn: 'root' },
-  withState<BuState>(initialState),
   withPagedEntities<BU, BUCreate, BUUpdate>(BUService),
   withSimpleEntities<BU>(BUService)
 );

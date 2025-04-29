@@ -8,7 +8,7 @@ import {
   signalStore,
   withComputed,
   withMethods,
-  withProps
+  withProps,
 } from '@ngrx/signals';
 import { setEntity } from '@ngrx/signals/entities';
 import { withAuth } from '../../../core/auth/data-access/auth.store';
@@ -43,6 +43,7 @@ export const IdeaStore = signalStore(
     isDeletingAttachment: computed(
       () => loadingStates()['delete-attachment'] || false
     ),
+    isUpdating: computed(() => loadingStates()['update'] || false),
   })),
 
   /**
@@ -54,12 +55,7 @@ export const IdeaStore = signalStore(
     withIdeaViewDetail: computed(() => true),
     withIdeaEdit: computed(() => isSubmitter()),
     withIdeaDelete: computed(() => isSubmitter()),
-    withIdeaExport: computed(
-      () => false
-      // [RoleEnum.TEOA, RoleEnum.SYSTEM_ADMIN, RoleEnum.COMMITTEE].some((role) =>
-      //   userRolesNames().includes(role)
-      // )
-    ),
+    withIdeaExport: computed(() => false),
     withIdeaReview: computed(() => true),
   })),
 
@@ -143,6 +139,7 @@ export const IdeaStore = signalStore(
         try {
           const updatedIdeaResponse = await ideaService.updateIdea({
             ...ideaBody,
+            updated_at: new Date().toISOString(),
           });
           let updatedIdea = updatedIdeaResponse.data as Idea;
 

@@ -1,9 +1,9 @@
-import { Component, inject, model, OnInit, output } from '@angular/core';
+import { Component, model, OnInit, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInput, MatInputModule } from '@angular/material/input';
-import { QueryParamType } from 'projects/e-suggestion/src/app/core/api/api.model';
+import { DatePickerModule } from 'primeng/datepicker';
 import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/button/button.component';
 
 @Component({
@@ -17,13 +17,13 @@ import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/b
     MatDatepickerModule,
     FormsModule,
     BaButtonComponent,
+    DatePickerModule,
   ],
 })
 export class DateFilterComponent implements OnInit {
-
   filterChanged = output<{
-    start: Date | null;
-    end: Date | null;
+    start: string | null;
+    end: string | null;
   }>();
 
   start = model<Date | null>();
@@ -47,6 +47,8 @@ export class DateFilterComponent implements OnInit {
     this.endDate = today;
     this.activeFilter = 'last-30-days';
     this.dateError = false;
+
+    this.emitFilter();
   }
 
   setLastMonth() {
@@ -54,7 +56,7 @@ export class DateFilterComponent implements OnInit {
     const firstDayLastMonth = new Date(
       today.getFullYear(),
       today.getMonth() - 1,
-      1,
+      1
     );
     const lastDayLastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
 
@@ -62,6 +64,8 @@ export class DateFilterComponent implements OnInit {
     this.endDate = lastDayLastMonth;
     this.activeFilter = 'last-month';
     this.dateError = false;
+
+    this.emitFilter();
   }
 
   setLast60Days() {
@@ -73,6 +77,8 @@ export class DateFilterComponent implements OnInit {
     this.endDate = today;
     this.activeFilter = 'last-60-days';
     this.dateError = false;
+
+    this.emitFilter();
   }
 
   setAllTime() {
@@ -80,9 +86,11 @@ export class DateFilterComponent implements OnInit {
     this.endDate = null;
     this.activeFilter = 'all';
     this.dateError = false;
+
+    this.emitFilter();
   }
 
-  exportReport() {
+  private emitFilter() {
     if (this.startDate && this.endDate && this.startDate > this.endDate) {
       this.dateError = true;
       return;
@@ -90,9 +98,9 @@ export class DateFilterComponent implements OnInit {
 
     this.dateError = false;
 
-    const queryParams: QueryParamType = {
-      fromDate: this.startDate ? this.startDate.toISOString() : null,
-      toDate: this.endDate ? this.endDate.toISOString() : null,
-    };
+    this.filterChanged.emit({
+      start: this.startDate ? this.startDate.toISOString() : null,
+      end: this.endDate ? this.endDate.toISOString() : null,
+    });
   }
 }

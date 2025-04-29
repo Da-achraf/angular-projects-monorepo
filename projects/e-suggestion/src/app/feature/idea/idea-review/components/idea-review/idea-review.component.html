@@ -5,7 +5,10 @@
 -->
 
 @if (idea(); as idea) {
-  <div id="style-4" class="min-h-full bg-gray-50/80">
+  <div
+    [dir]="translationService.dir()"
+    id="style-4"
+    class="min-h-full bg-gray-50/80">
     <div class="mx-auto flex max-w-[95rem] flex-col gap-y-5 px-10 py-4">
       <div
         id="_buttons"
@@ -14,7 +17,7 @@
           <div class="flex items-center gap-x-3">
             @if (store.canApprove()) {
               <ba-button
-                label="Approve"
+                [label]="'approve' | translate"
                 icon="fa-circle-check"
                 [isLoading]="store.isApprovingIdea()"
                 buttonClass="text-sm bg-primary-200 !text-gray-50 !ring-primary-200 hover:bg-primary-200"
@@ -23,7 +26,7 @@
             @if (store.canReject()) {
               <ba-button
                 label=""
-                title="Reject the idea"
+                [title]="'reject-idea-title' | translate"
                 icon="fa-xmark"
                 [isLoading]="store.isRejectingIdea()"
                 buttonClass="text-sm !bg-transparent ring-red-300 text-red-500 border border-red-100 hover:border-red-300 hover:bg-red-100"
@@ -32,7 +35,7 @@
             @if (store.canRate()) {
               <ba-button
                 label=""
-                title="Rate the idea"
+                [title]="'rate-idea-title' | translate"
                 icon="fa-table-cells"
                 [isLoading]="store.isRatingIdea()"
                 buttonClass="relative text-sm !bg-transparent !ring-cyan-400 text-cyan-500 border border-cyan-100 hover:border-cyan-300 hover:bg-cyan-100"
@@ -50,7 +53,9 @@
         }
       </div>
 
-      <ba-idea-caption [idea]="idea">Review page of idea</ba-idea-caption>
+      <ba-idea-caption [idea]="idea">{{
+        'idea-review-page' | translate
+      }}</ba-idea-caption>
 
       @defer {
         <div

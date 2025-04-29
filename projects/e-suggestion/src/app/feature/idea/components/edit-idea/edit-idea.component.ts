@@ -16,6 +16,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { Router } from '@angular/router';
 import { EditorModule } from 'primeng/editor';
 import { SelectModule } from 'primeng/select';
+import { TranslatePipe } from 'projects/e-suggestion/src/app/core/translation/translate.pipe';
 import { AttachmentUploadComponent } from 'projects/e-suggestion/src/app/pattern/attachment-upload/components/attachment-upload.component';
 import { DeleteDialogComponent } from 'projects/e-suggestion/src/app/pattern/dialogs/delete-dialog.component';
 import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/button/button.component';
@@ -27,6 +28,7 @@ import { Idea, IdeaUpdate } from '../../../../core/idea/models/idea.model';
 import { IdeaCaptionComponent } from '../../idea-review/components/idea-caption.component';
 import { IdeaService } from '../../services/idea.service';
 import { IdeaStore } from '../../services/idea.store';
+import { TranslationService } from 'projects/e-suggestion/src/app/core/translation/translation.service';
 
 @Component({
   selector: 'ba-edit-idea',
@@ -44,6 +46,7 @@ import { IdeaStore } from '../../services/idea.store';
     EditorComponent,
     TitleCasePipe,
     IdeaCaptionComponent,
+    TranslatePipe,
   ],
 })
 export class EditIdeaComponent {
@@ -54,6 +57,7 @@ export class EditIdeaComponent {
   private readonly dialog = inject(MatDialog);
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
+  protected readonly translationService = inject(TranslationService);
 
   protected readonly idea = signal<Idea | null>(null);
   protected attachments = computed(() => this.idea()?.attachments);
@@ -137,6 +141,7 @@ export class EditIdeaComponent {
     const ideaUpdate: Partial<IdeaUpdate> = {
       ...this.form.getRawValue(),
       id: this.idea()?.id,
+      action: 'modified',
     };
     await this.store.updateIdea(ideaUpdate, this.files);
   }

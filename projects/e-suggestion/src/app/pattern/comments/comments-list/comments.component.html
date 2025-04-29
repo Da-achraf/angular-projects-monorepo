@@ -3,11 +3,11 @@
   class="flex items-center justify-between overflow-x-auto overflow-y-hidden border-b border-primary-50 bg-white p-4">
   <span
     class="mr-6 text-lg font-semibold uppercase tracking-wide text-primary"
-    >{{ label() }}</span
+    >{{ label() | translate }}</span
   >
   <div class="flex items-center gap-x-3">
     <button
-      [title]="sortingTitle()"
+      [title]="sortingTitle() | translate"
       [ngClass]="sortingClass()"
       class="fa-solid text-gray-500 hover:text-gray-600"
       (click)="toggleSortingOrder()"></button>
@@ -18,13 +18,13 @@
       @if (showCreateCommentEditor()) {
         <ba-button
           icon="fa-comment-slash"
-          title="Close"
+          [title]="'close' | translate"
           buttonClass="text-xs ring-red-400 text-red-500 border border-red-100 hover:border-red-300 hover:bg-red-100"
           (onClick)="createCommentTrigger.set(false)" />
       } @else {
         <ba-button
           [icon]="'fa-regular fa-comment'"
-          title="Add a comment"
+          [title]="'add-comment' | translate"
           buttonClass="text-sm ring-teal-400 text-teal-500 border border-teal-100 hover:border-teal-300 hover:bg-teal-100"
           (onClick)="createCommentTrigger.set(true)" />
       }
@@ -55,8 +55,8 @@
       <div class="flex flex-col items-center justify-center gap-y-2">
         <i class="fa-solid fa-comment-slash text-red-400"></i>
         <span class="text-sm font-semibold text-gray-500"
-          >No comments found!</span
-        >
+          >{{ 'no-comments' | translate }}
+        </span>
       </div>
     }
   </div>

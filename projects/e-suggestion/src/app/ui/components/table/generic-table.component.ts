@@ -22,6 +22,9 @@ import { PaginatorComponent } from '../paginator/paginator.component';
 import { SearchBarComponent } from '../search/search-bar.component';
 import { TableColumn } from './table-types.interface';
 import { LoadingComponent } from '../loading/loading.component';
+import { convertPrimeNgMatchModeToBackendOperator } from './generic-table.util';
+import { QueryParamType } from '../../../core/api/api.model';
+import { TranslatePipe } from '../../../core/translation/translate.pipe';
 
 @Component({
   selector: 'ba-generic-table',
@@ -42,6 +45,7 @@ import { LoadingComponent } from '../loading/loading.component';
     MatMenuModule,
     MatButtonModule,
     MatTooltipModule,
+    TranslatePipe,
   ],
 })
 export class GenericTableComponent implements OnInit {
@@ -60,6 +64,8 @@ export class GenericTableComponent implements OnInit {
   readonly withViewDetail = input(false);
   readonly withReview = input(false);
   readonly withExport = input(false);
+  readonly showActionsColumn = input(true);
+  readonly showClearButton = input(true);
 
   page = output<number>();
   pageSize = output<number>();
@@ -69,6 +75,8 @@ export class GenericTableComponent implements OnInit {
   view = output<number>();
   delete = output<number>();
   review = output<number>();
+  search = output<string>();
+  filter = output<QueryParamType | null>();
 
   columnsLength = computed(() => this.columns().length);
 
@@ -88,16 +96,73 @@ export class GenericTableComponent implements OnInit {
 
   getFilterTemplate(column: any): TemplateRef<any> | null {
     const template = this.templates().find(
-      (t: any) => t['_declarationTContainer'].localNames[0] === column.filterTemplate
+      (t: any) =>
+        t['_declarationTContainer'].localNames[0] === column.filterTemplate
     );
     return template || null;
   }
 
   clear(table: Table) {
     table.clear();
+    this.filter.emit(null);
   }
 
   onFilter(event: any) {
-    // console.log('Filter: ', event);
+    const filters = event.filters;
+    console.log('filters before parsing: ', filters);
+    const queryParams: { [key: string]: string } = {};
+
+    for (const field in filters) {
+      if (filters.hasOwnProperty(field)) {
+        const filter = filters[field];
+
+        // Handle array filters (most fields)
+        if (Array.isArray(filter)) {
+          filter.forEach((singleFilter: any) => {
+            if (
+              singleFilter.value !== null &&
+              singleFilter.value !== undefined &&
+              singleFilter.value !== ''
+            ) {
+              const paramKey = `${field.split('.').join('__')}__${convertPrimeNgMatchModeToBackendOperator(singleFilter.matchMode)}`;
+              queryParams[paramKey] = this.formatFilterValue(
+                singleFilter.value
+              );
+            }
+          });
+        }
+
+        // Handle direct object filters (like validation)
+        else if (
+          filter.value !== null &&
+          filter.value !== undefined &&
+          filter.value !== ''
+        ) {
+          const paramKey = `${field.split('.').join('__')}__${convertPrimeNgMatchModeToBackendOperator(filter.matchMode)}`;
+          queryParams[paramKey] = this.formatFilterValue(filter.value);
+        }
+      }
+    }
+
+    // If no query params build
+    if (!Object.keys(queryParams).length) {
+      this.filter.emit(null);
+      return;
+    }
+
+    this.filter.emit(queryParams);
+  }
+
+  private formatFilterValue(value: any): string {
+    // Format dates to ISO string (without time if it's a date-only filter)
+    if (value instanceof Date) {
+      return value.toISOString();
+    }
+
+    return String(value);
+  }
+
+  onSearch(term: string) {
+    this.search.emit(term);
   }
 }

@@ -19,7 +19,7 @@ export const withToasterFeature = () => {
       },
 
       _showError: (msg?: string) => {
-        toasterService.showSuccess(
+        toasterService.showError(
           msg ?? 'Error occured! Please try again later.'
         );
       },

@@ -114,6 +114,7 @@ export const TeoaReviewStore = signalStore(
           const updateBody: Partial<IdeaUpdate> = {
             id: ideaId,
             status: IdeaStatus.CLOSED,
+            closed_at: new Date().toISOString(),
           };
 
           // Update the idea

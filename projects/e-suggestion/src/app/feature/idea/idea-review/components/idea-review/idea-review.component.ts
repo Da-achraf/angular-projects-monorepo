@@ -5,6 +5,8 @@ import { MatDividerModule } from '@angular/material/divider';
 import { DrawerModule } from 'primeng/drawer';
 import { EditorModule } from 'primeng/editor';
 import { SelectModule } from 'primeng/select';
+import { TranslatePipe } from 'projects/e-suggestion/src/app/core/translation/translate.pipe';
+import { TranslationService } from 'projects/e-suggestion/src/app/core/translation/translation.service';
 import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/button/button.component';
 import { LoadingComponent } from 'projects/e-suggestion/src/app/ui/components/loading/loading.component';
 import { AssignmentComponent } from '../../assignment/assignment/assignment.component';
@@ -33,6 +35,7 @@ import { RatingMatrixComponent } from '../rating-matrix/rating-matrix.component'
     NgStyle,
     AssignmentComponent,
     TeoaReviewComponent,
+    TranslatePipe,
   ],
   providers: [IdeaReviewStore],
 })
@@ -46,10 +49,12 @@ export class IdeaReviewComponent {
 
   protected readonly store = inject(IdeaReviewStore);
 
+  protected readonly translationService = inject(TranslationService);
+
   protected readonly idea = this.store.idea;
 
   /**
-   * This effect sets the received `ideaId` (via input) to the `ideaId` signal inside the store.
+   * This effect sets the received `id` (via input) to the `ideaId` signal inside the store.
    * This automatically triggers loading the idea from the backend because of the reactive nature
    * of the `rxMethod` (`_loadIdea`) called in the store's init hook.
    *

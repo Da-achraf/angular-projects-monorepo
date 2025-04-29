@@ -1,0 +1,16 @@
+<div class="w-[90%] max-w-[80vw] p-20">
+  <ba-generic-table
+    [data]="store.entities()"
+    [total]="store.total()"
+    [columns]="columns()"
+    [globalFilterFields]="globalFilterFields()"
+    [loading]="store.isLoading()"
+    [withCreate]="true"
+    [withEdit]="true"
+    [withDelete]="true"
+    (page)="store.setPage($event)"
+    (pageSize)="store.setPageSize($event)"
+    (create)="onCreate()"
+    (edit)="onEdit($event)"
+    (delete)="onDelete($event)" />
+</div>

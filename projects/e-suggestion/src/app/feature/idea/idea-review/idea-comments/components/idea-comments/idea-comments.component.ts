@@ -15,18 +15,19 @@ import { IdeaCommentsStore } from '../../services/idea-comments.store';
 
 const Options: FilterOption[] = [
   {
-    label: 'All',
+    label: 'comments-filter-all',
     value: 'all',
+    title: 'comments-filter-all-title'
   },
   {
-    label: 'Yours',
+    label: 'comments-filter-yours',
     value: 'only_yours',
-    title: 'Show your comments only',
+    title: 'comments-filter-yours-title',
   },
   {
-    label: "Other's",
+    label: "comments-filter-others",
     value: 'only_others',
-    title: "Show other's comments only",
+    title: "comments-filter-others-title",
   },
 ];
 

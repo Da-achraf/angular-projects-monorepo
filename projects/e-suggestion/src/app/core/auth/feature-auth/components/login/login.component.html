@@ -2,27 +2,14 @@
   <div
     class="h-screen select-none flex-col bg-blue-500 p-4 text-center md:flex md:w-1/3">
     <div class="text-white">
-      <a
-        [routerLink]="['/home']"
-        class="flex cursor-pointer items-center whitespace-nowrap text-nowrap text-2xl font-black text-white">
-        <i
-          class="fa-solid fa-lightbulb mr-1 rotate-180 text-xl text-neutral-50"></i>
-        Goo<span class="font-black text-orange-500">dl</span>deas
-      </a>
+      <ba-logo class="mx-auto" type="light" [width]="200" />
 
       <div class="mt-7 flex flex-col gap-y-10">
         <p class="text-2xl font-semibold leading-7">
-          Your Ideas Can Make a
-          <span
-            class="inline-block border-b-4 border-b-orange-500 text-3xl font-bold"
-            >Difference</span
-          >
+          {{ 'can-make-difference' | translate }}
         </p>
         <p class="mb-4 2xl:text-xl">
-          By signing up, you join a community of passionate individuals
-          dedicated to making TE Connectivity more efficient, collaborative, and
-          innovative. Together, we can improve processes and foster a culture of
-          continuous learning and growth.
+          {{ 'by-sign-in' | translate }}
         </p>
       </div>
     </div>
@@ -129,12 +116,14 @@
       </svg>
     </div>
   </div>
-
+  <!-- 
   <div class="flex w-full flex-col md:w-2/3">
     <div
       class="mx-auto my-auto flex w-full max-w-[45rem] flex-col justify-center px-8 pt-2 md:justify-start">
-      <p class="text-center text-xl font-bold md:text-left md:leading-tight">
-        Sign in to your account
+      <p
+
+        class="text-right text-xl font-bold  md:leading-tight">
+        {{ 'Sign in to your account' | translate }}
       </p>
       <p class="mt-6 text-center font-medium md:text-left">
         Don't have an account?
@@ -146,50 +135,6 @@
       </p>
 
       <ba-list-errors />
-
-      <!-- <form
-        class="flex flex-col items-stretch gap-y-5 py-3"
-        [formGroup]="form"
-        (ngSubmit)="onSubmit()">
-        <div class="flex flex-col gap-y-1">
-          <ba-input [control]="form.controls.te_id">
-            <input
-              type="text"
-              id="te-id"
-              formControlName="te_id"
-              placeholder="TEXXXXXX"
-              value="TE"
-              pattern="TE\d{6}"
-              title="TE Id should be in the format TEXXXXXX where X is a number." />
-          </ba-input>
-
-          <div class="flex items-center gap-x-2">
-            <span class="h-[.4px] flex-1 bg-gray-300"></span>
-            <span
-              class="text-sm font-semibold uppercase tracking-wide text-primary"
-              >or</span
-            >
-            <span class="h-[.4px] flex-1 bg-gray-300"></span>
-          </div>
-
-          <ba-input [control]="form.controls.email">
-            <input type="email" formControlName="email" placeholder="Email" />
-          </ba-input>
-        </div>
-
-        <span class="my-3 block w-full h-[1px] bg-gray-300 shadow-xl"></span>
-
-        <ba-password [control]="form.controls.password" />
-
-        <ba-button
-          label="Login"
-          type="submit"
-          [disabled]="!form.valid"
-          [isLoading]="store.isLoginIn()"
-          icon="fa-user"
-          buttonClass="bg-secondary-100 text-gray-100 hover:bg-secondary"
-          (onClick)="onSubmit()" />
-      </form> -->
 
       <form
         class="flex flex-col items-stretch gap-y-5 py-3"
@@ -226,6 +171,72 @@
 
         <ba-button
           label="Login"
+          type="submit"
+          [disabled]="!form.valid"
+          [isLoading]="store.isLoginIn()"
+          icon="fa-user"
+          buttonClass="bg-secondary-100 text-gray-100 hover:bg-secondary"
+          (onClick)="onSubmit()" />
+      </form>
+    </div>
+  </div> -->
+
+  <div class="flex w-full flex-col md:w-2/3">
+    <div
+      class="mx-auto my-auto flex w-full max-w-[45rem] flex-col justify-center px-8 pt-2 md:justify-start">
+      <p class="text-left text-xl font-bold md:leading-tight">
+        {{ 'sign in to your account' | translate }}
+      </p>
+
+      <p class="mt-6 text-center font-medium md:text-left">
+        {{ 'donot-have-account' | translate }}
+        <a
+          [routerLink]="['/register']"
+          class="whitespace-nowrap border-b-2 border-b-transparent font-semibold text-primary-200 transition-all duration-300 hover:border-b-primary-200">
+          {{ 'register-here' | translate }}
+        </a>
+      </p>
+
+      <ba-list-errors />
+
+      <form
+        class="flex flex-col items-stretch gap-y-5 py-3"
+        [formGroup]="form"
+        (ngSubmit)="onSubmit()">
+        <div class="flex flex-col gap-y-1">
+          <ba-input [control]="form.controls.te_id">
+            <input
+              type="text"
+              id="te-id"
+              formControlName="te_id"
+              placeholder="TEXXXXXX"
+              pattern="TE\d{6}"
+              title="TE ID should be in the format TEXXXXXX where X is a number" />
+          </ba-input>
+
+          <div class="flex items-center gap-x-2">
+            <span class="h-[.4px] flex-1 bg-gray-300"></span>
+            <span
+              class="text-sm font-semibold uppercase tracking-wide text-primary">
+              {{ 'or' | translate }}
+            </span>
+            <span class="h-[.4px] flex-1 bg-gray-300"></span>
+          </div>
+
+          <ba-input [control]="form.controls.email">
+            <input
+              type="email"
+              formControlName="email"
+              [placeholder]="'email' | translate" />
+          </ba-input>
+        </div>
+
+        <span class="my-3 block h-[1px] w-full bg-gray-300 shadow-xl"></span>
+
+        <ba-password [control]="form.controls.password" />
+
+        <ba-button
+          [label]="'login' | translate"
           type="submit"
           [disabled]="!form.valid"
           [isLoading]="store.isLoginIn()"

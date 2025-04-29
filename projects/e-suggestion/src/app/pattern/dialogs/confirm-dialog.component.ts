@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BaseDialogComponent } from 'projects/e-suggestion/src/app/pattern/dialogs/base-dialog.component';
 import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/button/button.component';
+import { TranslatePipe } from '../../core/translation/translate.pipe';
 
 interface ConfirmDialogData {
   header: string;
@@ -25,18 +26,20 @@ interface ConfirmDialogData {
           <span class="text-[1em] font-medium">{{ body }} </span>
         }
 
-        <span class="text-[1em]">Are you sure you want to continue? </span>
+        <span class="text-[1em]">{{
+          'confirmation-question' | translate
+        }}</span>
 
         <div class="flex w-full items-center justify-center gap-x-3 py-3">
           <ba-button
             class="flex-1"
-            label="Cancel"
+            [label]="'cancel' | translate"
             icon="fa-xmark"
             buttonClass="text-gray-500 border border-gray-400 bg-neutral-50 hover:bg-neutral-100"
             (onClick)="cancel()" />
           <ba-button
             class="flex-1"
-            label="Confirm"
+            [label]="'confirm' | translate"
             icon="fa-check-double"
             buttonClass="bg-green-400 text-gray-50 hover:bg-green-500"
             (onClick)="confirm()" />
@@ -44,7 +47,7 @@ interface ConfirmDialogData {
       </div>
     </ba-base-dialog>
   `,
-  imports: [BaButtonComponent, BaseDialogComponent],
+  imports: [BaButtonComponent, BaseDialogComponent, TranslatePipe],
 })
 export class ConfirmDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<ConfirmDialogComponent>);

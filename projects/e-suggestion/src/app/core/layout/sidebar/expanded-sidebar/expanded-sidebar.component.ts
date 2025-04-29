@@ -1,6 +1,7 @@
-import { CommonModule, NgClass, TitleCasePipe } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { TranslatePipe } from '../../../translation/translate.pipe';
 import { SidebarService } from '../../data-access/sidebar.service';
 
 /**
@@ -12,7 +13,13 @@ import { SidebarService } from '../../data-access/sidebar.service';
   standalone: true,
   templateUrl: './expanded-sidebar.component.html',
   styleUrl: './expanded-sidebar.component.scss',
-  imports: [RouterLink, NgClass, TitleCasePipe, RouterLinkActive, CommonModule],
+  imports: [
+    RouterLink,
+    NgClass,
+    RouterLinkActive,
+    CommonModule,
+    TranslatePipe,
+  ],
 })
 export class ExpandedSidebarComponent {
   // Injected dependencies
@@ -28,8 +35,7 @@ export class ExpandedSidebarComponent {
     const sidebarItems = this.filteredItems();
 
     return sidebarItems.find(
-      (item) =>
-        item.isMenu && item.children?.map((ch) => ch.link).includes(path)
+      item => item.isMenu && item.children?.map(ch => ch.link).includes(path)
     )?.label;
   });
 
@@ -39,7 +45,7 @@ export class ExpandedSidebarComponent {
   }
 
   toggleMenu = (itemId: string) => {
-    this.menuVisibleMap.update((map) => ({
+    this.menuVisibleMap.update(map => ({
       // Clear other menus
       ...Object.keys(map).reduce(
         (acc, key) => ({

@@ -13,6 +13,7 @@ import {
   RouterLinkActive,
 } from '@angular/router';
 import { AuthStore } from '../../../auth/data-access/auth.store';
+import { TranslatePipe } from '../../../translation/translate.pipe';
 import { SidebarItem } from '../../data-access/sidebar.model';
 import { SidebarService } from '../../data-access/sidebar.service';
 
@@ -31,6 +32,7 @@ import { SidebarService } from '../../data-access/sidebar.service';
     RouterLinkActive,
     MatTooltipModule,
     TitleCasePipe,
+    TranslatePipe,
   ],
 })
 export class SidebarComponent implements OnInit {

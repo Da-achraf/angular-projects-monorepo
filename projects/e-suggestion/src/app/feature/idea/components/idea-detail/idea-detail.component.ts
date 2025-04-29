@@ -15,6 +15,8 @@ import { MatDividerModule } from '@angular/material/divider';
 import { Router } from '@angular/router';
 import { EditorModule } from 'primeng/editor';
 import { SelectModule } from 'primeng/select';
+import { TranslatePipe } from 'projects/e-suggestion/src/app/core/translation/translate.pipe';
+import { TranslationService } from 'projects/e-suggestion/src/app/core/translation/translation.service';
 import { AttachmentUploadComponent } from 'projects/e-suggestion/src/app/pattern/attachment-upload/components/attachment-upload.component';
 import { DeleteDialogComponent } from 'projects/e-suggestion/src/app/pattern/dialogs/delete-dialog.component';
 import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/button/button.component';
@@ -39,7 +41,8 @@ import { IdeaStore } from '../../services/idea.store';
     MatDividerModule,
     AttachmentUploadComponent,
     ContentDisplayComponent,
-    IdeaCaptionComponent
+    IdeaCaptionComponent,
+    TranslatePipe,
   ],
 })
 export class IdeaDetailComponent {
@@ -52,6 +55,7 @@ export class IdeaDetailComponent {
   private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
   private readonly destroyRef = inject(DestroyRef);
+  protected readonly translationService = inject(TranslationService);
 
   protected readonly idea = signal<Idea | null>(null);
   protected readonly attachments = computed(() => this.idea()?.attachments);
@@ -116,7 +120,7 @@ export class IdeaDetailComponent {
       .afterClosed()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (res) => {
+        next: res => {
           if (res && res?.type === 'delete') {
             this.store.deleteOne(id);
             this.router.navigateByUrl('/app/ideas');

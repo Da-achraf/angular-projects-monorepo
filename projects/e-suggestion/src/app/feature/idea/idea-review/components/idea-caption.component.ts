@@ -11,7 +11,7 @@ import { RatingScoreComponent } from 'projects/e-suggestion/src/app/ui/component
         <i class="fa-solid fa-circle-info text-secondary"></i>
         <p class="text-lg font-semibold text-gray-500">
           <ng-content></ng-content>
-          with Id {{ idea.id }}
+          #{{ idea.id }}
         </p>
 
         <span class="text-lg font-semibold text-gray-300">-</span>

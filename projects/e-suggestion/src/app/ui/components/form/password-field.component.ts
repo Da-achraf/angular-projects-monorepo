@@ -6,6 +6,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { InputErrorsComponent } from '@ba/core/forms';
+import { TranslatePipe } from '../../../core/translation/translate.pipe';
 
 type InputType = 'text' | 'password';
 
@@ -14,23 +15,19 @@ type InputType = 'text' | 'password';
   template: `
     <div class="flex flex-col">
       <div
-        class="text-sm flex items-center overflow-hidden shadow rounded-md border-2 bg-white transition focus-within:border-primary-200"
-      >
+        class="flex items-center overflow-hidden rounded-md border-2 bg-white text-sm shadow transition focus-within:border-primary-200">
         <input
           [type]="inputType()"
           [formControl]="control()"
-          placeholder="Password (minimum 8 characters)"
-          class="w-full border-none outline-none appearance-none border-gray-300 bg-white py-3 px-0 text-base text-gray-700 placeholder-gray-400 focus:outline-none"
-        />
+          [placeholder]="'password-placeholder' | translate"
+          class="w-full appearance-none border-none border-gray-300 bg-white px-0 py-3 text-base text-gray-700 placeholder-gray-400 outline-none focus:outline-none" />
         <button
-          class="flex items-center bg-white h-full py-1 px-2 focus-within:outline-none group"
-        >
+          class="group flex h-full items-center bg-white px-2 py-1 focus-within:outline-none">
           <button
             (click)="onEnter($event)"
             (keydown.enter)="onEnter($event)"
             [ngClass]="icon()"
-            class="text-gray-400 rounded-lg fa-solid p-2 transition-all focus-within:outline-none duration-300 group-focus-within:bg-gray-100 hover:bg-gray-50 hover:cursor-pointer"
-          ></button>
+            class="fa-solid rounded-lg p-2 text-gray-400 transition-all duration-300 focus-within:outline-none hover:cursor-pointer hover:bg-gray-50 group-focus-within:bg-gray-100"></button>
         </button>
       </div>
       <ba-input-errors [control]="control()" />
@@ -39,11 +36,11 @@ type InputType = 'text' | 'password';
   styles: [
     `
       input {
-        @apply w-full border-none outline-none appearance-none border-gray-300 bg-white py-3 px-4 text-base text-gray-700 placeholder-gray-400 focus:outline-none;
+        @apply w-full appearance-none border-none border-gray-300 bg-white px-4 py-3 text-base text-gray-700 placeholder-gray-400 outline-none focus:outline-none;
       }
     `,
   ],
-  imports: [InputErrorsComponent, ReactiveFormsModule, NgClass],
+  imports: [InputErrorsComponent, ReactiveFormsModule, NgClass, TranslatePipe],
   viewProviders: [
     {
       provide: ControlContainer,
@@ -68,6 +65,6 @@ export class PasswordFieldComponent {
   }
 
   private toggleInputType() {
-    this.inputType.update((v) => (v === 'password' ? 'text' : 'password'));
+    this.inputType.update(v => (v === 'password' ? 'text' : 'password'));
   }
 }

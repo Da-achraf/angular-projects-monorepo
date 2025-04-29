@@ -24,8 +24,8 @@ export const AuthGuard: CanActivateFn = async (
   state: RouterStateSnapshot
 ) => {
   const authStore = inject(AuthStore);
-  const router = inject(Router)
-  const toaster = inject(ToasterService)
+  // const router = inject(Router)
+  // const toaster = inject(ToasterService)
 
   await waitForAuthInit(authStore.initialized);
 

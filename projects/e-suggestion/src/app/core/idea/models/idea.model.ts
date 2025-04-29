@@ -14,23 +14,44 @@ type IdeaBase = {
   department: string;
 };
 
+type IdeaMixin = {
+  created_at: string;
+  updated_at?: string;
+  assigned_at?: string;
+  implemented_at?: string;
+  closed_at?: string;
+};
+
 export type IdeaCreate = IdeaBase & {
   submitter_id: number;
 };
-export type IdeaUpdate = IdeaBase & {
-  id: number;
-  status: IdeaStatusType;
-  created_at: string;
-};
+export type IdeaUpdate = IdeaBase &
+  IdeaMixin & {
+    id: number;
+    status: IdeaStatusType;
+    /**
+     * This helps the backend services to determin the email/app notification
+     * body that will be sent to the affected users by the idea update.
+     */
+    action?: IdeaAction;
+  };
 
-export type Idea = IdeaBase & {
-  id: number;
-  created_at: string;
-  status: IdeaStatusType;
-  submitter: User;
-  comments: Comment[];
-  attachments: Attachement[];
-  rating_matrix?: RatingMatrix;
-  assignment?: Assignment;
-  teoa_review?: TeoaReview;
-};
+export type Idea = IdeaBase &
+  IdeaMixin & {
+    id: number;
+    status: IdeaStatusType;
+    submitter: User;
+    comments: Comment[];
+    attachments: Attachement[];
+    rating_matrix?: RatingMatrix;
+    assignment?: Assignment;
+    teoa_review?: TeoaReview;
+  };
+
+export type IdeaAction =
+  | 'modified'
+  | 'rated'
+  | 'approved'
+  | 'assigned'
+  | 'rejected'
+  | 'closed';

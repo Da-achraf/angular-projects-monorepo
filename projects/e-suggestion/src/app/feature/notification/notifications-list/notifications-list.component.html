@@ -1,0 +1,36 @@
+<div class="mx-auto max-w-[80rem] p-10" dir="rtl">
+  <ba-generic-table
+    [data]="store.entities()"
+    [total]="store.total()"
+    [columns]="columns()"
+    [loading]="store.isLoading()"
+    [withCreate]="false"
+    [showActionsColumn]="false"
+    [showClearButton]="false"
+    (page)="store.setPage($event)"
+    (pageSize)="store.setPageSize($event)"
+    (search)="store.setQueryParams({ search: $event })">
+    <ng-template #notificationTemplate let-notification>
+      <ba-notification-item [notification]="notification" />
+    </ng-template>
+
+    @if (store.showNotificationFilter()) {
+      <div class="additional-filters flex items-center gap-x-4">
+        <ba-radio-filter
+          [options]="notificationFilterOptions()"
+          (optionSelected)="store.setFilter($event)" />
+
+        <button
+          class="fa-solid fa-check-double transition-all duration-200 hover:text-green-500"
+          [pTooltip]="'mark-all-as-Read' | translate"
+          [tooltipPosition]="
+            translationService.dir() === 'ltr' ? 'right' : 'left'
+          "
+          showDelay="300"
+          hideDelay="50"
+          (click)="store.markAllAsRead()"></button>
+      </div>
+    }
+    <
+  </ba-generic-table>
+</div>

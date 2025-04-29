@@ -121,6 +121,7 @@ export const IdeaReviewStore = signalStore(
         const body: Partial<IdeaUpdate> = {
           id: ideaId(),
           status: IdeaStatus.REJECTED,
+          action: 'rejected',
         };
 
         startLoading('reject-idea');
@@ -139,6 +140,7 @@ export const IdeaReviewStore = signalStore(
         const body: Partial<IdeaUpdate> = {
           id: ideaId(),
           status: IdeaStatus.APPROVED,
+          action: 'approved',
         };
 
         startLoading('approve-idea');

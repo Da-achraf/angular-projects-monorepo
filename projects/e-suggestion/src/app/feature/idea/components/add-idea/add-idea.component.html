@@ -1,9 +1,9 @@
-<div id="style-4" class="">
+<div id="style-4" [dir]="translationService.dir()">
   <div class="mx-auto flex max-w-[80rem] flex-col gap-y-5 p-4">
     <div
       class="flex flex-col gap-y-2 sm:flex-row sm:items-center sm:justify-end">
       <ba-button
-        label="Create Idea"
+        [label]="'create-idea' | translate"
         [isLoading]="store.isSaving()"
         icon="fa-plus"
         [disabled]="!form.valid"
@@ -13,7 +13,9 @@
 
     <div class="mb-5 flex items-center gap-x-3">
       <i class="fa-solid fa-circle-info text-secondary"></i>
-      <p class="text-lg font-semibold text-gray-500">Create a new idea here</p>
+      <p class="text-lg font-semibold text-gray-500">
+        {{ 'create-idea-here' | translate }}
+      </p>
     </div>
 
     @defer {
@@ -25,7 +27,7 @@
             <div class="flex items-center gap-x-2">
               <span
                 class="text-sm font-semibold uppercase tracking-wide text-primary"
-                >Idea title</span
+                >{{ 'idea-title' | translate }}</span
               >
               <span class="h-[.4px] flex-1 bg-gray-300"></span>
             </div>
@@ -33,7 +35,7 @@
               <input
                 type="text"
                 formControlName="title"
-                placeholder="Type a title" />
+                [placeholder]="'idea-title-placeholder' | translate" />
             </ba-input>
           </div>
 
@@ -41,25 +43,25 @@
             <div class="flex items-center gap-x-2">
               <span
                 class="text-sm font-semibold uppercase tracking-wide text-primary"
-                >Current situation</span
+                >{{ 'current-situation' | translate }}</span
               >
               <span class="h-[.4px] flex-1 bg-gray-300"></span>
             </div>
             <ba-editor
               formControlName="actual_situation"
-              placeholder="Describe the current situation here..." />
+              [placeholder]="'current-situation-placeholder' | translate" />
           </div>
           <div class="flex flex-col gap-y-2">
             <div class="flex items-center gap-x-2">
               <span
                 class="text-sm font-semibold uppercase tracking-wide text-primary"
-                >Idea description</span
+                >{{ 'idea-description' | translate }}</span
               >
               <span class="h-[.4px] flex-1 bg-gray-300"></span>
             </div>
             <ba-editor
               formControlName="description"
-              placeholder="Describe your idea here.." />
+              [placeholder]="'idea-description-placeholder' | translate" />
           </div>
         </div>
 
@@ -68,7 +70,7 @@
             <div class="flex items-center gap-x-2">
               <span
                 class="text-sm font-semibold uppercase tracking-wide text-primary"
-                >Category</span
+                >{{ 'category' | translate }}</span
               >
               <span class="h-[.4px] flex-1 bg-gray-300"></span>
             </div>
@@ -77,7 +79,7 @@
               formControlName="category"
               [filter]="true"
               [showClear]="true"
-              placeholder="Select a category"
+              [placeholder]="'select-category' | translate"
               class="flex-1">
               <ng-template #selectedItem let-selectedOption>
                 <div class="flex items-center gap-2">
@@ -92,11 +94,11 @@
             </p-select>
           </div>
 
-          <div class="flex flex-col gap-y-2 mt-10">
+          <div class="mt-10 flex flex-col gap-y-2">
             <div class="flex items-center gap-x-2">
               <span
                 class="text-sm font-semibold uppercase tracking-wide text-primary"
-                >Department</span
+                >{{ 'department' | translate }}</span
               >
               <span class="h-[.4px] flex-1 bg-gray-300"></span>
             </div>
@@ -105,7 +107,7 @@
               formControlName="department"
               [filter]="true"
               [showClear]="true"
-              placeholder="Select a department"
+              [placeholder]="'select-department' | translate"
               class="flex-1">
               <ng-template #selectedItem let-selectedOption>
                 <div class="flex items-center gap-2">

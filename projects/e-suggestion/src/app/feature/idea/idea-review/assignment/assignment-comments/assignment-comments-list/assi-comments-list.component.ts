@@ -1,10 +1,4 @@
-import {
-  Component,
-  effect,
-  inject,
-  input,
-  untracked
-} from '@angular/core';
+import { Component, effect, inject, input, untracked } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { EditorModule } from 'primeng/editor';
 import { AssignmentComment } from 'projects/e-suggestion/src/app/core/idea/models/assignment-comment.model';
@@ -16,23 +10,24 @@ import { AssignmentCommentsStore } from '../assignment-comments.store';
 
 const Options: FilterOption[] = [
   {
-    label: 'All',
+    label: 'comments-filter-all',
     value: 'all',
+    title: 'comments-filter-all-title',
   },
   {
-    label: 'Yours',
+    label: 'comments-filter-yours',
     value: 'only_yours',
-    title: 'Show your comments only',
+    title: 'comments-filter-yours-title',
   },
   {
-    label: "Other's",
+    label: 'comments-filter-others',
     value: 'only_others',
-    title: "Show other's comments only",
+    title: 'comments-filter-others-title',
   },
   {
-    label: 'Owner',
+    label: 'comments-filter-owner',
     value: 'owner',
-    title: "Show the owner's comments only",
+    title: 'comments-filter-owner-title',
   },
 ];
 
@@ -40,12 +35,7 @@ const Options: FilterOption[] = [
   selector: 'ba-assi-comments-list',
   templateUrl: './assi-comments-list.component.html',
   styleUrl: './assi-comments-list.component.scss',
-  imports: [
-    EditorModule,
-    FormsModule,
-    RadioFilterComponent,
-    CommentsComponent
-  ],
+  imports: [EditorModule, FormsModule, RadioFilterComponent, CommentsComponent],
   providers: [AssignmentCommentService, AssignmentCommentsStore],
 })
 export class AssignmentCommentsListComponent {

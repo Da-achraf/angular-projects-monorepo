@@ -1,0 +1,21 @@
+<div
+  class="flex flex-col gap-2 rounded-md bg-white p-3 shadow-md"
+  [ngClass]="{ 'blur-sm': store.loading() }">
+  <div class="flex items-center gap-4">
+    <h4
+      class="text-xl font-semibold tracking-tighter text-gray-400 xl:text-2xl">
+      (Un)Implemented Actions by Department
+    </h4>
+
+    <ba-filter-button (onClick)="op.toggle($event)" />
+    <p-popover #op>
+      <ba-dashboard-filter (filterChanged)="onFilter($event); op.hide()" />
+    </p-popover>
+  </div>
+
+  <div
+    echarts
+    [options]="store.chartOptions()"
+    [loading]="store.loading()"
+    class="min-h-[30rem] w-full"></div>
+</div>

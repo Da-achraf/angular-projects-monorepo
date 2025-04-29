@@ -20,6 +20,7 @@ import { IdeaStatusBadgeComponent } from '../../../../pattern/idea-status/compon
 import { IdeaStore } from '../../services/idea.store';
 import { loadIdeaInitialQueryParams } from '../../services/idea.util';
 import { COLUMNS, GLOBAL_FILTER_FIELDS } from './const';
+import { QueryParamType } from 'projects/e-suggestion/src/app/core/api/api.model';
 
 @Component({
   selector: 'ba-ideas-list',
@@ -77,5 +78,14 @@ export class IdeasListComponent {
 
   onReview(id: number) {
     this.router.navigate([`/app/ideas/${id}/review`]);
+  }
+
+  onFilter(filter: QueryParamType | null) {
+    if (filter === null) {
+      this.store.resetQueryParams();
+      return;
+    }
+
+    this.store.setQueryParams(filter);
   }
 }

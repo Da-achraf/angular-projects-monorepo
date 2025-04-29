@@ -6,6 +6,7 @@ import { RemoveFilenamePrefixPipe } from '../../../ui/pipes/file-name/file-name-
 import { FilenameTruncatePipe } from '../../../ui/pipes/file-name/file-name-truncate.pipe';
 import { FileSizePipe } from '../../../ui/pipes/file-size.pipe';
 import { Attachement } from '../models/attachement.model';
+import { TranslatePipe } from '../../../core/translation/translate.pipe';
 
 @Component({
   selector: 'ba-attachment-upload',
@@ -16,14 +17,15 @@ import { Attachement } from '../models/attachement.model';
     RemoveFilenamePrefixPipe,
     FileSizePipe,
     MatTooltipModule,
-    LoadingComponent
+    LoadingComponent,
+    TranslatePipe,
   ],
 })
 export class AttachmentUploadComponent {
   attachments = input<Attachement[]>();
   viewOnly = input(false);
 
-  isDeletingAttachment = input(false)
+  isDeletingAttachment = input(false);
 
   filesChanged = output<File[]>();
   files: any[] = [];
@@ -86,6 +88,6 @@ export class AttachmentUploadComponent {
   }
 
   private emitFilesChanged() {
-    this.filesChanged.emit(this.files.map((f) => f.file));
+    this.filesChanged.emit(this.files.map(f => f.file));
   }
 }

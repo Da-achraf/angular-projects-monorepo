@@ -12,8 +12,10 @@ import { ListErrorsComponent } from '@ba/core/forms';
 import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/button/button.component';
 import { BaInputComponent } from 'projects/e-suggestion/src/app/ui/components/form/input.component';
 import { PasswordFieldComponent } from 'projects/e-suggestion/src/app/ui/components/form/password-field.component';
-import { LoginUser } from '../../../data-access/auth.model';
+import { TranslatePipe } from '../../../../translation/translate.pipe';
+import { TranslationService } from '../../../../translation/translation.service';
 import { AuthStore } from '../../../data-access/auth.store';
+import { LogoComponent } from 'projects/e-suggestion/src/app/ui/components/logo.component';
 
 @Component({
   selector: 'ba-login',
@@ -27,30 +29,13 @@ import { AuthStore } from '../../../data-access/auth.store';
     BaButtonComponent,
     BaInputComponent,
     PasswordFieldComponent,
+    TranslatePipe,
+    LogoComponent,
   ],
 })
 export class LoginComponent {
-  // protected readonly store = inject(AuthStore);
-
-  // form = inject(FormBuilder).nonNullable.group({
-  //   email: ['', [Validators.email, Validators.required]],
-  //   te_id: ['TE', [Validators.required, Validators.pattern(/^TE\d{6}$/)]],
-  //   password: ['', [Validators.required, Validators.minLength(8)]],
-  // });
-
-  // onSubmit() {
-  //   if (!this.form.valid) return;
-
-  //   const formValue = this.form.getRawValue();
-
-  //   const body: LoginUser = {
-  //     username: formValue.email,
-  //     password: formValue.password,
-  //   };
-  //   this.store.login(body);
-  // }
-
   protected readonly store = inject(AuthStore);
+  protected translationService = inject(TranslationService);
 
   private atLeastOneValidator: ValidatorFn = (
     control: AbstractControl

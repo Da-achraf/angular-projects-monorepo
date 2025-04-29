@@ -13,7 +13,7 @@ import {
   withInMemoryScrolling,
   withRouterConfig,
 } from '@angular/router';
-import { API_URL } from '@ba/core/http-client';
+import { API_URL, WS_URL } from '@ba/core/http-client';
 import { definePreset } from '@primeng/themes';
 import Aura from '@primeng/themes/aura';
 import { provideEchartsCore } from 'ngx-echarts';
@@ -32,6 +32,10 @@ import {
 } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { tokenInterceptor } from './interceptors/token.interceptor';
+import { TRANSLATION_CONFIG } from 'projects/core/src';
+import { LocalStorageService } from './auth/data-access/services/local-storage.service';
+
 echarts.use([
   BarChart,
   RadarChart,
@@ -69,7 +73,7 @@ export function provideCore({ routes }: CoreOptions) {
   return [
     provideExperimentalZonelessChangeDetection(),
     provideAnimationsAsync(),
-    provideHttpClient(withInterceptors([errorInterceptor])),
+    provideHttpClient(withInterceptors([errorInterceptor, tokenInterceptor])),
     provideRouter(
       routes,
       withRouterConfig({
@@ -88,6 +92,11 @@ export function provideCore({ routes }: CoreOptions) {
       useValue: environment.apiUrl,
     },
 
+    {
+      provide: WS_URL,
+      useValue: environment.wsUrl,
+    },
+
     MessageService,
     TitleCasePipe,
 
@@ -104,5 +113,26 @@ export function provideCore({ routes }: CoreOptions) {
       },
     }),
     provideEchartsCore({ echarts }),
+
+    {
+      provide: TRANSLATION_CONFIG,
+      useValue: {
+        defaultLanguage: 'en',
+        supportedLanguages: ['en', 'ar'],
+        rtlLanguages: ['ar'],
+        rtlFontClass: 'font-arabic',
+        storageKey: 'e-suggestion-lang',
+        // Provide your storage service implementation
+        storageService: {
+          provide: 'StorageService',
+          useExisting: LocalStorageService,
+        },
+        // Pre-load translations
+        initialTranslations: {
+          en: enTranslations,
+          ar: arTranslations,
+        },
+      },
+    },
   ];
 }

@@ -1,13 +1,13 @@
 <div
   class="relative flex min-h-16 items-center justify-between border-b border-primary-50 bg-white px-4 py-3">
   <span class="text-lg font-semibold uppercase tracking-wide text-primary">
-    Assignment
+    {{ 'assignment' | translate }}
   </span>
 
   <div class="flex items-center gap-x-3">
     @if (store.canInitiate()) {
       <ba-button
-        title="Initiate the assignment"
+        [title]="'start-assignment-action' | translate"
         icon="fa-flag-checkered animate-[bounce_.5s_ease-in-out_infinite] group-hover:animate-none"
         iconPosition="right"
         [isLoading]="store.isInitiatingAssignment()"
@@ -16,7 +16,7 @@
     }
     @if (store.isAssignmentDirty() && store.canSaveChanges()) {
       <ba-button
-        title="Save the changes"
+        [title]="'save-changes' | translate"
         icon="fa-bookmark"
         iconPosition="right"
         [isLoading]="store.isSavingChanges()"
@@ -25,7 +25,7 @@
     }
     @if (store.canDelete()) {
       <ba-button
-        title="Delete assignment"
+        [title]="'delete' | translate"
         icon="fa-trash"
         iconPosition="right"
         [isLoading]="store.isDeletingAssignment()"

@@ -1,0 +1,45 @@
+<ul
+  class="border-blue-gray-50 text-blue-gray-500 shadow-blue-gray-500/10 z-10 flex min-w-[180px] max-w-[400px] flex-col gap-2 overflow-auto rounded-md border bg-white p-3 font-sans text-sm font-normal shadow-lg focus:outline-none">
+  @if (notifService.notificationsCount() > 0) {
+    <div
+      class="mb-2 flex items-center justify-between"
+      [dir]="translationService.dir()">
+      <span
+        [routerLink]="['/app/notifications']"
+        class="cursor-pointer border-b-2 border-transparent text-lg transition-all duration-150 hover:border-primary"
+        >{{ 'notifications' | translate }}
+        <span class="font-bold text-primary">{{
+          notifService.unreadCount()
+        }}</span></span
+      >
+      <div class="flex items-center gap-x-3 text-primary-200">
+        <button
+          class="fa-solid transition-all duration-200 hover:text-primary"
+          [ngClass]="{
+            'fa-check': notifService.unreadCount(),
+            'fa-check-double': !notifService.unreadCount(),
+          }"
+          [pTooltip]="'mark-all-as-read' | translate"
+          tooltipPosition="top"
+          showDelay="300"
+          hideDelay="50"
+          (click)="notifService.markAllAsRead()"></button>
+        <button
+          class="fa-solid fa-rotate-right transition-all duration-200 hover:text-primary active:rotate-90"
+          [pTooltip]="'refresh' | translate"
+          tooltipPosition="top"
+          showDelay="300"
+          hideDelay="50"
+          (click)="notifService.refreshNotifications()"></button>
+      </div>
+    </div>
+  } @else {
+    <span>{{ 'no-notifications' | translate }}</span>
+  }
+
+  @for (notif of notifService.notifications(); track notif.id) {
+    <ba-notification-item
+      [notification]="notif"
+      (opened)="onNotificationOpened($event)" />
+  }
+</ul>

@@ -311,17 +311,31 @@ export const AssignmentStore = signalStore(
 
           // Update idea body
           let ideaBody: Partial<IdeaUpdate> | undefined;
+          const updatedIdeaStatus = tempData()?.status;
+          const updatedProgress = tempData()?.progress;
+          const updatedAssignees = tempData()?.assignees;
+
+          // Update idea dates
+          if (updatedAssignees) {
+            ideaBody = {
+              assigned_at: new Date().toISOString(),
+            };
+          }
+
+          if (updatedProgress && updatedProgress === 100) {
+            ideaBody = {
+              implemented_at: new Date().toISOString(),
+            };
+          }
 
           // Update idea status
-          const updatedIdeaStatus = tempData()?.status;
           if (updatedIdeaStatus) {
             ideaBody = {
               status: updatedIdeaStatus as IdeaStatusType,
             };
           }
 
-          // Update idea status
-          const updatedProgress = tempData()?.progress;
+          // Update idea status based on updated progress
           if (updatedProgress != undefined) {
             ideaBody = {
               ...ideaBody,

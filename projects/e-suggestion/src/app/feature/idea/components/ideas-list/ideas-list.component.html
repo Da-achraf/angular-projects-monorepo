@@ -1,4 +1,4 @@
-<div class="max-w-[80rem] p-10">
+<div class="mx-auto max-w-[80rem] p-10">
   <ba-generic-table
     [data]="store.entities()"
     [total]="store.total()"
@@ -13,9 +13,11 @@
     [withReview]="store.withIdeaReview()"
     (page)="store.setPage($event)"
     (pageSize)="store.setPageSize($event)"
+    (filter)="onFilter($event)"
     (create)="onCreate()"
     (edit)="onEdit($event)"
     (delete)="store.showDeleteIdeaDialog($event)"
+    (search)="store.setQueryParams({ search: $event })"
     (view)="onView($event)"
     (review)="onReview($event)">
     <ng-template #sumbitterTemplate let-idea>
@@ -32,7 +34,7 @@
     </ng-template>
 
     <ng-template #categoryTemplate let-idea>
-      <span class="italic font-medium">{{ idea.category | titlecase }}</span>
+      <span class="font-medium italic">{{ idea.category | titlecase }}</span>
     </ng-template>
   </ba-generic-table>
 </div>

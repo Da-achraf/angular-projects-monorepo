@@ -3,7 +3,6 @@ import {
   Component,
   effect,
   inject,
-  OnInit,
   untracked,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -14,10 +13,12 @@ import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/b
 import { BaInputComponent } from '../../../../../ui/components/form/input.component';
 import { BUStore } from '../../../../crud/bus/bu.store';
 import { PlantStore } from '../../../../crud/plants/plant.store';
+import { TranslatePipe } from '../../../../translation/translate.pipe';
+import { RoleEnum } from '../../../data-access/auth.model';
 import { AuthStore } from '../../../data-access/auth.store';
 import { RoleStore } from '../../../data-access/role.store';
 import { RoleNamePipe } from '../../pipes/role-name.pipe';
-import { RoleEnum } from '../../../data-access/auth.model';
+import { LogoComponent } from 'projects/e-suggestion/src/app/ui/components/logo.component';
 
 @Component({
   selector: 'app-register',
@@ -32,6 +33,8 @@ import { RoleEnum } from '../../../data-access/auth.model';
     BaButtonComponent,
     SelectModule,
     RoleNamePipe,
+    TranslatePipe,
+    LogoComponent,
   ],
 })
 export class RegisterComponent {
@@ -57,7 +60,7 @@ export class RegisterComponent {
 
   private readonly userRoleEffect = effect(() => {
     const submitterRoleId = this.roles().find(
-      (r) => r.name === RoleEnum.SUBMITTER
+      r => r.name === RoleEnum.SUBMITTER
     )?.id;
 
     if (!submitterRoleId) return;

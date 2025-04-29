@@ -1,10 +1,11 @@
 import { Component, effect, inject, input, untracked } from '@angular/core';
-import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/button/button.component';
-import { TeoaReviewStore } from '../teoa-review.store';
-import { TeoaCommentsComponent } from '../teoa-comments/teao-comments-list/teoa-comments.component';
-import { TeoaReviewNotInitializedComponent } from './teoa-review-not-initialized.component';
 import { TeoaReview } from 'projects/e-suggestion/src/app/core/idea/models/teoa-review.model';
+import { TranslatePipe } from 'projects/e-suggestion/src/app/core/translation/translate.pipe';
+import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/button/button.component';
+import { TeoaCommentsComponent } from '../teoa-comments/teao-comments-list/teoa-comments.component';
 import { TeoaReviewService } from '../teoa-review.service';
+import { TeoaReviewStore } from '../teoa-review.store';
+import { TeoaReviewNotInitializedComponent } from './teoa-review-not-initialized.component';
 
 @Component({
   selector: 'ba-teoa-review',
@@ -14,14 +15,15 @@ import { TeoaReviewService } from '../teoa-review.service';
     BaButtonComponent,
     TeoaCommentsComponent,
     TeoaReviewNotInitializedComponent,
+    TranslatePipe,
   ],
   providers: [TeoaReviewService, TeoaReviewStore],
 })
 export class TeoaReviewComponent {
   protected readonly store = inject(TeoaReviewStore);
-  
+
   ideaId = input.required<number>();
-  teoaReview = input<TeoaReview>()
+  teoaReview = input<TeoaReview>();
 
   private readonly teoaReviewEffect = effect(() => {
     const review = this.teoaReview();

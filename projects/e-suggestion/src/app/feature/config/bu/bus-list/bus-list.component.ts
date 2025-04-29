@@ -1,0 +1,122 @@
+import { CommonModule } from '@angular/common';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ButtonModule } from 'primeng/button';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { SelectModule } from 'primeng/select';
+import { SliderModule } from 'primeng/slider';
+import { Table, TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
+import { BUStore } from 'projects/e-suggestion/src/app/core/crud/bus/bu.store';
+import { DeleteDialogComponent } from '../../../../pattern/dialogs/delete-dialog.component';
+import { GenericTableComponent } from '../../../../ui/components/table/generic-table.component';
+import { COLUMNS, GLOBAL_FILTER_FIELDS } from './consts';
+import { AddBuComponent } from '../add-bu/add-bu.componenet';
+import { UpdateBuComponent } from '../update-bu/update-bu.componenet';
+
+@Component({
+  selector: 'ba-bus-list',
+  imports: [
+    MatProgressSpinnerModule,
+    TableModule,
+    CommonModule,
+    FormsModule,
+    InputTextModule,
+    TagModule,
+    SelectModule,
+    MultiSelectModule,
+    ButtonModule,
+    IconFieldModule,
+    MatButtonModule,
+    InputIconModule,
+    ProgressBarModule,
+    SelectModule,
+    SliderModule,
+    TagModule,
+    GenericTableComponent,
+  ],
+
+  templateUrl: './bus-list.component.html',
+  styleUrl: './bus-list.component.scss',
+})
+export class BusListComponent {
+  protected readonly store = inject(BUStore);
+  private readonly dialog = inject(MatDialog);
+  private readonly destroyRef = inject(DestroyRef);
+
+  protected columns = signal(COLUMNS).asReadonly();
+  protected globalFilterFields = signal(GLOBAL_FILTER_FIELDS).asReadonly();
+
+  onDelete(id: number) {
+    this.dialog
+      .open(DeleteDialogComponent, {
+        data: { label: 'business unit' },
+        minWidth: '40vw',
+        maxHeight: '95vh',
+      })
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: res => {
+          if (res && res?.type === 'delete') this.store.deleteOne(id);
+        },
+      });
+  }
+
+  onCreate() {
+    this.dialog
+      .open(AddBuComponent, {
+        minWidth: '40vw',
+        maxHeight: '95vh',
+      })
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res: any) => {
+          if (!res) {
+            return;
+          }
+          if (res?.type === 'create') {
+            this.store.save(res.data);
+          }
+        },
+      });
+  }
+
+  onEdit(id: number) {
+    const entity = this.store.entityMap()[id];
+    if (!entity) return;
+    this.dialog
+      .open(UpdateBuComponent, {
+        data: {
+          entity,
+        },
+        minWidth: '40vw',
+        maxHeight: '95vh',
+      })
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res: any) => {
+          if (!res) {
+            return;
+          }
+          if (res?.type === 'update') {
+            this.store.update({ id, ...res.data });
+          }
+        },
+      });
+  }
+
+  clear(table: Table) {
+    table.clear();
+  }
+}

@@ -1,53 +1,73 @@
 <div class="flex items-center">
   <div
-    class="h-[var(--header-height)] bg-primary flex items-center border-b border-b-gray-400 transition-all duration-300"
+    class="flex h-[var(--header-height)] items-center border-b border-b-gray-400 bg-primary transition-all duration-300"
     [ngClass]="{
       'w-[var(--expanded-sidebar-width)] justify-between pr-2': sidebarOpened(),
-      'w-[var(--collapsed-sidebar-width)] justify-center': !sidebarOpened()
-    }"
-  >
+      'w-[var(--collapsed-sidebar-width)] justify-center': !sidebarOpened(),
+    }">
     <button
       (click)="toggleSidebar()"
-      class="fa-solid fa-bars p-3 text-xl font-bold transition duration-300 text-gray-300 hover:text-gray-100"
-    ></button>
+      class="fa-solid fa-bars p-3 text-xl font-bold text-gray-300 transition duration-300 hover:text-gray-100"></button>
     @if (sidebarOpened()) {
-    <ba-logo bg="dark" />
+      <ba-logo type="light" />
     }
   </div>
-  
+
   <div
-    class="h-[var(--header-height)] w-full border-b border-b-neutral-300 shadow-md bg-white/30 backdrop-blur-sm sticky top-0 z-[200]"
-  >
+    class="sticky top-0 z-[200] h-[var(--header-height)] w-full border-b border-b-neutral-300 bg-white/30 shadow-md backdrop-blur-sm">
     <div
       class="flex items-center px-3 py-2"
       [ngClass]="{
         'justify-between': !sidebarOpened(),
-        'justify-end': sidebarOpened()
-      }"
-    >
+        'justify-end': sidebarOpened(),
+      }">
       @if (!sidebarOpened()) {
-      <ba-logo />
+        <ba-logo />
       }
-      <div class="flex items-center gap-x-3">
-        <span>
-          <i class="fa-solid fa-bell text-2xl text-primary"></i>
+      <div class="flex items-center gap-x-4">
+        <span class="relative">
+          <i
+            (click)="notifsOp.toggle($event)"
+            class="fa-solid fa-bell cursor-pointer text-2xl text-primary"></i>
+          @if (notifService.haveUnread()) {
+            <span class="absolute -right-[.1rem] -top-[.1rem] flex h-2 w-2">
+              <span
+                class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75"></span>
+              <span
+                class="relative inline-flex h-2 w-2 rounded-full bg-red-600"></span>
+            </span>
+          }
         </span>
+
+        <p-selectbutton
+          [options]="stateOptions"
+          [(ngModel)]="defaultLang"
+          optionLabel="label"
+          optionValue="value"
+          aria-labelledby="basic"
+          (onOptionClick)="onLangChanged($event)" />
+
         <button
-          (click)="logout()"
-          class="group flex items-center justify-start text-neutral-50 w-10 h-10 text-base bg-red-500 rounded-full cursor-pointer relative overflow-hidden transition-all duration-200 shadow-lg hover:w-28 hover:rounded-lg active:translate-x-1 active:translate-y-1"
-        >
-          <div
-            class="flex items-center justify-center w-full transition-all duration-300 group-hover:justify-start group-hover:px-3"
-          >
-            <i class="fa-solid fa-arrow-right-from-bracket"></i>
-          </div>
-          <div
-            class="absolute right-5 transform translate-x-full opacity-0 text-white font-semibold transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
-          >
-            Logout
-          </div>
-        </button>
+          (click)="logoutOp.toggle($event)"
+          class="fa-solid fa-ellipsis text-xl text-gray-400 transition-all duration-200 hover:text-gray-500"></button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Notifications panel popover -->
+<p-popover #notifsOp (onShow)="onNotificationPanelOpened()">
+  <ba-notifications-panel />
+</p-popover>
+
+<!-- Logout popover -->
+<p-popover #logoutOp>
+  <div class="flex w-[10rem] flex-col gap-4">
+    <button
+      (click)="logout()"
+      class="flex w-full items-center justify-start gap-x-2 rounded-md bg-gray-100 px-2 py-3 transition-all duration-200 hover:bg-gray-200">
+      <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      <span>{{ 'logout' | translate }}</span>
+    </button>
+  </div>
+</p-popover>

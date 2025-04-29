@@ -3,8 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import { API_REQUEST_DELAY, ApiResponse, Response } from '@ba/core/data-access';
 import { API_URL, ApiService } from '@ba/core/http-client';
 import { delay, lastValueFrom, map, Observable, tap } from 'rxjs';
-import { Idea, IdeaCreate, IdeaUpdate } from '../../../core/idea/models/idea.model';
+import {
+  Idea,
+  IdeaCreate,
+  IdeaUpdate,
+} from '../../../core/idea/models/idea.model';
 import { ContentProcessingService } from './content-processing.service';
+import { QueryParamType } from '../../../core/api/api.model';
 
 @Injectable()
 export class IdeaService {
@@ -18,7 +23,7 @@ export class IdeaService {
   load(
     page: number,
     pageSize: number,
-    queryParams?: { [key: string]: any }
+    queryParams?: QueryParamType
   ): Observable<Response<Idea>> {
     const params = {
       page: page.toString(),
@@ -27,11 +32,11 @@ export class IdeaService {
     };
 
     return this.#apiService.get('/ideas', { queryParams: params }).pipe(
-      map((resp) => resp as Response<Idea>),
-      map((resp) => ({ ...resp, content: resp.content as Idea[] })),
-      map((resp) => ({
+      map(resp => resp as Response<Idea>),
+      map(resp => ({ ...resp, content: resp.content as Idea[] })),
+      map(resp => ({
         ...resp,
-        content: resp.content.map((u) => ({
+        content: resp.content.map(u => ({
           ...u,
           created_at: new Date(u.created_at),
         })),
@@ -44,25 +49,25 @@ export class IdeaService {
   loadOne(id: number): Observable<ApiResponse<Idea>> {
     return this.#apiService
       .get(`/ideas/${id}`)
-      .pipe(map((resp) => resp as ApiResponse<Idea>));
+      .pipe(map(resp => resp as ApiResponse<Idea>));
   }
 
   deleteOne(id: number): Observable<ApiResponse<Idea>> {
     return this.#apiService
       .delete(`/ideas/${id}`)
-      .pipe(map((resp) => resp as ApiResponse<Idea>));
+      .pipe(map(resp => resp as ApiResponse<Idea>));
   }
 
   delete(ids: number[]): Observable<ApiResponse<Idea>> {
     return this.#apiService
       .batchDelete('/ideas', ids)
-      .pipe(map((resp) => resp as ApiResponse<Idea>));
+      .pipe(map(resp => resp as ApiResponse<Idea>));
   }
 
   update(userBody: Partial<IdeaUpdate>) {
     return this.#apiService
       .put<Idea>(`/ideas/${userBody.id}`, userBody)
-      .pipe(map((resp) => resp as ApiResponse<Idea>));
+      .pipe(map(resp => resp as ApiResponse<Idea>));
   }
 
   save(ideaBody: IdeaCreate) {
@@ -86,7 +91,6 @@ export class IdeaService {
     );
   }
 
-
   async updateIdea(idea: Partial<IdeaUpdate>) {
     // Process images in actual_situation
     idea.actual_situation = await this.#contentService.replaceImagesInHtml(
@@ -100,7 +104,10 @@ export class IdeaService {
 
     // Submit the idea to the backend
     return lastValueFrom(
-      this.#http.put<ApiResponse<Idea>>(`${this.#url}/ideas/${idea.id}`, idea)
+      this.#http.put<ApiResponse<Idea>>(
+        `${this.#url}/ideas/${idea.id}?action=${idea.action}`,
+        idea
+      )
     );
   }
 }

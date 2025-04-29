@@ -1,19 +1,19 @@
 @if (idea(); as idea) {
-  <div id="style-4" class="">
+  <div id="style-4" [dir]="translationService.dir()">
     <div class="mx-auto flex max-w-[80rem] flex-col gap-y-5 p-4">
       <div
         class="flex flex-col gap-y-2 py-2 sm:flex-row sm:items-center sm:justify-end">
         @if (id(); as id) {
           <div class="flex items-center gap-x-3">
             <ba-button
-              label="Save Changes"
+              [label]="'save-changes' | translate"
               [isLoading]="store.isUpdating()"
               icon="fa-bookmark"
               [disabled]="!form.valid || !form.dirty"
               buttonClass="text-sm border border-gray-400 bg-primary-200 hover:bg-primary text-gray-50"
               (onClick)="onSaveChanges()" />
             <ba-button
-              label="Delete Idea"
+              [label]="'delete-idea' | translate"
               [isLoading]="store.isDeleting()"
               icon="fa-trash"
               buttonClass="text-sm bg-red-50 ring-red-400 text-red-500 border border-red-100 hover:border-red-300 hover:bg-red-100"
@@ -22,9 +22,9 @@
         }
       </div>
 
-      <ba-idea-caption [idea]="idea" class="mb-5"
-        >You're editing the idea</ba-idea-caption
-      >
+      <ba-idea-caption [idea]="idea" class="mb-5">{{
+        'editing-idea' | translate
+      }}</ba-idea-caption>
 
       @defer {
         <form
@@ -35,7 +35,7 @@
               <div class="flex items-center gap-x-2">
                 <span
                   class="text-sm font-semibold uppercase tracking-wide text-primary"
-                  >Idea title</span
+                  >{{ 'idea-title' | translate }}</span
                 >
                 <span class="h-[.4px] flex-1 bg-gray-300"></span>
               </div>
@@ -43,7 +43,7 @@
                 <input
                   type="text"
                   formControlName="title"
-                  placeholder="Type a title" />
+                  [placeholder]="'idea-title-placeholder' | translate" />
               </ba-input>
             </div>
 
@@ -51,25 +51,25 @@
               <div class="flex items-center gap-x-2">
                 <span
                   class="text-sm font-semibold uppercase tracking-wide text-primary"
-                  >Current situation</span
+                  >{{ 'current-situation' | translate }}</span
                 >
                 <span class="h-[.4px] flex-1 bg-gray-300"></span>
               </div>
               <ba-editor
                 formControlName="actual_situation"
-                placeholder="Describe the current situation here..." />
+                [placeholder]="'current-situation-placeholder' | translate" />
             </div>
             <div class="flex flex-col gap-y-2">
               <div class="flex items-center gap-x-2">
                 <span
                   class="text-sm font-semibold uppercase tracking-wide text-primary"
-                  >Idea description</span
+                  >{{ 'idea-description' | translate }}</span
                 >
                 <span class="h-[.4px] flex-1 bg-gray-300"></span>
               </div>
               <ba-editor
                 formControlName="description"
-                placeholder="Describe your idea here.." />
+                [placeholder]="'idea-description-placeholder' | translate" />
             </div>
           </div>
 
@@ -78,7 +78,7 @@
               <div class="flex items-center gap-x-2">
                 <span
                   class="text-sm font-semibold uppercase tracking-wide text-primary"
-                  >Category</span
+                  >{{ 'category' | translate }}</span
                 >
                 <span class="h-[.4px] flex-1 bg-gray-300"></span>
               </div>
@@ -87,7 +87,7 @@
                 formControlName="category"
                 [filter]="true"
                 [showClear]="true"
-                placeholder="Select a category"
+                [placeholder]="'select-category' | translate"
                 class="flex-1">
                 <ng-template #selectedItem let-selectedOption>
                   <div class="flex items-center gap-2">
@@ -106,7 +106,7 @@
               <div class="flex items-center gap-x-2">
                 <span
                   class="text-sm font-semibold uppercase tracking-wide text-primary"
-                  >Department</span
+                  >{{ 'department' | translate }}</span
                 >
                 <span class="h-[.4px] flex-1 bg-gray-300"></span>
               </div>
@@ -115,7 +115,7 @@
                 formControlName="department"
                 [filter]="true"
                 [showClear]="true"
-                placeholder="Select a department"
+                [placeholder]="'select-department' | translate"
                 class="flex-1">
                 <ng-template #selectedItem let-selectedOption>
                   <div class="flex items-center gap-2">

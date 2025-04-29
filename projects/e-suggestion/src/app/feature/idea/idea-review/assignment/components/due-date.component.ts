@@ -1,19 +1,21 @@
 import { Component, effect, input, output, untracked } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DatePickerModule } from 'primeng/datepicker';
+import { TranslatePipe } from 'projects/e-suggestion/src/app/core/translation/translate.pipe';
 
 @Component({
   selector: 'ba-due-date',
   template: `
     <div class="flex flex-col gap-y-2">
       <div class="flex items-center gap-x-2">
-        <span class="text-sm font-semibold uppercase tracking-wide text-primary"
-          >Due Date</span
+        <span
+          class="text-sm font-semibold uppercase tracking-wide text-primary"
+          >{{ 'due-date' | translate }}</span
         >
         <span class="h-[.4px] flex-1 bg-gray-300"></span>
       </div>
       <p-datepicker
-        placeholder="Due Date"
+        [placeholder]="'select-due-date' | translate"
         [disabled]="disabled()"
         styleClass="w-full"
         [(ngModel)]="date"
@@ -28,7 +30,7 @@ import { DatePickerModule } from 'primeng/datepicker';
         (onSelect)="dueDateChange.emit(date)" />
     </div>
   `,
-  imports: [DatePickerModule, FormsModule],
+  imports: [DatePickerModule, FormsModule, TranslatePipe],
 })
 export class DueDateComponent {
   dueDate = input<Date | undefined>(undefined);

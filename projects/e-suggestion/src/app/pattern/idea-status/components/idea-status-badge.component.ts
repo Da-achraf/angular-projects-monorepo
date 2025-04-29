@@ -10,6 +10,7 @@ import { IdeaStatusDisplayPipe } from '../pipes/idea-status.pipe';
   template: `
     @if(status(); as status) {
       <span
+        dir="ltr"
         class="px-3 py-2 w-fit text-nowrap flex items-center gap-x-2 text-xs font-bold rounded-md shadow cursor-pointer"
         [ngClass]="status | ideaStatusClasses"
       >

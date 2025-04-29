@@ -37,6 +37,14 @@
         "dist/core/src/lib/toaster/*",
         "dist/core/src/lib/toaster"
       ],
+      "@ba/core/translation/*": [
+        "projects/core/src/lib/translation/*",
+        "projects/core/src/lib/translation"
+      ],
+      "@ba/core/translation": [
+        "dist/core/src/lib/translation/*",
+        "dist/core/src/lib/translation"
+      ],
     },
     "outDir": "./dist/out-tsc",
     "strict": true,

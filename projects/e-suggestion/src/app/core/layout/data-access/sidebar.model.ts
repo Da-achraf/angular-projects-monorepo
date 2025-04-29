@@ -26,7 +26,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     allowedRoles: [RoleEnum.ALL],
   },
   {
-    label: 'assigned ideas',
+    label: 'assigned-ideas',
     icon: 'fa-bookmark',
     link: '/app/ideas/assigned',
     isMenu: false,
@@ -40,14 +40,14 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     allowedRoles: [RoleEnum.SYSTEM_ADMIN, RoleEnum.TEOA],
   },
   {
-    label: 'Configuration',
+    label: 'configuration',
     icon: 'fa-gears',
     link: '#',
     isMenu: true,
     allowedRoles: [RoleEnum.SYSTEM_ADMIN, RoleEnum.TEOA],
     children: [
       {
-        label: 'business units',
+        label: 'business-units',
         icon: 'fa-briefcase',
         link: '/app/config/bus',
         isMenu: false,
@@ -55,9 +55,16 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
       {
         label: 'plant',
         icon: 'fa-building',
-        link: '#',
+        link: '/app/config/plants',
         isMenu: false,
       },
     ],
+  },
+  {
+    label: 'Notifications',
+    icon: 'fa-bell',
+    link: '/app/notifications',
+    isMenu: false,
+    allowedRoles: [RoleEnum.ALL],
   },
 ];

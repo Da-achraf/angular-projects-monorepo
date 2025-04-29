@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/auth/data-access/services/auth.guard';
-import { LogoComponent } from './ui/components/logo.component';
 import { NonAuthGuard } from './core/auth/data-access/services/non-auth.guard';
 
 export const routes: Routes = [
@@ -13,7 +12,7 @@ export const routes: Routes = [
     path: 'home',
     canActivate: [NonAuthGuard],
     loadComponent: () =>
-      import('./core/home/home.component').then((c) => c.HomeComponent),
+      import('./core/home/home.component').then(c => c.HomeComponent),
   },
   {
     path: 'register',
@@ -21,14 +20,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import(
         './core/auth/feature-auth/components/register/register.component'
-      ).then((c) => c.RegisterComponent),
+      ).then(c => c.RegisterComponent),
   },
   {
     path: 'login',
     canActivate: [NonAuthGuard],
     loadComponent: () =>
       import('./core/auth/feature-auth/components/login/login.component').then(
-        (c) => c.LoginComponent
+        c => c.LoginComponent
       ),
   },
   {
@@ -38,9 +37,7 @@ export const routes: Routes = [
       {
         path: 'app',
         loadComponent: () =>
-          import('./core/layout/layout.component').then(
-            (c) => c.LayoutComponent
-          ),
+          import('./core/layout/layout.component').then(c => c.LayoutComponent),
         data: {
           breadcrumb: {
             label: 'App',
@@ -67,9 +64,14 @@ export const routes: Routes = [
             loadChildren: () => import('./feature/idea/idea.routes'),
           },
           {
-            path: 'config/bus',
-            component: LogoComponent
-          }
+            path: 'config',
+            loadChildren: () => import('./feature/config/config.routes'),
+          },
+          {
+            path: 'notifications',
+            loadChildren: () =>
+              import('./feature/notification/notification.routes'),
+          },
         ],
       },
     ],

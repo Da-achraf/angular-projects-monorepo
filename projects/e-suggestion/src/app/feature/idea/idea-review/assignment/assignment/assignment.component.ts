@@ -1,5 +1,6 @@
 import { Component, effect, inject, input, untracked } from '@angular/core';
 import { Assignment } from 'projects/e-suggestion/src/app/core/idea/models/assignment.model';
+import { TranslatePipe } from 'projects/e-suggestion/src/app/core/translation/translate.pipe';
 import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/button/button.component';
 import { AssignmentCommentsListComponent } from '../assignment-comments/assignment-comments-list/assi-comments-list.component';
 import { AssignmentService } from '../assignment.service';
@@ -19,6 +20,7 @@ import { ProgressComponent } from '../progress/progress.component';
     BaButtonComponent,
     AssignmentNotInitializedComponent,
     ProgressComponent,
+    TranslatePipe,
   ],
   styleUrl: './assignment.component.scss',
   providers: [AssignmentService, AssignmentStore],

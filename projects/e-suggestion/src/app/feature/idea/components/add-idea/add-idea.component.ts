@@ -4,6 +4,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
 import { EditorModule } from 'primeng/editor';
 import { SelectModule } from 'primeng/select';
+import { TranslatePipe } from 'projects/e-suggestion/src/app/core/translation/translate.pipe';
+import { TranslationService } from 'projects/e-suggestion/src/app/core/translation/translation.service';
 import { AttachmentUploadComponent } from 'projects/e-suggestion/src/app/pattern/attachment-upload/components/attachment-upload.component';
 import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/button/button.component';
 import { EditorComponent } from 'projects/e-suggestion/src/app/ui/components/editor/editor.component';
@@ -27,10 +29,12 @@ import { IdeaStore } from '../../services/idea.store';
     AttachmentUploadComponent,
     EditorComponent,
     TitleCasePipe,
+    TranslatePipe,
   ],
 })
 export class AddIdeaComponent {
   protected readonly store = inject(IdeaStore);
+  protected readonly translationService = inject(TranslationService);
 
   files: File[] = [];
 

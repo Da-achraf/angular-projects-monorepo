@@ -7,10 +7,11 @@ import { AddCommentComponent } from 'projects/e-suggestion/src/app/pattern/comme
 import { CommentDetailComponent } from 'projects/e-suggestion/src/app/pattern/comments/comment-detail/comment-detail.component';
 import { LoadingComponent } from 'projects/e-suggestion/src/app/ui/components/loading/loading.component';
 import { BaButtonComponent } from '../../../ui/components/button/button.component';
+import { TranslatePipe } from '../../../core/translation/translate.pipe';
 
 /**
  * Generic comments components
- * 
+ *
  */
 
 @Component({
@@ -25,24 +26,24 @@ import { BaButtonComponent } from '../../../ui/components/button/button.componen
     FormsModule,
     NgClass,
     LoadingComponent,
+    TranslatePipe,
   ],
 })
 export class CommentsComponent {
-
-  label = input('')
+  label = input('');
   comments = input.required<Comment[]>();
 
   loading = input(false);
   sortingOrder = input<'asc' | 'desc'>();
   connectedUserId = input.required<number>();
-  viewMode = input(false)
+  viewMode = input(false);
 
   sortingOrderChange = output<'asc' | 'desc'>();
   addComment = output<string>();
   deleteComment = output<number>();
 
   protected readonly sortingTitle = computed(() =>
-    this.sortingOrder() === 'desc' ? 'Recent to old' : 'Old to recent'
+    this.sortingOrder() === 'desc' ? 'recent-to-old' : 'old-to-recent'
   );
 
   protected readonly sortingClass = computed(() =>

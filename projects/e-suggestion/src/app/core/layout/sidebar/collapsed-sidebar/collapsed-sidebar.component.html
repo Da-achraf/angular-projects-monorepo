@@ -10,7 +10,7 @@
         routerLinkActive="text-[var(--sidebar-active-color)] shadow shadow-[var(--sidebar-active-color)]"
         class="flex h-12 w-12 cursor-pointer items-center justify-center rounded transition-all duration-200 hover:text-[var(--sidebar-hover-color)]"
         #tooltip="matTooltip"
-        [matTooltip]="item.label | titlecase"
+        [matTooltip]="item.label | translate"
         [matTooltipPosition]="'right'"
         matTooltipShowDelay="500"
         matTooltipHideDelay="100">
@@ -28,7 +28,7 @@
         }"
         class="flex h-12 w-12 cursor-pointer items-center justify-center rounded transition-all duration-200"
         #tooltip="matTooltip"
-        [matTooltip]="item.label | titlecase"
+        [matTooltip]="item.label | translate"
         [matTooltipPosition]="'above'"
         matTooltipShowDelay="500"
         matTooltipHideDelay="100">
@@ -75,7 +75,7 @@
           routerLinkActive="text-[var(--sidebar-active-color)] shadow shadow-[var(--sidebar-active-color)]"
           class="flex h-12 w-12 cursor-pointer items-center justify-center rounded p-1 transition-all duration-200 hover:text-[var(--sidebar-hover-color)]"
           #tooltip="matTooltip"
-          [matTooltip]="item.label | titlecase"
+          [matTooltip]="item.label | translate"
           [matTooltipPosition]="'above'"
           matTooltipShowDelay="500"
           matTooltipHideDelay="100">

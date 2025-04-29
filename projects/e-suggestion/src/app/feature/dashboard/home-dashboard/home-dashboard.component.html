@@ -1,124 +1,37 @@
-<div class="flex flex-col gap-6 px-4 lg:px-20">
+<div class="flex flex-col gap-6 px-4 py-6 lg:px-20">
   <ba-score-cards-list />
 
   <div class="flex flex-col gap-3 xl:flex-row xl:items-center">
-    <div
-      class="mb-6 flex w-full max-w-full flex-col break-words rounded-lg border border-gray-100 bg-white text-gray-600 shadow-lg">
-      <div class="relative p-3">
-        <div class="pt-1">
-          <div class="mb-4 flex items-center justify-between gap-x-3">
-            <h4
-              class="text-2xl font-semibold tracking-tighter text-gray-400 xl:text-2xl">
-              Ideas by Plants
-            </h4>
-
-            <div class="flex items-center gap-3">
-              <p-floatlabel class="w-full" variant="in">
-                <p-multiSelect
-                  id="by_plant"
-                  [options]="plants()"
-                  [(ngModel)]="selectedPlants"
-                  optionLabel="name"
-                  [showToggleAll]="true"
-                  [showHeader]="true"
-                  styleClass="w-52"
-                  (onChange)="updateByPlantsChart()">
-                </p-multiSelect>
-                <label for="by_plants">Plants</label>
-              </p-floatlabel>
-
-              <p-floatlabel class="w-full" variant="in">
-                <p-multiSelect
-                  [options]="statuses()"
-                  [(ngModel)]="selectedStatuses"
-                  [showToggleAll]="true"
-                  [showHeader]="true"
-                  styleClass="w-52"
-                  (onChange)="updateByPlantsChart()">
-                  <ng-template let-status #item>
-                    <ba-idea-status [status]="status" />
-                  </ng-template>
-                </p-multiSelect>
-                <label for="by_status">Status</label>
-              </p-floatlabel>
-            </div>
-          </div>
-          <div
-            echarts
-            [options]="byPlantschartOptions"
-            [loading]="isLoading"
-            class="h-96 w-full"></div>
-        </div>
-      </div>
-    </div>
-
-    <div
-      class="mb-6 flex w-full max-w-full flex-col break-words rounded-lg border border-gray-100 bg-white text-gray-600 shadow-lg">
-      <div class="relative p-3">
-        <div class="pt-1">
-          <div class="mb-4 flex items-center justify-between gap-x-3">
-            <h4
-              class="text-2xl font-semibold tracking-tighter text-gray-400 xl:text-2xl">
-              Ideas by BUs
-            </h4>
-
-            <div class="flex items-center gap-3">
-              <p-floatlabel class="w-full" variant="in">
-                <p-multiSelect
-                  id="by_by"
-                  [options]="bus()"
-                  [(ngModel)]="selectedBus"
-                  optionLabel="name"
-                  [showToggleAll]="true"
-                  [showHeader]="true"
-                  styleClass="w-52"
-                  (onChange)="updateByBusChart()">
-                </p-multiSelect>
-                <label for="by_by">BUs</label>
-              </p-floatlabel>
-
-              <p-floatlabel class="w-full" variant="in">
-                <p-multiSelect
-                  [options]="statuses()"
-                  [(ngModel)]="selectedStatuses"
-                  [showToggleAll]="true"
-                  [showHeader]="true"
-                  styleClass="w-52"
-                  (onChange)="updateByPlantsChart()">
-                  <ng-template let-status #item>
-                    <ba-idea-status [status]="status" />
-                  </ng-template>
-                </p-multiSelect>
-                <label for="by_status">Status</label>
-              </p-floatlabel>
-            </div>
-          </div>
-          <div
-            echarts
-            [options]="byBuschartOptions"
-            [loading]="isLoading"
-            class="h-96 w-full"></div>
-        </div>
-      </div>
-    </div>
+    <ba-ideas-by-plants class="w-full flex-1 xl:w-auto" [plants]="plants()" />
+    <ba-ideas-by-bus class="w-full flex-1 xl:w-auto" [bus]="bus()" />
   </div>
+</div>
 
-  <div class="flex flex-col gap-3 xl:flex-row xl:items-center">
-    <div
+@if (showActionsChart()) {
+  <div class="flex flex-col gap-6 px-4 lg:px-20">
+    <ba-actions-count [departments]="[]" />
+    <!-- <div
       class="mb-6 flex w-full max-w-full flex-col break-words rounded-lg border border-gray-100 bg-white text-gray-600 shadow-lg">
       <div class="relative p-3">
         <div class="pt-1">
-          <h4
-            class="text-2xl font-semibold tracking-tighter text-gray-400 xl:text-2xl">
-            Unimplemented Actions by Department
-          </h4>
-
+          <div class="flex items-center gap-3">
+            <h4
+              class="text-2xl font-semibold tracking-tighter text-gray-400 xl:text-2xl">
+              (Un)Implemented Actions by Department
+            </h4>
+  
+            <ba-filter-button (onClick)="op.toggle($event)" />
+            <p-popover #op>
+              <ba-dashboard-filter />
+            </p-popover>
+          </div>
+  
           <div
             echarts
             [options]="unImplementedActionschartOptions"
-            class="h-[30rem] w-full"></div>
+            class="min-h-[30rem] w-full"></div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
-</div>
+}

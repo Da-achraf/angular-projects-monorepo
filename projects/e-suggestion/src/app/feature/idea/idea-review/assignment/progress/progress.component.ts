@@ -1,10 +1,12 @@
 // progress.component.ts
 import { Component, computed, input, model } from '@angular/core';
+import { TranslatePipe } from 'projects/e-suggestion/src/app/core/translation/translate.pipe';
 
 @Component({
   selector: 'ba-progress',
   templateUrl: './progress.component.html',
   styleUrl: './progress.component.scss',
+  imports: [TranslatePipe],
 })
 export class ProgressComponent {
   // Model for two-way binding

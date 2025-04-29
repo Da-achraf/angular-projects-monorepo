@@ -1,0 +1,44 @@
+<!-- <div
+  class="mb-6 flex w-full max-w-full flex-col break-words rounded-lg border border-gray-100 bg-white text-gray-600 shadow-lg">
+  <div class="relative p-3">
+    <div class="pt-1">
+      <div class="mb-4 flex items-center justify-between gap-x-3">
+        <h4
+          class="text-2xl font-semibold tracking-tighter text-gray-400 xl:text-2xl">
+          Ideas by Plants
+        </h4>
+
+        <ba-filter-button (onClick)="op.toggle($event)" />
+        <p-popover #op>
+          <ba-dashboard-filter
+            [plants]="store.plants()"
+            (filterChanged)="onFilter($event); op.hide()" />
+        </p-popover>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div
+  class="flex flex-col gap-3 rounded-md bg-white p-3 shadow-md"
+  [ngClass]="{ 'blur-sm': store.loading() }">
+  <div class="mb-8 flex items-center gap-4">
+    <h4
+      class="text-xl font-semibold tracking-tighter text-gray-400 xl:text-2xl">
+      Ideas by Plants
+    </h4>
+
+    <ba-filter-button (onClick)="op.toggle($event)" />
+    <p-popover #op>
+      <ba-dashboard-filter
+        [plants]="store.plants()"
+        (filterChanged)="onFilter($event); op.hide()" />
+    </p-popover>
+  </div>
+
+  <div
+    echarts
+    [options]="store.chartOptions()"
+    [loading]="store.loading()"
+    class="h-96 w-full"></div>
+</div>

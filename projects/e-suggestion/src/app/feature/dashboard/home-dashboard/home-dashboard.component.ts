@@ -9,11 +9,11 @@ import {
   untracked,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { graphic } from 'echarts/core';
 import { EChartsOption } from 'echarts/types/dist/shared';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { PopoverModule } from 'primeng/popover';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { BU } from 'projects/e-suggestion/src/app/core/crud/bus/bu.model';
 import { BUStore } from 'projects/e-suggestion/src/app/core/crud/bus/bu.store';
@@ -21,9 +21,15 @@ import { Plant } from 'projects/e-suggestion/src/app/core/crud/plants/plant.mode
 import { PlantStore } from 'projects/e-suggestion/src/app/core/crud/plants/plant.store';
 import { IdeaStatus } from 'projects/e-suggestion/src/app/core/idea/models/idea-status.model';
 import { IdeaStatusDisplayPipe } from 'projects/e-suggestion/src/app/pattern/idea-status/pipes/idea-status.pipe';
+import { DashboardFilterComponent } from '../../../pattern/dashboard-filter/dashboard-filter/dashboard-filter.component';
 import { IdeaStatusBadgeComponent } from '../../../pattern/idea-status/components/idea-status-badge.component';
-import { ScoreCardComponent } from "../components/score-card.component";
-import { ScoreCardsListComponent } from "../components/score-cards/score-cards-list.component";
+import { FilterButtonComponent } from '../../../ui/components/filter-button/filter-button.component';
+import { ScoreCardComponent } from '../score-cards/score-card.component';
+import { ScoreCardsListComponent } from '../score-cards/score-cards-list/score-cards-list.component';
+import { IdeasByPlantsComponent } from '../ideas-by-plants/ideas-by-plants/ideas-by-plants.component';
+import { IdeasByBusComponent } from '../ideas-by-bus/ideas-by-bus/ideas-by-bus.component';
+import { ActionsCountComponent } from '../implemented-actions/actions-count/actions-count.component';
+import { AuthStore } from '../../../core/auth/data-access/auth.store';
 
 interface ChartType {
   name: string;
@@ -59,13 +65,21 @@ const CHART_COLORS = [
     FloatLabelModule,
     IdeaStatusDisplayPipe,
     ScoreCardComponent,
-    ScoreCardsListComponent
-],
+    ScoreCardsListComponent,
+    FilterButtonComponent,
+    DashboardFilterComponent,
+    PopoverModule,
+    IdeasByPlantsComponent,
+    IdeasByBusComponent,
+    ActionsCountComponent,
+  ],
 })
 export class HomeDashboardHomeComponent implements OnInit {
   plants = inject(PlantStore).allEntities;
   bus = inject(BUStore).allEntities;
   statuses = signal(Object.values(IdeaStatus));
+
+  authStore = inject(AuthStore);
 
   selectedPlants: Plant[] = [];
   selectedBus: BU[] = [];
@@ -75,6 +89,10 @@ export class HomeDashboardHomeComponent implements OnInit {
   byBuschartOptions!: EChartsOption;
   byPlantschartOptions!: EChartsOption;
   unImplementedActionschartOptions!: EChartsOption;
+
+  showActionsChart = computed(
+    () => this.authStore.isCommitteeMember() || this.authStore.isTeoaMember()
+  );
 
   // Chart type options
   chartTypes: ChartType[] = [
@@ -155,7 +173,11 @@ export class HomeDashboardHomeComponent implements OnInit {
       name: xAxisData[filteredData.indexOf(item)],
     }));
 
-    this.byPlantschartOptions = this.createPieChart(xAxisData, seriesData);
+    this.byPlantschartOptions = this.createDognutChart(
+      xAxisData,
+      seriesData,
+      'Ideas'
+    );
 
     this.isLoading = false;
   }
@@ -186,12 +208,20 @@ export class HomeDashboardHomeComponent implements OnInit {
       name: xAxisData[filteredData.indexOf(item)],
     }));
 
-    this.byBuschartOptions = this.createPieChart(xAxisData, seriesData);
+    this.byBuschartOptions = this.createDognutChart(
+      xAxisData,
+      seriesData,
+      'Ideas'
+    );
 
     this.isLoading = false;
   }
 
-  createPieChart(labels: string[], data: any[]): EChartsOption {
+  createDognutChart(
+    labels: string[],
+    data: any[],
+    label: string
+  ): EChartsOption {
     return {
       tooltip: {
         trigger: 'item',
@@ -204,7 +234,7 @@ export class HomeDashboardHomeComponent implements OnInit {
       },
       series: [
         {
-          name: 'Ideas',
+          name: label,
           type: 'pie',
           radius: ['40%', '70%'],
           color: shuffleArray(CHART_COLORS),
@@ -235,91 +265,219 @@ export class HomeDashboardHomeComponent implements OnInit {
     };
   }
 
-  mockData: { [key: string]: number } = {
-    Production: 62,
-    Quality: 45,
-    Process: 38,
-    'Tools Shop': 27,
-    Maintenance: 53,
-    'Tool & Die': 29,
-    Warehouse: 19,
-    SC: 33,
-    Other: 15,
-  };
+  mockData: { [key: string]: { implemented: number; unimplemented: number } } =
+    {
+      Production: { implemented: 30, unimplemented: 62 },
+      Quality: { implemented: 25, unimplemented: 45 },
+      Process: { implemented: 20, unimplemented: 38 },
+      'Tools Shop': { implemented: 15, unimplemented: 27 },
+      Maintenance: { implemented: 28, unimplemented: 53 },
+      'Tool & Die': { implemented: 14, unimplemented: 29 },
+      Warehouse: { implemented: 10, unimplemented: 19 },
+      SC: { implemented: 18, unimplemented: 33 },
+      Other: { implemented: 8, unimplemented: 15 },
+    };
 
   updateunImplementedActionschart() {
-    // Sort departments by action count in descending order
+    // Sort departments by unimplemented actions (descending)
     const sortedDepartments = Object.entries(this.mockData).sort(
-      (a, b) => b[1] - a[1]
+      (a, b) => b[1].unimplemented - a[1].unimplemented
     );
 
     const departments = sortedDepartments.map(([dept]) => dept);
-    const values = sortedDepartments.map(([, count]) => count);
+    const implementedValues = sortedDepartments.map(
+      ([, counts]) => counts.implemented
+    );
+    const unimplementedValues = sortedDepartments.map(
+      ([, counts]) => counts.unimplemented
+    );
+    const totalValues = sortedDepartments.map(
+      ([, counts]) => counts.implemented + counts.unimplemented
+    );
 
-    // Shuffle colors for variety
-    const shuffledColors = shuffleArray(CHART_COLORS);
+    // Color definitions
+    const implementedBaseColor = '#5EB087'; // Green
+    const unimplementedBaseColor = '#C86C89'; // Red
 
-    // Set chart options
     this.unImplementedActionschartOptions = {
       tooltip: {
         trigger: 'axis',
-        axisPointer: {
-          type: 'shadow',
+        axisPointer: { type: 'shadow' },
+        formatter: (params: any) => {
+          let imp = 0,
+            unimp = 0;
+          params.forEach((p: any) => {
+            if (p.seriesName === 'Implemented') imp = p.value;
+            if (p.seriesName === 'Unimplemented') unimp = p.value;
+          });
+          return `Department: ${params[0].name}<br/>
+                      Implemented: ${imp}<br/>
+                      Unimplemented: ${unimp}<br/>
+                      Total: ${imp + unimp}`;
         },
-        formatter: '{b}: {c} actions',
       },
-      grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true,
-      },
+      grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
       xAxis: {
         type: 'value',
-        name: 'Number of Unimplemented Actions',
-        nameLocation: 'middle',
-        nameGap: 30,
       },
       yAxis: {
         type: 'category',
         data: departments,
         axisLabel: {
           width: 120,
-          overflow: 'truncate',
+          formatter: (value: string, index: number) => {
+            // Append the total to the department name
+            return `${value} (${totalValues[index]})`;
+          },
         },
       },
       series: [
         {
-          name: 'Unimplemented Actions',
+          name: 'Implemented',
           type: 'bar',
-          data: values.map((value, index) => ({
+          barGap: '0%',
+          data: implementedValues.map(value => ({
             value,
+
             itemStyle: {
-              color: new graphic.LinearGradient(1, 0, 0, 0, [
-                {
-                  offset: 0,
-                  color: shuffledColors[index % shuffledColors.length],
-                }, // Base color
-                {
-                  offset: 1,
-                  color: adjustColorBrightness(
-                    shuffledColors[index % shuffledColors.length],
-                    -40
-                  ),
-                }, // Darker shade
-              ]),
+              color: {
+                type: 'linear',
+                x: 0,
+                y: 0,
+                x2: 1,
+                y2: 0,
+                colorStops: [
+                  { offset: 0, color: '#A8E6CF' }, // Start color (light green)
+                  { offset: 1, color: '#5EB087' }, // End color (medium green)
+                ],
+              },
             },
           })),
-          barWidth: '60%',
+          barWidth: '40%',
           label: {
             show: true,
-            position: 'right',
+            position: 'insideRight',
+            color: '#fff',
+            formatter: '{c}',
+          },
+        },
+        {
+          name: 'Unimplemented',
+          type: 'bar',
+          barGap: '0%',
+          data: unimplementedValues.map(value => ({
+            value,
+            itemStyle: {
+              color: {
+                type: 'linear',
+                x: 0,
+                y: 0,
+                x2: 1,
+                y2: 0,
+                colorStops: [
+                  { offset: 0, color: '#FF8B94' }, // Start color (light red)
+                  { offset: 1, color: '#C86C89' }, // End color (medium red)
+                ],
+              },
+            },
+          })),
+          barWidth: '40%',
+          label: {
+            show: true,
+            position: 'insideRight',
+            color: '#fff',
             formatter: '{c}',
           },
         },
       ],
     };
   }
+
+  // mockData: { [key: string]: number } = {
+  //   Production: 62,
+  //   Quality: 45,
+  //   Process: 38,
+  //   'Tools Shop': 27,
+  //   Maintenance: 53,
+  //   'Tool & Die': 29,
+  //   Warehouse: 19,
+  //   SC: 33,
+  //   Other: 15,
+  // };
+
+  // updateunImplementedActionschart() {
+  //   // Sort departments by action count in descending order
+  //   const sortedDepartments = Object.entries(this.mockData).sort(
+  //     (a, b) => b[1] - a[1]
+  //   );
+
+  //   const departments = sortedDepartments.map(([dept]) => dept);
+  //   const values = sortedDepartments.map(([, count]) => count);
+
+  //   // Shuffle colors for variety
+  //   const shuffledColors = shuffleArray(CHART_COLORS);
+
+  //   // Set chart options
+  //   this.unImplementedActionschartOptions = {
+  //     tooltip: {
+  //       trigger: 'axis',
+  //       axisPointer: {
+  //         type: 'shadow',
+  //       },
+  //       formatter: '{b}: {c} actions',
+  //     },
+  //     grid: {
+  //       left: '3%',
+  //       right: '4%',
+  //       bottom: '3%',
+  //       containLabel: true,
+  //     },
+  //     xAxis: {
+  //       type: 'value',
+  //       name: 'Number of Unimplemented Actions',
+  //       nameLocation: 'middle',
+  //       nameGap: 30,
+  //     },
+  //     yAxis: {
+  //       type: 'category',
+  //       data: departments,
+  //       axisLabel: {
+  //         width: 120,
+  //         overflow: 'truncate',
+  //       },
+  //     },
+  //     series: [
+  //       {
+  //         name: 'Unimplemented Actions',
+  //         type: 'bar',
+  //         data: values.map((value, index) => ({
+  //           value,
+  //           itemStyle: {
+  //             color: new graphic.LinearGradient(1, 0, 0, 0, [
+  //               {
+  //                 offset: 0,
+  //                 color: shuffledColors[index % shuffledColors.length],
+  //               }, // Base color
+  //               {
+  //                 offset: 1,
+  //                 color: adjustColorBrightness(
+  //                   shuffledColors[index % shuffledColors.length],
+  //                   -40
+  //                 ),
+  //               }, // Darker shade
+  //             ]),
+  //           },
+  //         })),
+  //         barWidth: '60%',
+  //         label: {
+  //           show: true,
+  //           position: 'right',
+  //           formatter: '{c}',
+  //         },
+  //       },
+  //     ],
+  //   };
+  // }
 }
 
 // Function to darken or lighten a color
@@ -343,138 +501,6 @@ function adjustColorBrightness(hex: string, amount: number): string {
     (usePound ? '#' : '') +
     ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1)
   );
-
-  //   mockData: { [key: string]: { implemented: number; unimplemented: number } } =
-  //     {
-  //       Production: { implemented: 30, unimplemented: 62 },
-  //       Quality: { implemented: 25, unimplemented: 45 },
-  //       Process: { implemented: 20, unimplemented: 38 },
-  //       'Tools Shop': { implemented: 15, unimplemented: 27 },
-  //       Maintenance: { implemented: 28, unimplemented: 53 },
-  //       'Tool & Die': { implemented: 14, unimplemented: 29 },
-  //       Warehouse: { implemented: 10, unimplemented: 19 },
-  //       SC: { implemented: 18, unimplemented: 33 },
-  //       Other: { implemented: 8, unimplemented: 15 },
-  //     };
-
-  //   updateunImplementedActionschart() {
-  //     // Sort departments by unimplemented actions (descending)
-  //     const sortedDepartments = Object.entries(this.mockData).sort(
-  //       (a, b) => b[1].unimplemented - a[1].unimplemented
-  //     );
-
-  //     const departments = sortedDepartments.map(([dept]) => dept);
-  //     const implementedValues = sortedDepartments.map(
-  //       ([, counts]) => counts.implemented
-  //     );
-  //     const unimplementedValues = sortedDepartments.map(
-  //       ([, counts]) => counts.unimplemented
-  //     );
-  //     const totalValues = sortedDepartments.map(
-  //       ([, counts]) => counts.implemented + counts.unimplemented
-  //     );
-
-  //     // Color definitions
-  //     const implementedBaseColor = '#5EB087'; // Green
-  //     const unimplementedBaseColor = '#C86C89'; // Red
-
-  //     this.unImplementedActionschartOptions = {
-  //       tooltip: {
-  //         trigger: 'axis',
-  //         axisPointer: { type: 'shadow' },
-  //         formatter: (params: any) => {
-  //           let imp = 0,
-  //             unimp = 0;
-  //           params.forEach((p: any) => {
-  //             if (p.seriesName === 'Implemented') imp = p.value;
-  //             if (p.seriesName === 'Unimplemented') unimp = p.value;
-  //           });
-  //           return `Department: ${params[0].name}<br/>
-  //                     Implemented: ${imp}<br/>
-  //                     Unimplemented: ${unimp}<br/>
-  //                     Total: ${imp + unimp}`;
-  //         },
-  //       },
-  //       grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-  //       xAxis: {
-  //         type: 'value',
-  //       },
-  //       yAxis: {
-  //         type: 'category',
-  //         data: departments,
-  //         axisLabel: {
-  //           width: 120,
-  //           formatter: (value: string, index: number) => {
-  //             // Append the total to the department name
-  //             return `${value} (${totalValues[index]})`;
-  //           },
-  //         },
-  //       },
-  //       series: [
-  //         {
-  //           name: 'Implemented',
-  //           type: 'bar',
-  //           barGap: '0%',
-  //           data: implementedValues.map(value => ({
-  //             value,
-
-  //             itemStyle: {
-  //               color: {
-  //                 type: 'linear',
-  //                 x: 0,
-  //                 y: 0,
-  //                 x2: 1,
-  //                 y2: 0,
-  //                 colorStops: [
-  //                   { offset: 0, color: '#A8E6CF' }, // Start color (light green)
-  //                   { offset: 1, color: '#5EB087' }, // End color (medium green)
-  //                 ],
-  //               },
-  //             },
-
-  //             // itemStyle: {
-  //             //   color: implementedBaseColor,
-  //             // },
-  //           })),
-  //           barWidth: '40%',
-  //           label: {
-  //             show: true,
-  //             position: 'insideRight',
-  //             color: '#fff',
-  //             formatter: '{c}',
-  //           },
-  //         },
-  //         {
-  //           name: 'Unimplemented',
-  //           type: 'bar',
-  //           barGap: '0%',
-  //           data: unimplementedValues.map(value => ({
-  //             value,
-  //             itemStyle: {
-  //               color: {
-  //                 type: 'linear',
-  //                 x: 0,
-  //                 y: 0,
-  //                 x2: 1,
-  //                 y2: 0,
-  //                 colorStops: [
-  //                   { offset: 0, color: '#FF8B94' }, // Start color (light red)
-  //                   { offset: 1, color: '#C86C89' }, // End color (medium red)
-  //                 ],
-  //               },
-  //             },
-  //           })),
-  //           barWidth: '40%',
-  //           label: {
-  //             show: true,
-  //             position: 'insideRight',
-  //             color: '#fff',
-  //             formatter: '{c}',
-  //           },
-  //         },
-  //       ],
-  //     };
-  //   }
 }
 
 function shuffleArray<T>(array: T[]): T[] {

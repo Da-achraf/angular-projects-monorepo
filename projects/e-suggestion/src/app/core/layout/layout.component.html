@@ -3,23 +3,22 @@
 
   <div class="flex h-[calc(100vh-var(--header-height))]">
     <div
-      class="min-h-[calc(100vh-var(--header-height))] transition-all duration-300 ease-in-out  relative"
+      class="relative min-h-[calc(100vh-var(--header-height))] transition-all duration-300 ease-in-out"
       [style.width]="
         isOpen()
           ? 'var(--expanded-sidebar-width)'
           : 'var(--collapsed-sidebar-width)'
-      "
-    >
+      ">
       @if (isOpen()) {
-      <app-expanded-sidebar />
-      }@else {
-      <app-collapsed-sidebar />
+        <app-expanded-sidebar />
+      } @else {
+        <app-collapsed-sidebar />
       }
     </div>
 
-    <div class="min-h-[calc(100vh-var(--header-height))] overflow-auto w-full">
-      <div class="h-full w-full bg-white mx-auto">
-        <ba-breadcrumb class="sticky top-0 backdrop-blur-[.5rem] z-[200]" />
+    <div class="min-h-[calc(100vh-var(--header-height))] w-full overflow-auto">
+      <div class="mx-auto h-full w-full bg-white">
+        <ba-breadcrumb class="sticky top-0 z-[200] backdrop-blur-[.5rem]" />
 
         <router-outlet />
       </div>
