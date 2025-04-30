@@ -13,12 +13,12 @@ import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/b
 import { BaInputComponent } from '../../../../../ui/components/form/input.component';
 import { BUStore } from '../../../../crud/bus/bu.store';
 import { PlantStore } from '../../../../crud/plants/plant.store';
-import { TranslatePipe } from '../../../../translation/translate.pipe';
 import { RoleEnum } from '../../../data-access/auth.model';
 import { AuthStore } from '../../../data-access/auth.store';
 import { RoleStore } from '../../../data-access/role.store';
 import { RoleNamePipe } from '../../pipes/role-name.pipe';
 import { LogoComponent } from 'projects/e-suggestion/src/app/ui/components/logo.component';
+import { TranslatePipe } from '@ba/core/data-access';
 
 @Component({
   selector: 'app-register',

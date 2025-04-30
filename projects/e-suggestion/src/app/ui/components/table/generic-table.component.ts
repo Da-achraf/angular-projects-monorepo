@@ -13,18 +13,21 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { PAGE_SIZE } from '@ba/core/data-access';
+import {
+  PAGE_SIZE,
+  TranslatePipe,
+  TranslationService
+} from '@ba/core/data-access';
 import { Button } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
 import { Table, TableModule } from 'primeng/table';
+import { QueryParamType } from '../../../core/api/api.model';
 import { BaButtonComponent } from '../button/button.component';
+import { LoadingComponent } from '../loading/loading.component';
 import { PaginatorComponent } from '../paginator/paginator.component';
 import { SearchBarComponent } from '../search/search-bar.component';
-import { TableColumn } from './table-types.interface';
-import { LoadingComponent } from '../loading/loading.component';
 import { convertPrimeNgMatchModeToBackendOperator } from './generic-table.util';
-import { QueryParamType } from '../../../core/api/api.model';
-import { TranslatePipe } from '../../../core/translation/translate.pipe';
+import { TableColumn } from './table-types.interface';
 
 @Component({
   selector: 'ba-generic-table',
@@ -81,6 +84,7 @@ export class GenericTableComponent implements OnInit {
   columnsLength = computed(() => this.columns().length);
 
   private readonly size = inject(PAGE_SIZE);
+  protected translationService = inject(TranslationService);
 
   ngOnInit(): void {
     this.page.emit(1);

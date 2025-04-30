@@ -1,6 +1,6 @@
 import { Component, effect, inject, input, untracked } from '@angular/core';
 import { TeoaReview } from 'projects/e-suggestion/src/app/core/idea/models/teoa-review.model';
-import { TranslatePipe } from 'projects/e-suggestion/src/app/core/translation/translate.pipe';
+import { TranslatePipe } from '@ba/core/data-access';
 import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/button/button.component';
 import { TeoaCommentsComponent } from '../teoa-comments/teao-comments-list/teoa-comments.component';
 import { TeoaReviewService } from '../teoa-review.service';

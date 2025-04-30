@@ -2,7 +2,7 @@ import { TableColumn } from 'projects/e-suggestion/src/app/ui/components/table/t
 
 export const COLUMNS: TableColumn[] = [
   {
-    header: 'Title',
+    header: 'idea-title',
     type: 'text',
     field: 'title',
     sortable: true,
@@ -10,7 +10,7 @@ export const COLUMNS: TableColumn[] = [
     filter: { type: 'text', field: 'title' },
   },
   {
-    header: 'Created At',
+    header: 'created-at',
     field: 'created_at',
     sortable: true,
     sortField: 'created_at',
@@ -18,7 +18,7 @@ export const COLUMNS: TableColumn[] = [
     type: 'date',
   },
   {
-    header: 'Status',
+    header: 'status',
     field: 'status',
     type: 'custom',
     sortField: 'status',
@@ -27,14 +27,14 @@ export const COLUMNS: TableColumn[] = [
     // filterTemplate: 'statusFilterTemplate',
   },
   {
-    header: 'Category',
+    header: 'category',
     type: 'custom',
     field: 'category',
     filter: { type: 'text', field: 'category' },
     template: 'categoryTemplate',
   },
   {
-    header: 'Submitter',
+    header: 'submitter',
     type: 'custom',
     field: 'submitter.first_name',
     sortable: true,

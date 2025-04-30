@@ -13,7 +13,7 @@ import _ from 'lodash';
 import { MultiSelect, MultiSelectModule } from 'primeng/multiselect';
 import { User } from 'projects/e-suggestion/src/app/core/auth/data-access/auth.model';
 import { UsersStore } from 'projects/e-suggestion/src/app/core/auth/data-access/services/users.store';
-import { TranslatePipe } from 'projects/e-suggestion/src/app/core/translation/translate.pipe';
+import { TranslatePipe } from '@ba/core/data-access';
 
 @Component({
   selector: 'ba-assignees',

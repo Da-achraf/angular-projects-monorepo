@@ -1,4 +1,4 @@
-<div class="relative w-full">
+<div class="relative w-full" [dir]="translationService.dir()">
   <!-- Loading Overlay -->
   @if (loading(); as loading) {
     <div
@@ -76,7 +76,7 @@
           </th>
         }
         @if (showActionsColumn()) {
-          <th [style.minWidth]="'auto'">Actions</th>
+          <th [style.minWidth]="'auto'">{{ 'actions' | translate }}</th>
         }
       </tr>
     </ng-template>

@@ -1,7 +1,7 @@
 import { CommonModule, NgClass } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { TranslatePipe } from '../../../translation/translate.pipe';
+import { TranslatePipe } from '@ba/core/data-access';
 import { SidebarService } from '../../data-access/sidebar.service';
 
 /**

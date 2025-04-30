@@ -112,5 +112,10 @@
     "notifications-filter-unread": "غير المقروءة",
     "notifications-filter-unread-title": "عرض الإشعارات غير المقروءة فقط",
     "notifications-filter-read": "المقروءة",
-    "notifications-filter-read-title": "عرض الإشعارات المقروءة فقط"
+    "notifications-filter-read-title": "عرض الإشعارات المقروءة فقط",
+
+    "created-at": "تاريخ الإنشاء",
+    "status": "الحالة",
+    "submitter": "صاحب الفكرة",
+    "actions": "عمليات"
 }

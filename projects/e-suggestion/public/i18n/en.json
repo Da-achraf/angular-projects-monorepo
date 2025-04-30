@@ -107,5 +107,10 @@
     "notifications-filter-unread": "Unread",
     "notifications-filter-unread-title": "Show unread notifications only",
     "notifications-filter-read": "Read",
-    "notifications-filter-read-title": "Show read notifications only"
+    "notifications-filter-read-title": "Show read notifications only",
+
+    "created-at": "Created At",
+    "status": "Status",
+    "submitter": "Submitter",
+    "Actions": "Actions"
 }

@@ -10,9 +10,8 @@ import { LogoComponent } from '../../../ui/components/logo.component';
 import { AuthStore } from '../../auth/data-access/auth.store';
 import { NotificationSocketService } from '../../notifications/notification-socket.service';
 import { NotificationsPanelComponent } from '../../notifications/notifications-panel/notifications-panel.component';
-import { TranslatePipe } from '../../translation/translate.pipe';
-import { TranslationService } from '../../translation/translation.service';
 import { SidebarService } from '../data-access/sidebar.service';
+import { TranslatePipe, TranslationService } from '@ba/core/data-access';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -49,7 +48,9 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.defaultLang = this.translationService.selectedLanguage();
+    this.defaultLang = this.translationService.selectedLanguage() as
+      | 'en'
+      | 'ar';
   }
 
   logout() {

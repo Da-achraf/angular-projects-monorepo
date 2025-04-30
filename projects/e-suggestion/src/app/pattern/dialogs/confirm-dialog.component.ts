@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BaseDialogComponent } from 'projects/e-suggestion/src/app/pattern/dialogs/base-dialog.component';
 import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/button/button.component';
-import { TranslatePipe } from '../../core/translation/translate.pipe';
+import { TranslatePipe } from '@ba/core/data-access';
 
 interface ConfirmDialogData {
   header: string;

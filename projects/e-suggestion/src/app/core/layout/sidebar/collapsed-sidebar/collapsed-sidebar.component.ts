@@ -13,7 +13,7 @@ import {
   RouterLinkActive,
 } from '@angular/router';
 import { AuthStore } from '../../../auth/data-access/auth.store';
-import { TranslatePipe } from '../../../translation/translate.pipe';
+import { TranslatePipe } from '@ba/core/data-access';
 import { SidebarItem } from '../../data-access/sidebar.model';
 import { SidebarService } from '../../data-access/sidebar.service';
 

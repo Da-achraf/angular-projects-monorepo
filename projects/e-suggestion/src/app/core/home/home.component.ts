@@ -1,12 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe, TranslationService } from '@ba/core/data-access';
 import {
   SelectButtonModule,
   SelectButtonOptionClickEvent,
 } from 'primeng/selectbutton';
-import { TranslationService } from '../translation/translation.service';
-import { TranslatePipe } from '../translation/translate.pipe';
 import { LogoComponent } from '../../ui/components/logo.component';
 
 @Component({
@@ -36,6 +35,8 @@ export class HomeComponent {
   }
 
   ngOnInit() {
-    this.defaultLang = this.translationService.selectedLanguage();
+    this.defaultLang = this.translationService.selectedLanguage() as
+      | 'en'
+      | 'ar';
   }
 }

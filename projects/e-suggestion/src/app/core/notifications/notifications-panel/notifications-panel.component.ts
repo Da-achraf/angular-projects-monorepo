@@ -1,11 +1,13 @@
 import { NgClass } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ToasterService } from '@ba/core/data-access';
+import {
+  ToasterService,
+  TranslatePipe,
+  TranslationService,
+} from '@ba/core/data-access';
 import { TooltipModule } from 'primeng/tooltip';
 import { AuthStore } from '../../auth/data-access/auth.store';
-import { TranslatePipe } from '../../translation/translate.pipe';
-import { TranslationService } from '../../translation/translation.service';
 import { NotificationItemComponent } from '../notification-item/notification-item.component';
 import { NotificationSocketService } from '../notification-socket.service';
 

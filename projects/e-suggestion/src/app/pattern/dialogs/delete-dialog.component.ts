@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TranslatePipe } from '../../core/translation/translate.pipe';
+import { TranslatePipe } from '@ba/core/data-access';
 import { BaButtonComponent } from '../../ui/components/button/button.component';
 import { BaseDialogComponent } from './base-dialog.component';
 

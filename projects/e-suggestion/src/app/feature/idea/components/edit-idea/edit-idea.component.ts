@@ -14,9 +14,9 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { Router } from '@angular/router';
+import { TranslatePipe, TranslationService } from '@ba/core/data-access';
 import { EditorModule } from 'primeng/editor';
 import { SelectModule } from 'primeng/select';
-import { TranslatePipe } from 'projects/e-suggestion/src/app/core/translation/translate.pipe';
 import { AttachmentUploadComponent } from 'projects/e-suggestion/src/app/pattern/attachment-upload/components/attachment-upload.component';
 import { DeleteDialogComponent } from 'projects/e-suggestion/src/app/pattern/dialogs/delete-dialog.component';
 import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/button/button.component';
@@ -28,7 +28,6 @@ import { Idea, IdeaUpdate } from '../../../../core/idea/models/idea.model';
 import { IdeaCaptionComponent } from '../../idea-review/components/idea-caption.component';
 import { IdeaService } from '../../services/idea.service';
 import { IdeaStore } from '../../services/idea.store';
-import { TranslationService } from 'projects/e-suggestion/src/app/core/translation/translation.service';
 
 @Component({
   selector: 'ba-edit-idea',

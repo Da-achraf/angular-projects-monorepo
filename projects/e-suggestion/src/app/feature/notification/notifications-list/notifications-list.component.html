@@ -1,4 +1,4 @@
-<div class="mx-auto max-w-[80rem] p-10" dir="rtl">
+<div class="mx-auto max-w-[80rem] p-10" [dir]="translationService.dir()">
   <ba-generic-table
     [data]="store.entities()"
     [total]="store.total()"

@@ -1,6 +1,6 @@
 // progress.component.ts
 import { Component, computed, input, model } from '@angular/core';
-import { TranslatePipe } from 'projects/e-suggestion/src/app/core/translation/translate.pipe';
+import { TranslatePipe } from '@ba/core/data-access';
 
 @Component({
   selector: 'ba-progress',

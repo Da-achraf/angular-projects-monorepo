@@ -7,7 +7,7 @@ import { AddCommentComponent } from 'projects/e-suggestion/src/app/pattern/comme
 import { CommentDetailComponent } from 'projects/e-suggestion/src/app/pattern/comments/comment-detail/comment-detail.component';
 import { LoadingComponent } from 'projects/e-suggestion/src/app/ui/components/loading/loading.component';
 import { BaButtonComponent } from '../../../ui/components/button/button.component';
-import { TranslatePipe } from '../../../core/translation/translate.pipe';
+import { TranslatePipe } from '@ba/core/data-access';
 
 /**
  * Generic comments components

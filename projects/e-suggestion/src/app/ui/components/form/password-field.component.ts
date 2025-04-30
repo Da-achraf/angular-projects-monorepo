@@ -5,8 +5,8 @@ import {
   FormControl,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { TranslatePipe } from '@ba/core/data-access';
 import { InputErrorsComponent } from '@ba/core/forms';
-import { TranslatePipe } from '../../../core/translation/translate.pipe';
 
 type InputType = 'text' | 'password';
 

@@ -2,11 +2,10 @@ import { NgClass, NgStyle } from '@angular/common';
 import { Component, effect, inject, input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
+import { TranslatePipe, TranslationService } from '@ba/core/data-access';
 import { DrawerModule } from 'primeng/drawer';
 import { EditorModule } from 'primeng/editor';
 import { SelectModule } from 'primeng/select';
-import { TranslatePipe } from 'projects/e-suggestion/src/app/core/translation/translate.pipe';
-import { TranslationService } from 'projects/e-suggestion/src/app/core/translation/translation.service';
 import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/button/button.component';
 import { LoadingComponent } from 'projects/e-suggestion/src/app/ui/components/loading/loading.component';
 import { AssignmentComponent } from '../../assignment/assignment/assignment.component';
@@ -50,6 +49,8 @@ export class IdeaReviewComponent {
   protected readonly store = inject(IdeaReviewStore);
 
   protected readonly translationService = inject(TranslationService);
+
+  dirEffect = effect(() => console.log('dir: ', this.translationService.dir()));
 
   protected readonly idea = this.store.idea;
 

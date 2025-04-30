@@ -1,7 +1,7 @@
 import { Component, effect, input, output, signal } from '@angular/core';
 import { FilterOptionClassPipe } from './option-class.pipe';
 import { FilterOption } from './types';
-import { TranslatePipe } from '../../core/translation/translate.pipe';
+import { TranslatePipe } from '@ba/core/data-access';
 
 @Component({
   selector: 'ba-radio-filter',

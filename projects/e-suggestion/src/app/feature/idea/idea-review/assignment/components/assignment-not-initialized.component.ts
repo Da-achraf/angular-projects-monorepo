@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { TranslatePipe } from 'projects/e-suggestion/src/app/core/translation/translate.pipe';
+import { TranslatePipe } from '@ba/core/data-access';
 
 @Component({
   selector: 'ba-assignment-not-initialized',

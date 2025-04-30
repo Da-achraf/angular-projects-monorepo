@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { LocalStorageService } from '@ba/core/data-access';
+import { LocalStorageService } from '../localstorage.service';
 import { TranslationConfig } from './translation.config';
 
 @Injectable()
@@ -65,7 +65,9 @@ export class TranslationService {
       return key;
     }
 
-    return translations[currentLang][key.toLowerCase()] || key;
+    return (
+      translations[currentLang][key.toLowerCase()] || this.toTitleCase(key)
+    );
   }
 
   /**

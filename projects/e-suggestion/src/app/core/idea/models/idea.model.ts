@@ -25,6 +25,7 @@ type IdeaMixin = {
 export type IdeaCreate = IdeaBase & {
   submitter_id: number;
 };
+
 export type IdeaUpdate = IdeaBase &
   IdeaMixin & {
     id: number;

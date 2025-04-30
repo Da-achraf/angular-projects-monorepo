@@ -1,7 +1,7 @@
 import { Component, effect, input, output, untracked } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DatePickerModule } from 'primeng/datepicker';
-import { TranslatePipe } from 'projects/e-suggestion/src/app/core/translation/translate.pipe';
+import { TranslatePipe } from '@ba/core/data-access';
 
 @Component({
   selector: 'ba-due-date',

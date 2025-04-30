@@ -33,8 +33,9 @@ import {
 import { CanvasRenderer } from 'echarts/renderers';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { tokenInterceptor } from './interceptors/token.interceptor';
-import { TRANSLATION_CONFIG } from 'projects/core/src';
-import { LocalStorageService } from './auth/data-access/services/local-storage.service';
+import { TranslationConfig, TranslationService } from '@ba/core/data-access';
+import * as enTranslations from '../../../public/i18n/en.json';
+import * as arTranslations from '../../../public/i18n/ar.json';
 
 echarts.use([
   BarChart,
@@ -100,6 +101,23 @@ export function provideCore({ routes }: CoreOptions) {
     MessageService,
     TitleCasePipe,
 
+    TranslationService,
+    {
+      provide: TranslationConfig,
+      useValue: {
+        defaultLanguage: 'en',
+        supportedLanguages: ['en', 'ar'],
+        rtlLanguages: ['ar'],
+        rtlFontClass: 'font-arabic',
+        storageKey: 'e-suggestion-lang',
+
+        // Pre-load translations
+        initialTranslations: {
+          en: enTranslations,
+          ar: arTranslations,
+        },
+      },
+    },
     provideNativeDateAdapter(),
 
     providePrimeNG({
@@ -113,26 +131,5 @@ export function provideCore({ routes }: CoreOptions) {
       },
     }),
     provideEchartsCore({ echarts }),
-
-    {
-      provide: TRANSLATION_CONFIG,
-      useValue: {
-        defaultLanguage: 'en',
-        supportedLanguages: ['en', 'ar'],
-        rtlLanguages: ['ar'],
-        rtlFontClass: 'font-arabic',
-        storageKey: 'e-suggestion-lang',
-        // Provide your storage service implementation
-        storageService: {
-          provide: 'StorageService',
-          useExisting: LocalStorageService,
-        },
-        // Pre-load translations
-        initialTranslations: {
-          en: enTranslations,
-          ar: arTranslations,
-        },
-      },
-    },
   ];
 }

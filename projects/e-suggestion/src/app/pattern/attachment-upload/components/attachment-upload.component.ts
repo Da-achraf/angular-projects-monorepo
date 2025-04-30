@@ -6,7 +6,7 @@ import { RemoveFilenamePrefixPipe } from '../../../ui/pipes/file-name/file-name-
 import { FilenameTruncatePipe } from '../../../ui/pipes/file-name/file-name-truncate.pipe';
 import { FileSizePipe } from '../../../ui/pipes/file-size.pipe';
 import { Attachement } from '../models/attachement.model';
-import { TranslatePipe } from '../../../core/translation/translate.pipe';
+import { TranslatePipe } from '@ba/core/data-access';
 
 @Component({
   selector: 'ba-attachment-upload',
