@@ -1,64 +1,69 @@
 <div
   id="style-4"
-  class="h-full overflow-y-auto py-1 shadow-2xl flex flex-col text-[var(--sidebar-text-color)] bg-[var(--sidebar-bg-color)] overflow-x-hidden"
->
-  <ul class="flex flex-col gap-y-1 justify-center p-1">
-    @for (item of filteredItems(); track item.label) { @if (!item.isMenu) {
+  class="flex h-full flex-col overflow-y-auto overflow-x-hidden bg-[var(--sidebar-bg-color)] py-1 text-[var(--sidebar-text-color)] shadow-2xl">
+  <div class="flex items-center gap-x-3 mb-4 sm:hidden">
     <button
-      [routerLink]="item.link"
-      routerLinkActive="text-[var(--sidebar-active-color)] shadow shadow-[var(--sidebar-active-color)]"
-      class="flex items-center font-medium justify-start gap-x-4 p-2 rounded cursor-pointer transition-all duration-200 hover:text-[var(--sidebar-hover-color)]"
-    >
-      <i [ngClass]="item.icon" class="w-4 fa-solid text-md"></i>
-      <span>{{ item.label | translate }}</span>
-    </button>
-    } @else {
-    <div class="relative">
-      <button
-        (click)="toggleMenu(item.label)"
-        class="w-full flex items-center justify-between p-2 font-medium rounded cursor-pointer transition-all duration-200 hover:text-[var(--sidebar-hover-color)]"
-        [ngClass]="{
-          'text-[var(--sidebar-active-color)] shadow shadow-[var(--sidebar-active-color)]':
-            navigatedToMenuLabel() === item.label
-        }"
-      >
-        <div class="flex items-center justify-start gap-x-4">
-          <i [ngClass]="item.icon" class="w-4 fa-solid text-md"></i>
-          <span>{{ item.label | translate }}</span>
-        </div>
-        <i
-          class="fa-solid text-xs transition-transform duration-200"
-          [class.rotate-180]="menuVisibleMap()[item.label]"
-          [ngClass]="{
-            'fa-minus': menuVisibleMap()[item.label],
-            'fa-plus': !menuVisibleMap()[item.label]
-          }"
-        >
-        </i>
-      </button>
-      @if (menuVisibleMap()[item.label]) {
-      <div class="w-full pl-2 py-1 text-[.8rem] flex flex-col gap-y-1">
-        @for (child of item.children; track child.label) {
+      (click)="sideBarToggler()"
+      class="fa-solid fa-bars p-3 text-xl font-bold text-gray-300 transition duration-300 hover:text-gray-100"></button>
+    @if (sideBarOpened()) {
+      <ba-logo type="light" />
+    }
+  </div>
+
+  <ul class="flex flex-col justify-center gap-y-1 p-1">
+    @for (item of filteredItems(); track item.label) {
+      @if (!item.isMenu) {
         <button
-          [routerLink]="child.link"
+          [routerLink]="item.link"
           routerLinkActive="text-[var(--sidebar-active-color)] shadow shadow-[var(--sidebar-active-color)]"
-          class="flex items-center w-full justify-start gap-x-4 p-2 rounded cursor-pointer transition-all duration-200 border border-transparent hover:border-neutral-100"
-        >
-          <i [ngClass]="child.icon" class="w-4 fa-solid text-md"></i>
-          <span>{{ child.label | translate }}</span>
+          class="flex cursor-pointer items-center justify-start gap-x-4 rounded p-2 font-medium transition-all duration-200 hover:text-[var(--sidebar-hover-color)]">
+          <i [ngClass]="item.icon" class="fa-solid text-md w-4"></i>
+          <span>{{ item.label | translate }}</span>
         </button>
-        }
-      </div>
+      } @else {
+        <div class="relative">
+          <button
+            (click)="toggleMenu(item.label)"
+            class="flex w-full cursor-pointer items-center justify-between rounded p-2 font-medium transition-all duration-200 hover:text-[var(--sidebar-hover-color)]"
+            [ngClass]="{
+              'text-[var(--sidebar-active-color)] shadow shadow-[var(--sidebar-active-color)]':
+                navigatedToMenuLabel() === item.label,
+            }">
+            <div class="flex items-center justify-start gap-x-4">
+              <i [ngClass]="item.icon" class="fa-solid text-md w-4"></i>
+              <span>{{ item.label | translate }}</span>
+            </div>
+            <i
+              class="fa-solid text-xs transition-transform duration-200"
+              [class.rotate-180]="menuVisibleMap()[item.label]"
+              [ngClass]="{
+                'fa-minus': menuVisibleMap()[item.label],
+                'fa-plus': !menuVisibleMap()[item.label],
+              }">
+            </i>
+          </button>
+          @if (menuVisibleMap()[item.label]) {
+            <div class="flex w-full flex-col gap-y-1 py-1 pl-2 text-[.8rem]">
+              @for (child of item.children; track child.label) {
+                <button
+                  [routerLink]="child.link"
+                  routerLinkActive="text-[var(--sidebar-active-color)] shadow shadow-[var(--sidebar-active-color)]"
+                  class="flex w-full cursor-pointer items-center justify-start gap-x-4 rounded border border-transparent p-2 transition-all duration-200 hover:border-neutral-100">
+                  <i [ngClass]="child.icon" class="fa-solid text-md w-4"></i>
+                  <span>{{ child.label | translate }}</span>
+                </button>
+              }
+            </div>
+          }
+        </div>
       }
-    </div>
-    } }
+    }
   </ul>
 
   <a
-    class="flex items-center w-full justify-center mt-auto border-t-2 border-t-neutral-50 text-white p-2"
-  >
-    <button class="hover:shadow-lg">
-      <i class="fa-solid text-2xl fa-circle-user"></i>
+    class="mt-auto flex w-full items-center justify-center border-t-2 border-t-neutral-50 p-2 text-white">
+    <button class="hover:shadow-lg" [routerLink]="['/app/users/profile']">
+      <i class="fa-solid fa-circle-user text-2xl"></i>
     </button>
   </a>
 </div>

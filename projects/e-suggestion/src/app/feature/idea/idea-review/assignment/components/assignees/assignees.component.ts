@@ -49,17 +49,19 @@ export class AssigneesComponent {
   });
 
   onAssigneesChange() {
-    const assignneesIds = this.selectedAssignees.map(a => a.id);
-    this.assigneesChange.emit(assignneesIds);
+    if (this.selectedAssigneesValueChanged()) {
+      const assignneesIds = this.selectedAssignees.map(a => a.id);
+      this.assigneesChange.emit(assignneesIds);
+    }
   }
 
   onAssigneesPanelHide() {
-    if (this.assigneesValueChanged()) {
+    if (this.selectedAssigneesValueChanged()) {
       this.panelHide.emit();
     }
   }
 
-  private assigneesValueChanged() {
+  private selectedAssigneesValueChanged() {
     return (
       this.selectedAssignees.length != 0 &&
       !_.isEqual(this.selectedAssignees, this.selectedAssigneesCache)

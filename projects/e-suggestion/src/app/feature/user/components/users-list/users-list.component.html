@@ -1,7 +1,7 @@
-<div class="w-[90%] max-w-[80vw] p-20">
+<div class="mx-auto max-w-[80rem] p-10">
   <ba-generic-table
-    [data]="users()"
-    [total]="total()"
+    [data]="store.entities()"
+    [total]="store.total()"
     [columns]="columns()"
     [globalFilterFields]="globalFilterFields()"
     [loading]="store.isLoading()"
@@ -11,53 +11,82 @@
     (pageSize)="store.setPageSize($event)"
     (delete)="onDelete($event)"
     (edit)="onEdit($event)"
-  >
+    (filter)="onFilter($event)"
+    (search)="store.setQueryParams({ search: $event })">
     <!-- Custom template for the "Status" column -->
     <ng-template #statusTemplate let-user>
       <div
         (mouseenter)="isHoveredUser.set(user.id)"
-        (mouseleave)="isHoveredUser.set(undefined)"
-      >
+        (mouseleave)="isHoveredUser.set(undefined)">
         @if (isHoveredUser() === user.id) {
-        <label
-          class="relative delay-200 inline-flex items-center cursor-pointer"
-        >
-          <input
-            type="checkbox"
-            [checked]="user.account_status"
-            class="sr-only peer"
-            (change)="onToggleAccountStatus($event, user.id)"
-          />
-          <div
-            class="group peer ring-0 bg-rose-400 rounded-full outline-none duration-300 after:duration-300 w-16 h-5 shadow-md peer-checked:bg-emerald-500 peer-focus:outline-none after:content-['✖️'] after:rounded-full after:absolute after:bg-gray-50 after:outline-none after:h-3 after:w-4 after:top-1 after:left-1 after:-rotate-180 after:flex after:justify-center after:items-center peer-checked:after:translate-x-10 peer-checked:after:content-['✔️'] peer-hover:after:scale-95 peer-checked:after:rotate-0"
-          ></div>
-        </label>
-        } @else { @if (user.account_status) {
-        <span
-          class="inline-flex items-center gap-x-1 rounded-full bg-green-200 px-3 py-1 text-xs font-semibold text-green-900"
-        >
-          <span class="w-2 h-2 rounded-full bg-green-500"></span>
-          <span>Active</span>
-        </span>
+          <label
+            class="relative inline-flex cursor-pointer items-center delay-200">
+            <input
+              type="checkbox"
+              [checked]="user.account_status"
+              class="peer sr-only"
+              (change)="onToggleAccountStatus($event, user.id)" />
+            <div
+              class="group peer h-5 w-16 rounded-full bg-rose-400 shadow-md outline-none ring-0 duration-300 after:absolute after:left-1 after:top-1 after:flex after:h-3 after:w-4 after:-rotate-180 after:items-center after:justify-center after:rounded-full after:bg-gray-50 after:outline-none after:duration-300 after:content-['✖️'] peer-checked:bg-emerald-500 peer-checked:after:translate-x-10 peer-checked:after:rotate-0 peer-checked:after:content-['✔️'] peer-hover:after:scale-95 peer-focus:outline-none"></div>
+          </label>
         } @else {
-        <span
-          class="inline-flex items-center gap-x-1 rounded-full bg-red-200 px-3 py-1 text-xs font-semibold text-red-900"
-        >
-          <span class="w-2 h-2 rounded-full bg-red-500"></span>
-          <span>Inactive</span>
-        </span>
-        } }
+          @if (user.account_status) {
+            <span
+              class="inline-flex items-center gap-x-1 rounded-full bg-green-200 px-3 py-1 text-xs font-semibold text-green-900">
+              <span class="h-2 w-2 rounded-full bg-green-500"></span>
+              <span>Active</span>
+            </span>
+          } @else {
+            <span
+              class="inline-flex items-center gap-x-1 rounded-full bg-red-200 px-3 py-1 text-xs font-semibold text-red-900">
+              <span class="h-2 w-2 rounded-full bg-red-500"></span>
+              <span>Inactive</span>
+            </span>
+          }
+        }
       </div>
     </ng-template>
 
     <ng-template #fullNameTemplate let-user>
       <div class="flex items-center gap-x-2">
-        <i class="fa-solid fa-id-card-clip text-neutral-400 text-xl"></i>
+        <i class="fa-solid fa-id-card-clip text-xl text-neutral-400"></i>
         <span
           >{{ user.first_name | titlecase }}
           {{ user.last_name | titlecase }}</span
         >
       </div>
+    </ng-template>
+
+    <ng-template #roleTemplate let-user>
+      <div class="flex items-center gap-x-2">
+        @for (role of user.roles; track role.id; let isLast = $last) {
+          <span>
+            {{ role.name | rolename }}
+            <span [ngClass]="{ hidden: isLast }">, </span>
+          </span>
+        }
+      </div>
+    </ng-template>
+
+    <ng-template #actionsTemplate let-user>
+      <td class="actions flex items-center text-gray-400">
+        <button
+          [matTooltip]="'edit' | translate"
+          matTooltipPosition="above"
+          matTooltipShowDelay="500"
+          class="rounded-md p-2 transition-all duration-150 hover:bg-blue-50 hover:text-primary-200"
+          (click)="onEdit(user.id)">
+          <i class="fa-solid fa-edit"></i>
+        </button>
+        <button
+          [matTooltip]="'delete' | translate"
+          matTooltipPosition="above"
+          matTooltipShowDelay="500"
+          class="rounded-md p-2 transition-all duration-150 hover:bg-red-50 hover:text-red-400"
+          (click)="onDelete(user.id)">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </td>
     </ng-template>
   </ba-generic-table>
 </div>

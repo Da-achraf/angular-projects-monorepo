@@ -1,1 +1,102 @@
-<p>profile works!</p>
+<div class="mx-auto mt-10 w-[80%] max-w-[50rem]">
+  <form class="flex flex-col items-stretch gap-y-3 py-3" [formGroup]="form">
+    <div class="flex items-center gap-x-2">
+      <ba-input class="flex-1" [control]="form.controls.first_name">
+        <input
+          type="text"
+          formControlName="first_name"
+          [placeholder]="'first-name' | translate" />
+      </ba-input>
+
+      <ba-input class="flex-1" [control]="form.controls.last_name">
+        <input
+          type="text"
+          formControlName="last_name"
+          [placeholder]="'last-name' | translate" />
+      </ba-input>
+    </div>
+
+    <ba-input [control]="form.controls.email">
+      <input
+        type="email"
+        formControlName="email"
+        [placeholder]="'email-placeholder' | translate" />
+    </ba-input>
+
+    <div class="flex items-center gap-x-2">
+      <p-select
+        [options]="bus()"
+        formControlName="bu_id"
+        optionLabel="name"
+        optionValue="id"
+        [filter]="true"
+        filterBy="name"
+        [showClear]="true"
+        placeholder="Select a BU"
+        class="flex-1">
+        <ng-template #selectedItem let-selectedOption>
+          <div class="flex items-center gap-2">
+            <div>{{ selectedOption.name }}</div>
+          </div>
+        </ng-template>
+        <ng-template let-bu #item>
+          <div class="flex items-center gap-2">
+            <div>{{ bu.name }}</div>
+          </div>
+        </ng-template>
+      </p-select>
+
+      <p-select
+        [options]="plants()"
+        formControlName="plant_id"
+        optionLabel="name"
+        optionValue="id"
+        [filter]="true"
+        filterBy="name"
+        [showClear]="true"
+        placeholder="Select a Plant"
+        class="flex-1">
+        <ng-template #selectedItem let-selectedOption>
+          <div class="flex items-center gap-2">
+            <div>{{ selectedOption.name }}</div>
+          </div>
+        </ng-template>
+        <ng-template let-plant #item>
+          <div class="flex items-center gap-2">
+            <div>{{ plant.name }}</div>
+          </div>
+        </ng-template>
+      </p-select>
+    </div>
+
+    <p-select
+      [options]="departments()"
+      formControlName="department_id"
+      optionLabel="name"
+      optionValue="id"
+      [filter]="true"
+      filterBy="name"
+      [showClear]="true"
+      placeholder="Select a Department"
+      class="flex-1">
+      <ng-template #selectedItem let-selectedOption>
+        <div class="flex items-center gap-2">
+          <div>{{ selectedOption.name }}</div>
+        </div>
+      </ng-template>
+      <ng-template let-department #item>
+        <div class="flex items-center gap-2">
+          <div>{{ department.name }}</div>
+        </div>
+      </ng-template>
+    </p-select>
+
+    <ba-button
+      [label]="'save' | translate"
+      [disabled]="!form.valid"
+      [isLoading]="store.isUpdating()"
+      icon="fa-save"
+      buttonClass="bg-secondary-100 text-gray-50 hover:bg-secondary"
+      (onClick)="onSubmit()"></ba-button>
+  </form>
+</div>

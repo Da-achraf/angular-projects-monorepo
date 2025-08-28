@@ -11,7 +11,10 @@ import {
 } from '@ngrx/signals';
 import { withAuth } from 'projects/e-suggestion/src/app/core/auth/data-access/auth.store';
 import { IdeaStatus } from 'projects/e-suggestion/src/app/core/idea/models/idea-status.model';
-import { IdeaUpdate } from 'projects/e-suggestion/src/app/core/idea/models/idea.model';
+import {
+  IdeaUpdate,
+  IdeaAction,
+} from 'projects/e-suggestion/src/app/core/idea/models/idea.model';
 import { TeoaReview } from 'projects/e-suggestion/src/app/core/idea/models/teoa-review.model';
 import { ConfirmDialogComponent } from 'projects/e-suggestion/src/app/pattern/dialogs/confirm-dialog.component';
 import { DeleteDialogComponent } from 'projects/e-suggestion/src/app/pattern/dialogs/delete-dialog.component';
@@ -115,6 +118,7 @@ export const TeoaReviewStore = signalStore(
             id: ideaId,
             status: IdeaStatus.CLOSED,
             closed_at: new Date().toISOString(),
+            action: 'closed',
           };
 
           // Update the idea

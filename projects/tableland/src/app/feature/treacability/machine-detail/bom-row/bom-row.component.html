@@ -1,0 +1,189 @@
+<div
+  class="flex flex-col gap-4 rounded-lg border p-4 shadow-sm justify-center transition-all duration-300 lg:flex-row lg:items-start lg:justify-between lg:gap-6"
+  [class]="
+    isActive()
+      ? 'border-blue-300 bg-blue-50 shadow-md ring-2 ring-blue-500 ring-opacity-50'
+      : isVerified()
+        ? 'border-green-300 bg-green-50'
+        : 'border-gray-200 bg-gray-50 opacity-60'
+  ">
+  <!-- Component Info Section -->
+  <div class="min-w-0 flex-1">
+    @if (
+      bomItem()?.component &&
+      bomItem()?.component !== 'Scan to verify next item'
+    ) {
+      <!-- Real BOM item -->
+      <div class="flex items-start gap-3">
+        @if (isVerified()) {
+          <div class="flex-shrink-0 pt-1">
+            <div
+              class="flex h-8 w-8 items-center justify-center rounded-full bg-green-100">
+              <svg
+                class="h-5 w-5 text-green-600"
+                fill="currentColor"
+                viewBox="0 0 20 20">
+                <path
+                  fill-rule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clip-rule="evenodd" />
+              </svg>
+            </div>
+          </div>
+        }
+        <div class="min-w-0 flex-1">
+          <p
+            class="text-base font-semibold text-gray-900 sm:text-sm"
+            [class.blur-sm]="!isActive() && !isVerified()">
+            {{ bomItem()?.component }}
+          </p>
+          <div
+            class="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500 sm:text-xs">
+            <span>OP: {{ bomItem()?.op }}</span>
+            <span>WS: {{ bomItem()?.workstation }}</span>
+            <span>PN: {{ bomItem()?.pn }}</span>
+          </div>
+          @if (isVerified() && threeSCode()) {
+            <div class="mt-1 text-xs font-medium text-green-600">
+              ✓ Verified with: {{ threeSCode() }}
+            </div>
+          }
+        </div>
+      </div>
+    } @else {
+      <!-- Scanning placeholder -->
+      <div class="flex items-start gap-3">
+        <div class="flex-shrink-0 pt-1">
+          <div
+            class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100">
+            <svg
+              class="h-5 w-5 text-blue-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M12 12h-2V8h2m0 4v1m0-1h2v4m2-4v-1m0 0V8a4 4 0 00-8 0v4m8 0a4 4 0 00-4 4v1" />
+            </svg>
+          </div>
+        </div>
+        <div>
+          <p class="text-base font-semibold text-gray-700 sm:text-sm">
+            {{ bomItem()?.component || 'Ready to scan next component' }}
+          </p>
+          <p class="mt-1 text-xs text-gray-500">
+            Enter position and 3S code to verify
+          </p>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Scan Inputs Section -->
+  <div
+    class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-end sm:gap-4">
+    <!-- Position Input -->
+    <div class="w-full sm:w-[180px]">
+      <label class="mb-1.5 block text-xs font-medium text-gray-600"
+        >Position</label
+      >
+      <div class="relative">
+        <input
+          pInputText
+          #positionInput
+          type="text"
+          placeholder="Scan position"
+          [value]="position()"
+          [disabled]="!isActive() || isScanning()"
+          (input)="onPositionChange($event)"
+          (keydown)="onPositionKeyDown($event)"
+          class="h-10 w-full rounded-md border border-gray-300 px-3 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100" />
+        @if (position() && isActive()) {
+          <button
+            type="button"
+            (click)="position.set('')"
+            class="absolute right-2 top-1/2 -translate-y-1/2 transform text-gray-400 hover:text-gray-600">
+            <svg
+              class="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- 3S Code Input -->
+    <div class="w-full sm:w-[180px]">
+      <label class="mb-1.5 block text-xs font-medium text-gray-600"
+        >3S Code</label
+      >
+      <div class="relative">
+        <input
+          pInputText
+          #s3Input
+          type="text"
+          placeholder="Scan 3S code"
+          [value]="s3()"
+          [disabled]="!isActive() || isScanning()"
+          (input)="onS3Change($event)"
+          (keydown)="onS3KeyDown($event)"
+          class="h-10 w-full rounded-md border border-gray-300 px-3 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100" />
+        @if (s3() && isActive()) {
+          <button
+            type="button"
+            (click)="s3.set('')"
+            class="absolute right-2 top-1/2 -translate-y-1/2 transform text-gray-400 hover:text-gray-600">
+            <svg
+              class="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Verify Button -->
+    <div class="w-full sm:w-auto">
+      @if (isScanning()) {
+        <ba-button
+          [label]="'Verify' | translate"
+          type="submit"
+          [disabled]="!canVerify()"
+          [isLoading]="true"
+          buttonClass="bg-primary-light text-gray-100 hover:bg-secondary" />
+      } @else if (isVerified()) {
+        <ba-button
+          [label]="'Verified' | translate"
+          type="submit"
+          [disabled]="!canVerify()"
+          icon="fa-check-double"
+          buttonClass="bg-primary-light text-gray-100 hover:bg-secondary" />
+      } @else {
+        <ba-button
+          [label]="'Verfiy' | translate"
+          type="submit"
+          [disabled]="!canVerify()"
+          [isLoading]="isScanning()"
+          icon="fa-circle-check"
+          buttonClass="bg-primary-light text-gray-100 hover:bg-secondary"
+          (onClick)="onVerify()" />
+      }
+    </div>
+  </div>
+</div>

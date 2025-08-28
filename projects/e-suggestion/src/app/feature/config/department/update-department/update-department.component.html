@@ -1,0 +1,43 @@
+<div>
+  <div class="mx-auto flex max-w-[80rem] flex-col gap-y-5 p-4">
+    <div class="mb-5 flex items-center gap-x-3">
+      <i class="fa-solid fa-circle-info text-secondary"></i>
+      <p class="text-lg font-semibold text-gray-500">Update department</p>
+    </div>
+
+    @defer {
+      <form [formGroup]="form" class="flex flex-col gap-4">
+        <div class="mb-3 flex flex-1 flex-col gap-y-10">
+          <div class="flex flex-col gap-y-2">
+            <div class="flex items-center gap-x-2">
+              <span
+                class="text-sm font-semibold uppercase tracking-wide text-primary"
+                >Department name</span
+              >
+              <span class="h-[.4px] flex-1 bg-gray-300"></span>
+            </div>
+            <ba-input [control]="form.controls.name">
+              <input
+                type="text"
+                formControlName="name"
+                placeholder="Type a name" />
+            </ba-input>
+          </div>
+        </div>
+
+        <div class="flex justify-end">
+          <ba-button
+            label="Save Changes"
+            icon="fa-bookmark"
+            [disabled]="!form.valid"
+            buttonClass="text-sm border border-gray-400 bg-primary-200 hover:bg-primary text-gray-50"
+            (onClick)="onSubmit()" />
+        </div>
+      </form>
+    } @placeholder (minimum 500ms) {
+      <div class="p-10 text-center">
+        <ba-loading />
+      </div>
+    }
+  </div>
+</div>

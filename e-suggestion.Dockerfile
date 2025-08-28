@@ -3,12 +3,11 @@ FROM node:alpine AS build
 WORKDIR /usr/src/app
 
 # Copy the root package.json and package-lock.json
-COPY package.json package-lock.json ./
+COPY package.json ./
 
 # Install dependencies
 RUN npm config set strict-ssl false
-RUN npm install --force
-
+RUN npm install --no-package-lock
 
 # Copy the entire workspace
 COPY . .

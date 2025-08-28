@@ -7,18 +7,20 @@ import {
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ba/core/data-access';
 import { ListErrorsComponent } from '@ba/core/forms';
 import { SelectModule } from 'primeng/select';
 import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/button/button.component';
+import { LogoComponent } from 'projects/e-suggestion/src/app/ui/components/logo.component';
 import { BaInputComponent } from '../../../../../ui/components/form/input.component';
 import { BUStore } from '../../../../crud/bus/bu.store';
+import { DepartmentStore } from '../../../../crud/departments/department.store';
 import { PlantStore } from '../../../../crud/plants/plant.store';
+import { LanguageSwitcherComponent } from '../../../../home/language-switcher.component';
 import { RoleEnum } from '../../../data-access/auth.model';
 import { AuthStore } from '../../../data-access/auth.store';
 import { RoleStore } from '../../../data-access/role.store';
 import { RoleNamePipe } from '../../pipes/role-name.pipe';
-import { LogoComponent } from 'projects/e-suggestion/src/app/ui/components/logo.component';
-import { TranslatePipe } from '@ba/core/data-access';
 
 @Component({
   selector: 'app-register',
@@ -35,27 +37,31 @@ import { TranslatePipe } from '@ba/core/data-access';
     RoleNamePipe,
     TranslatePipe,
     LogoComponent,
+    LanguageSwitcherComponent,
   ],
 })
 export class RegisterComponent {
   protected readonly store = inject(AuthStore);
   readonly #buStore = inject(BUStore);
   readonly #plantStore = inject(PlantStore);
+  readonly #departmentStore = inject(DepartmentStore);
   readonly #roleStore = inject(RoleStore);
 
   readonly bus = this.#buStore.allEntities;
   readonly plants = this.#plantStore.allEntities;
+  readonly departments = this.#departmentStore.allEntities;
   readonly roles = this.#roleStore.allEntities;
 
   readonly form = inject(FormBuilder).nonNullable.group({
     first_name: ['', Validators.required],
     last_name: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', [Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     te_id: ['TE', [Validators.required, Validators.pattern(/^TE\d{6}$/)]],
     bu_id: [null as number | null, Validators.required],
     role_id: [null as number | null, Validators.required],
     plant_id: [null as number | null, Validators.required],
+    department_id: [null as number | null, Validators.required],
   });
 
   private readonly userRoleEffect = effect(() => {

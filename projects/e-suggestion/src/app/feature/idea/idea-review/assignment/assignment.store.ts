@@ -10,6 +10,8 @@ import {
   withState,
 } from '@ngrx/signals';
 import { withAuth } from 'projects/e-suggestion/src/app/core/auth/data-access/auth.store';
+import { PostponedDueDateCreate } from 'projects/e-suggestion/src/app/core/crud/postponed-due-dates/postponed-due-date.model';
+import { PostponedDueDateService } from 'projects/e-suggestion/src/app/core/crud/postponed-due-dates/postponed-due-date.service';
 import {
   Assignment,
   AssignmentUpdate,
@@ -41,14 +43,16 @@ type AssignmentState = {
   assignment: Assignment | undefined;
   /**
    * This temp data is used to store the changes the user made
-   *  to save them later or not depending on user action
+   * to save them later or not depending on user action
    */
   tempData: any;
+  dueDatesValid: boolean;
 };
 
 const intitialAssignmentState: AssignmentState = {
   assignment: undefined,
   tempData: undefined,
+  dueDatesValid: true,
 };
 
 export const AssignmentStore = signalStore(
@@ -58,10 +62,12 @@ export const AssignmentStore = signalStore(
 
   withProps(() => ({
     assiService: inject(AssignmentService),
+    postponedDueDateService: inject(PostponedDueDateService),
     dialog: inject(MatDialog),
     destroyRef: inject(DestroyRef),
 
     isOwner: inject(IdeaReviewStore).isOwner,
+    isIdeaSubmitter: inject(IdeaReviewStore).isIdeaSubmitter,
 
     ideaId: inject(IdeaReviewStore).ideaId,
     idea: inject(IdeaReviewStore).idea,
@@ -89,29 +95,53 @@ export const AssignmentStore = signalStore(
     ({
       idea,
       isCommitteeMember,
+      isTeoaMember,
       isOwner,
+      isIdeaSubmitter,
       isAssignmentAvailable,
       _ideaHasAssignees,
     }) => ({
       canInitiate: computed(
-        () => isCommitteeMember() && !isAssignmentAvailable()
+        () =>
+          (isCommitteeMember() || isTeoaMember()) &&
+          !isAssignmentAvailable() &&
+          !isIdeaSubmitter()
       ),
       canSaveChanges: computed(
-        () => isAssignmentAvailable() && (isCommitteeMember() || isOwner())
+        () =>
+          isAssignmentAvailable() &&
+          (isCommitteeMember() || isOwner() || isTeoaMember())
       ),
-      canSetAssignees: computed(() => isCommitteeMember()),
+      canSetAssignees: computed(
+        () => (isCommitteeMember() || isTeoaMember()) && !isIdeaSubmitter()
+      ),
       canSetDueDate: computed(
-        () => (isCommitteeMember() || isOwner()) && _ideaHasAssignees()
+        () =>
+          (isCommitteeMember() || isTeoaMember()) &&
+          _ideaHasAssignees() &&
+          !isIdeaSubmitter()
       ),
+
+      canSetPostponedDueDates: computed(() => isOwner()),
+
       canSetProgress: computed(
         () =>
           isOwner() &&
           _ideaHasAssignees() &&
           NonUpdatableStatuses.some(s => idea()?.status != s)
       ),
-      canDelete: computed(() => isCommitteeMember() && isAssignmentAvailable()),
+      canDelete: computed(
+        () =>
+          (isCommitteeMember() || isTeoaMember()) &&
+          isAssignmentAvailable() &&
+          !isIdeaSubmitter()
+      ),
     })
   ),
+
+  withComputed(({ canSaveChanges, dueDatesValid }) => ({
+    saveChangesDisabled: computed(() => canSaveChanges() && !dueDatesValid()),
+  })),
 
   // Loading states
   withComputed(({ loadingStates }) => ({
@@ -133,6 +163,11 @@ export const AssignmentStore = signalStore(
 
     setTempData: (newData: any) => {
       patchState(store, { tempData: { ...tempData(), ...newData } });
+    },
+
+    setDueDateValidation: (status: boolean) => {
+      console.log('updated due dates status: ', status);
+      patchState(store, { dueDatesValid: status });
     },
   })),
 
@@ -163,6 +198,8 @@ export const AssignmentStore = signalStore(
             assiService.initiateAssignment(ideaId)
           );
 
+          // TODO: Change the idea status to 'approved'
+
           patchState(store, { assignment: response.data as Assignment });
           _showSuccess('Assignment initiated successfully');
         } catch (error) {
@@ -184,6 +221,7 @@ export const AssignmentStore = signalStore(
           const ideaBody: Partial<IdeaUpdate> = {
             id: ideaId(),
             status: IdeaStatus.APPROVED,
+            action: 'approved',
           };
           updateIdea(ideaBody);
 
@@ -291,8 +329,10 @@ export const AssignmentStore = signalStore(
       _showError,
       connectedUserId,
       assiService,
+      postponedDueDateService,
       assignmentId,
       ideaId,
+      user,
       updateIdea,
       reloadIdea,
       ...store
@@ -304,37 +344,52 @@ export const AssignmentStore = signalStore(
           due_date: tempData()?.dueDate,
           assignees: tempData()?.assignees,
           progress: tempData()?.progress,
+          idea_id: ideaId(),
         };
+
+        if (body?.due_date) {
+          body = {
+            ...body,
+            due_date_set_by_id: user().id,
+          };
+        }
+
+        if (tempData()?.postponedDueDate) {
+          console.log('new postponed due date: ', tempData()?.postponedDueDate);
+          const postponedDueDateBody: PostponedDueDateCreate = {
+            assignment_id: assignmentId(),
+            new_due_date: tempData()?.postponedDueDate,
+            postponed_by_id: user().id,
+          };
+          await lastValueFrom(
+            postponedDueDateService.save(postponedDueDateBody)
+          );
+        }
 
         try {
           const response = await lastValueFrom(assiService.update(body));
-
           // Update idea body
           let ideaBody: Partial<IdeaUpdate> | undefined;
           const updatedIdeaStatus = tempData()?.status;
           const updatedProgress = tempData()?.progress;
           const updatedAssignees = tempData()?.assignees;
-
           // Update idea dates
           if (updatedAssignees) {
             ideaBody = {
               assigned_at: new Date().toISOString(),
             };
           }
-
           if (updatedProgress && updatedProgress === 100) {
             ideaBody = {
               implemented_at: new Date().toISOString(),
             };
           }
-
           // Update idea status
           if (updatedIdeaStatus) {
             ideaBody = {
               status: updatedIdeaStatus as IdeaStatusType,
             };
           }
-
           // Update idea status based on updated progress
           if (updatedProgress != undefined) {
             ideaBody = {
@@ -345,14 +400,12 @@ export const AssignmentStore = signalStore(
                   : IdeaStatus.IN_PROGRESS,
             };
           }
-
-          if (ideaBody) updateIdea({ ...ideaBody, id: ideaId() });
-
+          if (ideaBody)
+            updateIdea({ ...ideaBody, id: ideaId(), action: 'assigned' });
           patchState(store, {
             assignment: response.data as Assignment,
             tempData: undefined,
           });
-
           _showSuccess('Changes saved successfully.');
         } catch {
           _showError('Error occured while saving the changes.');

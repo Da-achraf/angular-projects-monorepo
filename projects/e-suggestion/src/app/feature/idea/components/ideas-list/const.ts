@@ -3,11 +3,10 @@ import { TableColumn } from 'projects/e-suggestion/src/app/ui/components/table/t
 export const COLUMNS: TableColumn[] = [
   {
     header: 'idea-title',
-    type: 'text',
+    type: 'custom',
     field: 'title',
-    sortable: true,
-    sortField: 'title',
     filter: { type: 'text', field: 'title' },
+    template: 'titleTemplate'
   },
   {
     header: 'created-at',
@@ -24,7 +23,6 @@ export const COLUMNS: TableColumn[] = [
     sortField: 'status',
     filter: { type: 'text', field: 'status' },
     template: 'statusTemplate',
-    // filterTemplate: 'statusFilterTemplate',
   },
   {
     header: 'category',
@@ -34,11 +32,16 @@ export const COLUMNS: TableColumn[] = [
     template: 'categoryTemplate',
   },
   {
+    header: 'department',
+    type: 'custom',
+    field: 'department.name',
+    filter: { type: 'text', field: 'department.name' },
+    template: 'departmentTemplate',
+  },
+  {
     header: 'submitter',
     type: 'custom',
     field: 'submitter.first_name',
-    sortable: true,
-    sortField: 'submitter.first_name',
     filter: { type: 'text', field: 'submitter.first_name' },
     template: 'sumbitterTemplate',
   },

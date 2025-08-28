@@ -24,6 +24,14 @@ import { errorInterceptor } from './interceptors/error.interceptor';
 // import echarts core
 import * as echarts from 'echarts/core';
 // import necessary echarts components
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { TranslationConfig, TranslationService } from '@ba/core/data-access';
+import {
+  popperVariation,
+  provideTippyConfig,
+  provideTippyLoader,
+  tooltipVariation,
+} from '@ngneat/helipopper/config';
 import { BarChart, FunnelChart, PieChart, RadarChart } from 'echarts/charts';
 import {
   GridComponent,
@@ -31,11 +39,9 @@ import {
   TooltipComponent,
 } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
-import { provideNativeDateAdapter } from '@angular/material/core';
-import { tokenInterceptor } from './interceptors/token.interceptor';
-import { TranslationConfig, TranslationService } from '@ba/core/data-access';
-import * as enTranslations from '../../../public/i18n/en.json';
 import * as arTranslations from '../../../public/i18n/ar.json';
+import * as enTranslations from '../../../public/i18n/en.json';
+import { tokenInterceptor } from './interceptors/token.interceptor';
 
 echarts.use([
   BarChart,
@@ -131,5 +137,14 @@ export function provideCore({ routes }: CoreOptions) {
       },
     }),
     provideEchartsCore({ echarts }),
+
+    provideTippyLoader(() => import('tippy.js')),
+    provideTippyConfig({
+      defaultVariation: 'tooltip',
+      variations: {
+        tooltip: tooltipVariation,
+        popper: popperVariation,
+      },
+    }),
   ];
 }

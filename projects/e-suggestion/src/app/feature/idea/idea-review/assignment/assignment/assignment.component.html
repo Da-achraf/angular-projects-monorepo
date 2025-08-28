@@ -4,7 +4,9 @@
     {{ 'assignment' | translate }}
   </span>
 
-  <div class="flex items-center gap-x-3">
+  <div
+    class="flex items-center gap-x-3"
+    [ngClass]="{ 'pointer-events-none opacity-80': readonly() }">
     @if (store.canInitiate()) {
       <ba-button
         [title]="'start-assignment-action' | translate"
@@ -14,15 +16,18 @@
         buttonClass="bg-white text-gray-500 border border-gray-200 !ring-gray-300 hover:animate-none group"
         (onClick)="store.showInitiateAssignmentDialog(ideaId())" />
     }
+
     @if (store.isAssignmentDirty() && store.canSaveChanges()) {
       <ba-button
         [title]="'save-changes' | translate"
         icon="fa-bookmark"
         iconPosition="right"
+        [disabled]="store.saveChangesDisabled()"
         [isLoading]="store.isSavingChanges()"
         buttonClass="bg-gray-50 text-primary-200 border border-primary-50 hover:bg-gray-100 hover:border-primary-200 !ring-primary"
         (onClick)="store.saveChanges()" />
     }
+
     @if (store.canDelete()) {
       <ba-button
         [title]="'delete' | translate"
@@ -37,27 +42,84 @@
 </div>
 
 @if (store.isAssignmentAvailable()) {
-  <div class="flex flex-col space-y-10 px-4 py-6">
+  <div
+    class="flex flex-col space-y-10 px-4 py-6"
+    [ngClass]="{ 'opacity-80': readonly() }">
     <ba-assignees
       [assignees]="store.assignment()?.assignees"
-      [disabled]="!store.canSetAssignees()"
+      [disabled]="!store.canSetAssignees() || readonly()"
       (assigneesChange)="onAssigneesChange($event)"
       (panelHide)="onAssigneesPanelHide()" />
 
     <ba-due-date
+      label="primary-due-date"
       [dueDate]="store.assignment()?.due_date"
-      [disabled]="!store.canSetDueDate()"
+      [setBy]="store.assignment()?.due_date_set_by"
+      [disabled]="!store.canSetDueDate() || readonly()"
+      [notBeforeNow]="true"
+      (validationChange)="onValidationChange($event)"
       (dueDateChange)="onDueDateChange($event)" />
+
+    @if (store.assignment()?.postponed_due_dates?.length === 0) {
+      <ba-due-date
+        label="current-due-date"
+        [disabled]="!store.canSetPostponedDueDates() || readonly()"
+        [afterDate]="store.assignment()?.due_date"
+        (validationChange)="onValidationChange($event)"
+        (dueDateChange)="onPostponedDueDateChange($event)" />
+    }
+
+    @if (store.assignment()?.postponed_due_dates?.length ?? 0 > 0) {
+      @if (store.assignment()?.postponed_due_dates; as postponedDueDates) {
+        <div>
+          @if (postponedDueDates[0]; as postponed) {
+            <ba-due-date
+              label="current-due-date"
+              [complementaryLabel]="postponed.new_due_date | date"
+              [disabled]="!store.canSetPostponedDueDates() || readonly()"
+              (validationChange)="onValidationChange($event)"
+              [setBy]="postponed.postponed_by"
+              [afterDate]="postponed.new_due_date"
+              (dueDateChange)="onPostponedDueDateChange($event)" />
+          }
+
+          @if (postponedDueDates.length > 1) {
+            <p-accordion>
+              <p-accordion-panel value="0" class="p-0">
+                <p-accordion-header class="m-0 p-0"
+                  >More Postponed Due Dates</p-accordion-header
+                >
+
+                <p-accordion-content>
+                  <div class="m-0 space-y-2">
+                    @for (d of postponedDueDates.slice(1); track $index) {
+                      <div class="flex items-center justify-between">
+                        <p>{{ d.new_due_date | date: 'MM/dd/yyyy HH:mm' }}</p>
+                        <p>
+                          {{ d.postponed_by.first_name | titlecase }}
+                          {{ d.postponed_by.last_name | titlecase }}
+                        </p>
+                      </div>
+                    }
+                  </div>
+                </p-accordion-content>
+              </p-accordion-panel>
+            </p-accordion>
+          }
+        </div>
+      }
+    }
 
     <ba-progress
       [value]="store.assignment()?.progress ?? 0"
-      [disabled]="!store.canSetProgress()"
+      [disabled]="!store.canSetProgress() || readonly()"
       (valueChange)="onProgressChange($event)" />
 
     <ba-assi-comments-list
       [radioFilter]="true"
       [assignmentId]="store.assignmentId()"
-      [comments]="store.assignmentComments()" />
+      [comments]="store.assignmentComments()"
+      [ngClass]="{ 'pointer-events-none opacity-80': readonly() }" />
   </div>
 } @else {
   <ba-assignment-not-initialized [isCommittee]="store.isCommitteeMember()" />

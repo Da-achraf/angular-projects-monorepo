@@ -1,0 +1,124 @@
+<div
+  class="flex items-center justify-between overflow-x-auto overflow-y-hidden border-b border-primary-50 bg-white p-4">
+  <span class="mr-6 text-lg font-semibold uppercase tracking-wide text-primary"
+    >{{ 'attachments' | translate }}
+  </span>
+</div>
+
+@if (isDeletingAttachment()) {
+  <div class="flex items-center justify-center px-8 py-6">
+    <ba-loading />
+  </div>
+} @else {
+  <div class="space-y-1 px-8 py-6">
+    @for (attachment of attachments(); track $index) {
+      <div
+        class="group relative rounded-lg p-3 transition-colors hover:bg-gray-50">
+        <div
+          class="mb-2 flex items-center justify-between"
+          #tooltip="matTooltip"
+          [matTooltip]="attachment.name | removeFilenamePrefix"
+          matTooltipPosition="below"
+          matTooltipHideDelay="50"
+          matTooltipShowDelay="300">
+          <span class="max-w-[70%] overflow-hidden text-nowrap text-gray-600">
+            {{ attachment.name | removeFilenamePrefix | filenameTruncate }}
+          </span>
+          <span class="text-sm text-gray-400 group-hover:hidden">{{
+            attachment.size | filesize
+          }}</span>
+        </div>
+
+        <!-- Action buttons -->
+        <div
+          class="absolute inset-y-0 right-0 flex items-center gap-x-2 px-4 opacity-0 backdrop-blur-md transition-all duration-300 ease-in-out group-hover:opacity-100">
+          @if (!viewOnly()) {
+            <button
+              (click)="delete.emit(attachment.id)"
+              class="text-gray-600 transition-colors hover:text-red-600"
+              title="Delete file">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          }
+
+          <button
+            class="text-gray-600 transition-colors hover:text-cyan-600"
+            title="View file"
+            (click)="viewAttachment(attachment.file_path)">
+            <i class="fa-solid fa-eye"></i>
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- File List -->
+    @for (file of files; track $index) {
+      <div
+        class="group relative rounded-lg p-3 transition-colors hover:bg-gray-50">
+        <div
+          class="mb-2 flex items-center justify-between"
+          #tooltip="matTooltip"
+          [matTooltip]="file.name"
+          matTooltipPosition="below"
+          matTooltipHideDelay="50"
+          matTooltipShowDelay="300">
+          <span class="max-w-[70%] overflow-hidden text-nowrap text-gray-600">
+            {{ file.name | filenameTruncate }}
+          </span>
+          <span class="text-sm text-gray-400 group-hover:hidden"
+            >{{ file.size }} KB</span
+          >
+        </div>
+
+        <!-- Action buttons -->
+        <div
+          class="absolute inset-y-0 right-0 flex items-center gap-x-2 px-3 opacity-0 backdrop-blur-md transition-all duration-300 ease-in-out group-hover:opacity-100">
+          <button
+            (click)="deleteFile($index)"
+            class="text-gray-600 transition-colors hover:text-red-600"
+            title="Delete file">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+
+          @if (
+            file.file.type.startsWith('image/') ||
+            file.file.type === 'application/pdf'
+          ) {
+            <button
+              class="text-gray-600 transition-colors hover:text-cyan-600"
+              title="View file"
+              (click)="viewFile(file.file)">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- File Drop Zone -->
+    @if (!viewOnly()) {
+      <div
+        class="flex flex-col items-center justify-center rounded-lg border-4 border-dashed px-4 py-6"
+        (drop)="onDrop($event)"
+        (dragover)="onDragOver($event)">
+        <i
+          class="fa-solid fa-arrow-up-from-bracket animate-bounce text-gray-500"></i>
+
+        <p class="mt-4 text-center text-xl font-medium text-gray-800">
+          Drop Files here or
+          <label
+            class="mt-2 block rounded-full border bg-white px-4 py-0.5 font-normal text-blue-500 shadow shadow-blue-100 hover:bg-blue-50">
+            <input
+              class="hidden"
+              type="file"
+              name="file"
+              id="fileInput"
+              (change)="onFileSelected($event)"
+              multiple />
+            browse
+          </label>
+        </p>
+      </div>
+    }
+  </div>
+}

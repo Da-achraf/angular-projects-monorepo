@@ -9,8 +9,8 @@ import {
   untracked,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TranslationService } from '@ba/core/data-access';
 import { EChartsOption } from 'echarts/types/dist/shared';
-import { NgxEchartsDirective } from 'ngx-echarts';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { PopoverModule } from 'primeng/popover';
@@ -20,16 +20,12 @@ import { BUStore } from 'projects/e-suggestion/src/app/core/crud/bus/bu.store';
 import { Plant } from 'projects/e-suggestion/src/app/core/crud/plants/plant.model';
 import { PlantStore } from 'projects/e-suggestion/src/app/core/crud/plants/plant.store';
 import { IdeaStatus } from 'projects/e-suggestion/src/app/core/idea/models/idea-status.model';
-import { IdeaStatusDisplayPipe } from 'projects/e-suggestion/src/app/pattern/idea-status/pipes/idea-status.pipe';
-import { DashboardFilterComponent } from '../../../pattern/dashboard-filter/dashboard-filter/dashboard-filter.component';
-import { IdeaStatusBadgeComponent } from '../../../pattern/idea-status/components/idea-status-badge.component';
-import { FilterButtonComponent } from '../../../ui/components/filter-button/filter-button.component';
-import { ScoreCardComponent } from '../score-cards/score-card.component';
-import { ScoreCardsListComponent } from '../score-cards/score-cards-list/score-cards-list.component';
-import { IdeasByPlantsComponent } from '../ideas-by-plants/ideas-by-plants/ideas-by-plants.component';
-import { IdeasByBusComponent } from '../ideas-by-bus/ideas-by-bus/ideas-by-bus.component';
-import { ActionsCountComponent } from '../implemented-actions/actions-count/actions-count.component';
 import { AuthStore } from '../../../core/auth/data-access/auth.store';
+import { DepartmentStore } from '../../../core/crud/departments/department.store';
+import { IdeasByDepartmentsComponent } from '../ideas-by-department/ideas-by-department/ideas-by-department.component';
+import { IdeasByPlantsComponent } from '../ideas-by-plants/ideas-by-plants/ideas-by-plants.component';
+import { ActionsCountComponent } from '../implemented-actions/actions-count/actions-count.component';
+import { ScoreCardsListComponent } from '../score-cards/score-cards-list/score-cards-list.component';
 
 interface ChartType {
   name: string;
@@ -59,29 +55,26 @@ const CHART_COLORS = [
   imports: [
     MultiSelectModule,
     FormsModule,
-    NgxEchartsDirective,
     SelectButtonModule,
-    IdeaStatusBadgeComponent,
     FloatLabelModule,
-    IdeaStatusDisplayPipe,
-    ScoreCardComponent,
     ScoreCardsListComponent,
-    FilterButtonComponent,
-    DashboardFilterComponent,
     PopoverModule,
     IdeasByPlantsComponent,
-    IdeasByBusComponent,
+    IdeasByDepartmentsComponent,
     ActionsCountComponent,
   ],
 })
 export class HomeDashboardHomeComponent implements OnInit {
   plants = inject(PlantStore).allEntities;
   bus = inject(BUStore).allEntities;
+  departments = inject(DepartmentStore).allEntities;
   statuses = signal(Object.values(IdeaStatus));
 
   authStore = inject(AuthStore);
+  translationService = inject(TranslationService);
 
   selectedPlants: Plant[] = [];
+
   selectedBus: BU[] = [];
   selectedStatuses: string[] = [];
 

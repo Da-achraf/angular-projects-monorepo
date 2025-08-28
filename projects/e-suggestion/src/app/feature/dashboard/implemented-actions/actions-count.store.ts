@@ -94,9 +94,10 @@ export const ActionsCountStore = signalStore(
   withHooks(({ loadActionsCount, setData, updateChart, queryParams }) => ({
     onInit: () => {
       // loadActionsCount(queryParams);
-      setData(MockData);
+      // setData(MockData);
+      loadActionsCount(queryParams());
 
-      updateChart();
+      // updateChart();
     },
   }))
 );

@@ -7,6 +7,7 @@ import { ScoreCardComponent } from '../score-card.component';
 import { ScoreCardService } from '../score-cards.service';
 import { ScoreCardStore } from '../score-cards.store';
 import { NgClass } from '@angular/common';
+import { TranslatePipe } from '@ba/core/data-access';
 @Component({
   selector: 'ba-score-cards-list',
   templateUrl: 'score-cards-list.component.html',
@@ -15,7 +16,8 @@ import { NgClass } from '@angular/common';
     DashboardFilterComponent,
     PopoverModule,
     FilterButtonComponent,
-    NgClass
+    NgClass,
+   TranslatePipe
   ],
   providers: [ScoreCardStore, ScoreCardService],
 })

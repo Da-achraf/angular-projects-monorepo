@@ -101,6 +101,7 @@ export class EditIdeaComponent2 {
       ...this.form.getRawValue(),
       id: this.idea()?.id,
     };
+    console.log('idea body: ', ideaUpdate);
     await this.ideaStore.updateIdea(ideaUpdate, this.files);
   }
 }

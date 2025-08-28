@@ -1,0 +1,42 @@
+<div class="mx-auto max-w-[80rem] p-10">
+  <ba-generic-table
+    [data]="store.entities()"
+    [total]="store.total()"
+    [columns]="columns()"
+    [globalFilterFields]="globalFilterFields()"
+    [loading]="store.isLoading()"
+    [withCreate]="true"
+    (page)="store.setPage($event)"
+    (pageSize)="store.setPageSize($event)"
+    (create)="onCreate()"
+    (edit)="onEdit($event)"
+    (delete)="onDelete($event)"
+    (filter)="onFilter($event)">
+    <ng-template #areaTemplate let-machine>
+      <div class="flex items-center gap-x-2">
+        <span>{{ machine.area?.name | titlecase }}</span>
+      </div>
+    </ng-template>
+
+    <ng-template #actionsTemplate let-bu>
+      <td class="actions flex items-center text-gray-400">
+        <button
+          [matTooltip]="'edit' | translate"
+          matTooltipPosition="above"
+          matTooltipShowDelay="500"
+          class="rounded-md p-2 transition-all duration-150 hover:bg-blue-50 hover:text-primary-200"
+          (click)="onEdit(bu.id)">
+          <i class="fa-solid fa-edit"></i>
+        </button>
+        <button
+          [matTooltip]="'delete' | translate"
+          matTooltipPosition="above"
+          matTooltipShowDelay="500"
+          class="rounded-md p-2 transition-all duration-150 hover:bg-red-50 hover:text-red-400"
+          (click)="onDelete(bu.id)">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </td>
+    </ng-template>
+  </ba-generic-table>
+</div>

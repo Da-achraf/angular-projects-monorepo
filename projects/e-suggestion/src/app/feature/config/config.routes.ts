@@ -13,6 +13,14 @@ export default <Routes>[
         path: 'plants',
         loadChildren: () => import('./plant/plant.routes'),
       },
+      {
+        path: 'departments',
+        loadChildren: () => import('./department/department.routes'),
+      },
+      {
+        path: 'categories',
+        loadChildren: () => import('./category/category.routes'),
+      },
     ],
   },
 ];

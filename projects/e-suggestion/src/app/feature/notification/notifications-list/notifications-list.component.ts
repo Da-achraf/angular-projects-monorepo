@@ -16,6 +16,7 @@ import { NotificationStore } from '../notification.store';
 import { COLUMNS, Options } from './data';
 import { loadNotificationInitialQueryParams } from './notification.util';
 import { TranslationService, TranslatePipe } from '@ba/core/data-access';
+import { QueryParamType } from '../../../core/api/api.model';
 
 @Component({
   selector: 'ba-notifications-list',
@@ -56,4 +57,13 @@ export class NotificationsListComponent {
       })
     );
   });
+
+  onFilter(filter: QueryParamType | null) {
+    if (filter === null) {
+      this.store.resetQueryParams();
+      return;
+    }
+
+    this.store.setQueryParams(filter);
+  }
 }

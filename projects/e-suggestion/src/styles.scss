@@ -1,5 +1,9 @@
 @use '@angular/material' as mat;
 
+@import 'tippy.js/dist/tippy.css';
+@import 'tippy.js/themes/light.css';
+@import 'tippy.js/animations/scale.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,6 +16,12 @@
 @font-face {
   font-family: 'Quicksand';
   src: url('../public/fonts/quicksand/Quicksand-VariableFont_wght.ttf')
+    format('truetype');
+}
+
+@font-face {
+  font-family: 'Noto Naskh Arabic';
+  src: url('../public/fonts/noto-naskh/NotoNaskhArabic-VariableFont_wght.ttf')
     format('truetype');
 }
 

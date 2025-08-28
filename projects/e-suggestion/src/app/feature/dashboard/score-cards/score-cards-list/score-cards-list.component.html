@@ -4,7 +4,7 @@
   <div class="mb-8 flex items-center gap-4">
     <h4
       class="text-xl font-semibold tracking-tighter text-gray-400 xl:text-2xl">
-      Ideas statistics
+      {{ 'ideas-statistics' | translate }}
     </h4>
 
     <ba-filter-button (onClick)="op.toggle($event)" />
@@ -13,27 +13,27 @@
     </p-popover>
   </div>
 
-  <div class="flex flex-wrap gap-x-4 gap-y-12">
+  <div class="flex flex-wrap gap-x-4 gap-y-12 justify-center sm:justify-start">
     <ba-score-card
-      label="Total Ideas"
+      [label]="'total-ideas' | translate"
       [score]="store.total()"
       color="#3b82f6"
       icon="fa-comments" />
 
     <ba-score-card
-      label="Implemented Ideas"
+      [label]="'implemented-ideas' | translate"
       [score]="store.implemented()"
       color="#22c55e"
       icon="fa-list-check" />
 
     <ba-score-card
-      label="Pending Ideas"
+      [label]="'pending-ideas' | translate"
       [score]="store.pending()"
       color="#fb923c"
       icon="fa-hourglass-half" />
 
     <ba-score-card
-      label="Rejected Ideas"
+      [label]="'rejected-ideas' | translate"
       [score]="store.rejected()"
       color="#f87171"
       icon="fa-xmark" />

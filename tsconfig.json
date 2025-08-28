@@ -45,6 +45,12 @@
         "dist/core/src/lib/translation/*",
         "dist/core/src/lib/translation"
       ],
+
+      "@core/*": ["src/app/core/*"],
+      "@feature/*": ["src/app/feature/*"],
+      "@pattern/*": ["src/app/pattern/*"],
+      "@ui/*": ["src/app/ui/*"],
+      "@environments/*": ["src/environments/*"]
     },
     "outDir": "./dist/out-tsc",
     "strict": true,
@@ -62,10 +68,7 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
-    "lib": [
-      "ES2022",
-      "dom"
-    ]
+    "lib": ["ES2022", "dom"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

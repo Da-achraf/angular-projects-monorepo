@@ -109,6 +109,11 @@ export class IdeaDetailComponent {
     this.router.navigateByUrl(`/app/ideas/${id}/edit`);
   }
 
+  review(id: number | undefined) {
+    if (!id) return;
+    this.router.navigateByUrl(`/app/ideas/${id}/review`);
+  }
+
   delete(id: number) {
     this.dialog
       .open(DeleteDialogComponent, {

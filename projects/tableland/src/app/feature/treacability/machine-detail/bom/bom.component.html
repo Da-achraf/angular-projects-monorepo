@@ -1,0 +1,276 @@
+<div class="mx-auto w-full max-w-4xl p-1">
+  <!-- Main Verification Card -->
+  <p-card
+    header="Bill of Materials Verification"
+    class="overflow-hidden border-0 shadow-xl">
+    <!-- Progress Header -->
+    <div class="mb-8">
+      <!-- Main Counter -->
+      <div class="mb-6 text-center">
+        <div
+          class="inline-flex h-32 w-32 items-center justify-center rounded-full border-4 transition-all duration-500"
+          [class]="
+            verificationProgress().isComplete
+              ? 'border-green-500 bg-green-50 text-green-700'
+              : 'border-blue-500 bg-blue-50 text-blue-700'
+          ">
+          <div class="text-center">
+            <div class="text-3xl font-bold">
+              {{ verificationProgress().verified }}
+            </div>
+            <div class="text-sm font-medium opacity-75">
+              of {{ verificationProgress().total }}
+            </div>
+          </div>
+        </div>
+
+        <h3 class="mt-4 text-2xl font-semibold text-gray-800">
+          @if (verificationProgress().isComplete) {
+            <span class="text-green-600">✓ Verification Complete!</span>
+          } @else {
+            <span>Items Verified</span>
+          }
+        </h3>
+
+        @if (!verificationProgress().isComplete) {
+          <p class="mt-2 text-gray-600">
+            {{ verificationProgress().remaining }} item(s) remaining
+          </p>
+        }
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="mb-6 h-3 w-full overflow-hidden rounded-full bg-gray-200">
+        <div
+          class="h-3 rounded-full transition-all duration-700 ease-out"
+          [class]="
+            verificationProgress().isComplete ? 'bg-green-500' : 'bg-blue-500'
+          "
+          [style.width.%]="verificationProgress().percentage"></div>
+      </div>
+    </div>
+
+    <!-- Scanning Interface -->
+    @if (!verificationProgress().isComplete) {
+      <div
+        class="rounded-xl border-2 border-dashed border-gray-300 bg-gray-50/50 p-8 text-center">
+        <div class="mb-6">
+          <div
+            class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100">
+            <svg
+              class="h-8 w-8 text-blue-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M12 12h-2V8h2m0 4v1m0-1h2v4m2-4v-1m0 0V8a4 4 0 00-8 0v4m8 0a4 4 0 00-4 4v1" />
+            </svg>
+          </div>
+          <h3 class="mb-2 text-xl font-semibold text-gray-800">
+            Ready to Scan
+          </h3>
+          <p class="text-gray-600">
+            Scan the position and 3S code to verify the next component
+          </p>
+        </div>
+
+        <!-- Single Row Component for Scanning -->
+        <ba-bom-row
+          class="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg"
+          [bomItem]="{
+            id: 0,
+            pn: '',
+            op: '',
+            workstation: '',
+            component: 'Scan to verify next item',
+          }"
+          [isActive]="true"
+          [isVerified]="false"
+          [isScanning]="isScanning()"
+          (verified)="onRowVerified(0, $event)" />
+      </div>
+    } @else {
+      <!-- Completion State -->
+      <div
+        class="rounded-xl border border-green-200 bg-gradient-to-r from-green-50 to-emerald-50 py-12 text-center">
+        <div
+          class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
+          <svg
+            class="h-10 w-10 text-green-600"
+            fill="currentColor"
+            viewBox="0 0 20 20">
+            <path
+              fill-rule="evenodd"
+              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+              clip-rule="evenodd" />
+          </svg>
+        </div>
+        <h3 class="mb-2 text-2xl font-bold text-green-800">
+          All Components Verified!
+        </h3>
+        <p class="mb-6 text-green-700">
+          Successfully verified all {{ verificationProgress().total }} items
+        </p>
+      </div>
+    }
+
+    <!-- Verification History Section (Collapsible) -->
+    @if (verificationProgress().verified > 0) {
+      <div class="mt-8 border-t border-gray-200 pt-6">
+        <button
+          type="button"
+          class="flex w-full items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-left transition-colors duration-200 hover:bg-gray-100"
+          [attr.aria-expanded]="showVerificationHistory()"
+          (click)="toggleVerificationHistory()">
+          <div class="flex items-center">
+            <svg
+              class="mr-2 h-5 w-5 text-gray-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span class="font-medium text-gray-800">Verification History</span>
+            <span
+              class="ml-2 rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800">
+              {{ verificationProgress().verified }} item{{
+                verificationProgress().verified !== 1 ? 's' : ''
+              }}
+            </span>
+          </div>
+          <svg
+            class="h-5 w-5 text-gray-400 transition-transform duration-200"
+            [class.rotate-180]="showVerificationHistory()"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <!-- Collapsible Content -->
+        <div
+          class="overflow-hidden transition-all duration-300 ease-in-out"
+          [class]="
+            showVerificationHistory()
+              ? 'max-h-96 opacity-100'
+              : 'max-h-0 opacity-0'
+          ">
+          <div
+            class="mt-4 max-h-80 space-y-3 overflow-y-auto rounded-lg border border-gray-200 bg-white p-2 shadow-sm sm:p-4">
+            @for (record of getVerificationRecords(); track record.bomItemId) {
+              <div
+                class="rounded-lg border border-gray-100 bg-gray-50 p-2 sm:p-3">
+                <!-- Mobile Layout (Stack Vertically) -->
+                <div class="block space-y-2 sm:hidden">
+                  <div class="flex items-center space-x-2">
+                    <div
+                      class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-green-100">
+                      <svg
+                        class="h-3 w-3 text-green-600"
+                        fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path
+                          fill-rule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clip-rule="evenodd" />
+                      </svg>
+                    </div>
+                    <div class="truncate text-sm font-medium text-gray-900">
+                      {{ record.component }}
+                    </div>
+                  </div>
+                  <div class="ml-8 space-y-1">
+                    <div
+                      class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-500">
+                      <span class="rounded bg-gray-200 px-1.5 py-0.5"
+                        >3S: {{ record.threeSCode }}</span
+                      >
+                      <span class="rounded bg-gray-200 px-1.5 py-0.5"
+                        >PN: {{ record.positionPn }}</span
+                      >
+                    </div>
+                    <div class="text-xs text-gray-600">
+                      {{ record.verifiedAt | date: 'short' }}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Desktop Layout (Horizontal) -->
+                <div class="hidden items-center justify-between sm:flex">
+                  <div class="flex min-w-0 flex-1 items-center space-x-3">
+                    <div
+                      class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-green-100">
+                      <svg
+                        class="h-4 w-4 text-green-600"
+                        fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path
+                          fill-rule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clip-rule="evenodd" />
+                      </svg>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                      <div class="truncate font-medium text-gray-900">
+                        {{ record.component }}
+                      </div>
+                      <div
+                        class="flex items-center space-x-2 text-sm text-gray-500">
+                        <span class="truncate"
+                          >3S: {{ record.threeSCode }}</span
+                        >
+                        <span>•</span>
+                        <span class="truncate"
+                          >PN: {{ record.positionPn }}</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="ml-4 flex-shrink-0 text-right">
+                    <div
+                      class="whitespace-nowrap text-sm font-medium text-gray-700">
+                      {{ record.verifiedAt | date: 'short' }}
+                    </div>
+                    <div class="text-xs text-gray-500">Verified</div>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Action Bar -->
+    <div
+      class="mt-8 flex items-center justify-between border-t border-gray-200 pt-6">
+      <div class="text-sm text-gray-500">Last updated: {{ updateDate }}</div>
+
+      <div class="flex space-x-2">
+        @if (
+          verificationProgress().verified > 0 &&
+          !verificationProgress().isComplete
+        ) {
+          <button
+            type="button"
+            class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-50"
+            (click)="resetVerifications()">
+            Reset All
+          </button>
+        }
+      </div>
+    </div>
+  </p-card>
+</div>

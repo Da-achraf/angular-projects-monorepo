@@ -1,0 +1,39 @@
+<div class="mx-auto max-w-[80rem] p-10">
+  <ba-generic-table
+    [data]="store.entities()"
+    [total]="store.total()"
+    [columns]="columns()"
+    [globalFilterFields]="globalFilterFields()"
+    [loading]="store.isLoading()"
+    [withCreate]="true"
+    [withEdit]="true"
+    [withDelete]="true"
+    (page)="store.setPage($event)"
+    (pageSize)="store.setPageSize($event)"
+    (create)="onCreate()"
+    (edit)="onEdit($event)"
+    (filter)="onFilter($event)"
+    (delete)="onDelete($event)"
+    (search)="store.setQueryParams({ search: $event })">
+    <ng-template #actionsTemplate let-department>
+      <td class="actions flex items-center text-gray-400">
+        <button
+          [matTooltip]="'edit' | translate"
+          matTooltipPosition="above"
+          matTooltipShowDelay="500"
+          class="rounded-md p-2 transition-all duration-150 hover:bg-blue-50 hover:text-primary-200"
+          (click)="onEdit(department.id)">
+          <i class="fa-solid fa-edit"></i>
+        </button>
+        <button
+          [matTooltip]="'delete' | translate"
+          matTooltipPosition="above"
+          matTooltipShowDelay="500"
+          class="rounded-md p-2 transition-all duration-150 hover:bg-red-50 hover:text-red-400"
+          (click)="onDelete(department.id)">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </td>
+    </ng-template>
+  </ba-generic-table>
+</div>

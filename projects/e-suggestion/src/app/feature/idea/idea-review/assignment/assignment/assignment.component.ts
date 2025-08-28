@@ -1,6 +1,8 @@
+import { DatePipe, NgClass, TitleCasePipe } from '@angular/common';
 import { Component, effect, inject, input, untracked } from '@angular/core';
-import { Assignment } from 'projects/e-suggestion/src/app/core/idea/models/assignment.model';
 import { TranslatePipe } from '@ba/core/data-access';
+import { AccordionModule } from 'primeng/accordion';
+import { Assignment } from 'projects/e-suggestion/src/app/core/idea/models/assignment.model';
 import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/button/button.component';
 import { AssignmentCommentsListComponent } from '../assignment-comments/assignment-comments-list/assi-comments-list.component';
 import { AssignmentService } from '../assignment.service';
@@ -21,6 +23,10 @@ import { ProgressComponent } from '../progress/progress.component';
     AssignmentNotInitializedComponent,
     ProgressComponent,
     TranslatePipe,
+    AccordionModule,
+    TitleCasePipe,
+    DatePipe,
+    NgClass,
   ],
   styleUrl: './assignment.component.scss',
   providers: [AssignmentService, AssignmentStore],
@@ -31,11 +37,19 @@ export class AssignmentComponent {
   assignment = input<Assignment | undefined>();
   ideaId = input.required<number>();
 
+  readonly = input(false);
+
   private readonly assignmentEffect = effect(() => {
     const assignment = this.assignment();
     if (!assignment) return;
 
     untracked(() => this.store.setAssignment(assignment));
+  });
+
+  private dueDateStatusEffect = effect(() => {
+    const status = this.store.saveChangesDisabled();
+
+    console.log('saveChangesDisabled: ', status);
   });
 
   onAssigneesChange(assignees: number[]) {
@@ -50,7 +64,15 @@ export class AssignmentComponent {
     this.store.setTempData({ dueDate: dueDate });
   }
 
+  onPostponedDueDateChange(dueDate: Date | undefined) {
+    this.store.setTempData({ postponedDueDate: dueDate });
+  }
+
   onProgressChange(progress: number) {
     this.store.setTempData({ progress });
+  }
+
+  onValidationChange(status: boolean) {
+    this.store.setDueDateValidation(status);
   }
 }

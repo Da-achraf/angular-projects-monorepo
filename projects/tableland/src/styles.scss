@@ -1,0 +1,90 @@
+/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+@import 'tippy.js/dist/tippy.css';
+@import 'tippy.js/themes/light.css';
+@import 'tippy.js/animations/scale.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  @apply rounded-md;
+}
+
+// // fonts
+// @font-face {
+//   font-family: 'Quicksand';
+//   src: url('../public/fonts/quicksand/Quicksand-VariableFont_wght.ttf')
+//     format('truetype');
+// }
+
+// @font-face {
+//   font-family: 'Noto Naskh Arabic';
+//   src: url('../public/fonts/noto-naskh/NotoNaskhArabic-VariableFont_wght.ttf')
+//     format('truetype');
+// }
+
+:root {
+  @include mat.snack-bar-overrides(
+    (
+      container-color: rgb(39, 217, 104),
+      supporting-text-color: rgb(226, 225, 225),
+    )
+  );
+}
+
+:root {
+  --header-height: 3.5rem;
+  --collapsed-sidebar-width: 4rem;
+  --expanded-sidebar-width: 17rem;
+
+  --sidebar-bg-color: #ea580c; /* accent.dark - deep orange sidebar */
+  --sidebar-text-color: #ffedd5; /* primary.100 - light orange text */
+  --sidebar-active-color: #f0f9ff; /* secondary.50 - light blue active (contrast) */
+  --sidebar-hover-color: #e0f2fe; /* secondary.100 - blue hover */
+
+  @include mat.divider-overrides(
+    (
+      color: rgb(223, 220, 220),
+    )
+  );
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-optical-sizing: auto;
+  font-family: 'Quicksand', serif;
+}
+
+.font-arabic {
+  font-family: 'Noto Naskh Arabic', serif;
+}
+
+// .font-default {
+//   font-family: 'Quicksand', serif;
+// }
+
+// Angular material snackbar classes
+.snackbar-success {
+  background-color: #4caf50 !important; /* Green for success */
+  color: white !important;
+}
+
+.snackbar-error {
+  background-color: #f44336 !important; /* Red for error */
+  color: white !important;
+}
+
+.content img {
+  max-width: 100%;
+  max-height: 400px;
+  height: auto;
+  width: auto;
+}

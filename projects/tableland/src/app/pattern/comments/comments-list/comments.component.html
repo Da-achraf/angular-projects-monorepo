@@ -1,0 +1,63 @@
+<div
+  id="style-4-h"
+  class="flex items-center justify-between overflow-x-auto overflow-y-hidden border-b border-primary-50 bg-white p-4">
+  <span
+    class="mr-6 text-lg font-semibold uppercase tracking-wide text-primary"
+    >{{ label() | translate }}</span
+  >
+  <div class="flex items-center gap-x-3">
+    <button
+      [title]="sortingTitle() | translate"
+      [ngClass]="sortingClass()"
+      class="fa-solid text-gray-500 hover:text-gray-600"
+      (click)="toggleSortingOrder()"></button>
+
+    <ng-content select="ba-radio-filter"></ng-content>
+
+    @if (!viewMode()) {
+      @if (showCreateCommentEditor()) {
+        <ba-button
+          icon="fa-comment-slash"
+          [title]="'close' | translate"
+          buttonClass="text-xs ring-red-400 text-red-500 border border-red-100 hover:border-red-300 hover:bg-red-100"
+          (onClick)="createCommentTrigger.set(false)" />
+      } @else {
+        <ba-button
+          [icon]="'fa-regular fa-comment'"
+          [title]="'add-comment' | translate"
+          buttonClass="text-sm ring-teal-400 text-teal-500 border border-teal-100 hover:border-teal-300 hover:bg-teal-100"
+          (onClick)="createCommentTrigger.set(true)" />
+      }
+    }
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="flex h-full w-full items-center justify-center p-6">
+    <ba-loading />
+  </div>
+} @else {
+  <div
+    id="style-4-h"
+    class="flex max-h-screen flex-col gap-y-4 overflow-auto bg-white px-5 py-3">
+    @if (showCreateCommentEditor()) {
+      <div class="flex flex-col gap-y-3">
+        <ba-add-comment (body)="onCommentSubmit($event)" />
+        <div class="h-[.5px] w-full bg-gray-300 shadow-xl"></div>
+      </div>
+    }
+    @for (comment of comments(); track comment.id) {
+      <ba-comment
+        [comment]="comment"
+        [connectedUserId]="connectedUserId()"
+        (delete)="deleteComment.emit($event)" />
+    } @empty {
+      <div class="flex flex-col items-center justify-center gap-y-2">
+        <i class="fa-solid fa-comment-slash text-red-400"></i>
+        <span class="text-sm font-semibold text-gray-500"
+          >{{ 'no-comments' | translate }}
+        </span>
+      </div>
+    }
+  </div>
+}

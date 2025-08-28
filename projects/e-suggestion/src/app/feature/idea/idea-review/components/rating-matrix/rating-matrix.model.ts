@@ -17,7 +17,7 @@ export const ResultCriteria: Criterion[] = [
       ],
     },
     {
-      key: 'costReduction',
+      key: 'cost_reduction',
       name: 'Réduction des coûts',
       options: [
         { value: 0, label: 'Pas de gain' },
@@ -27,7 +27,7 @@ export const ResultCriteria: Criterion[] = [
       ],
     },
     {
-      key: 'timeSavings',
+      key: 'time_savings',
       name: 'Délais',
       options: [
         { value: 0, label: "Pas d'amélioration" },

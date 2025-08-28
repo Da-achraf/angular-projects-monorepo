@@ -1,0 +1,62 @@
+@if(comment(); as comment) {
+<div
+  dir="ltr"
+  [ngClass]="{ 'shadow-red-200 border-red-400': waitingForDeletionConfirm() }"
+  class="relative flex flex-col gap-y-3 rounded-xl border border-gray-100 text-gray-600 shadow-lg shadow-primary-50 transition-all duration-700 px-3 py-5 group hover:shadow-primary-100"
+>
+  <div class="flex items-center gap-x-2">
+    <img
+      class="block h-8 w-8 sm:h-11 sm:w-11"
+      src="user-profile.png"
+      alt="Profile Picture"
+    />
+    <div class="flex flex-col gap-x-1 text-gray-600">
+      <div>
+        <div class="flex items-center gap-x-1">
+          <h3 class="text-sm font-bold text-gray-700">
+            {{ commenterFullName() | titlecase }}
+          </h3>
+          <span>-</span>
+          <time
+            class="text-xs cursor-pointer transition duration-300 hover:text-gray-700"
+            [title]="comment.created_at | date : 'full'"
+            [attr.datetime]="comment.created_at"
+          >
+            {{ comment.created_at | timeAgo }}
+          </time>
+        </div>
+        <p class="text-gray-400 text-xs">{{ commenterRole() | rolename }}</p>
+      </div>
+    </div>
+
+    <div
+      class="flex items-center gap-x-5 opacity-0 pointer-events-none absolute right-3 top-3 float-right transition-all duration-300 group-hover:opacity-100 group-hover:pointer-events-auto"
+    >
+      <button
+        [disabled]="!canDeleteComment()"
+        title="Delete"
+        (click)="onDelete(comment.id)"
+        class="fa-solid fa-trash text-sm text-gray-300 transition-all duration-200 hover:text-red-400"
+        [ngClass]="{ 'pointer-events-none': !canDeleteComment() }"
+      ></button>
+    </div>
+  </div>
+  <p class="text-sm" [innerHTML]="comment.body | cleanHtml | sanitize"></p>
+
+  <!-- <div class="w-full text-left">
+      <div class="mb-2 flex flex-col justify-between text-gray-600 sm:flex-row">
+        <div>
+          <h3 class="font-semibold text-gray-700">
+            {{ commenterFullName() | titlecase }}
+          </h3>
+          <p class="text-gray-400 text-sm">{{ commenterRole() | rolename }}</p>
+        </div>
+        <time class="text-xs" datetime="2022-11-13T20:00Z">{{
+          comment.created_at | date : "MMMM d, y 'at' h:mm a"
+        }}</time>
+      </div>
+  
+      <p class="text-sm" [innerHTML]="comment.body | cleanHtml | sanitize"></p>
+    </div> -->
+</div>
+}

@@ -18,6 +18,15 @@ export const COLUMNS: TableColumn[] = [
     filter: { type: 'text', field: 'first_name' },
     template: 'fullNameTemplate',
   },
+
+  {
+    header: 'Role',
+    field: '',
+    type: 'custom',
+    sortable: true,
+    template: 'roleTemplate',
+  },
+
   {
     header: 'Registered At',
     field: 'created_at',
@@ -31,7 +40,7 @@ export const COLUMNS: TableColumn[] = [
     field: 'account_status',
     type: 'custom',
     template: 'statusTemplate',
-  }
+  },
 ];
 
 export const GLOBAL_FILTER_FIELDS = [

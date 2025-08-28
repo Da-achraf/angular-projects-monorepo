@@ -1,0 +1,85 @@
+<!-- src/app/features/traceability/components/areas-list/areas-list.component.html -->
+<div class="container mx-auto px-6 py-8">
+  <div class="mb-8">
+    <h1 class="mb-2 text-3xl font-bold text-gray-800">Production Areas</h1>
+    <p class="text-gray-600">Select an area to view its machines</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="flex items-center justify-center py-12">
+    <ba-loading />
+  </div>
+
+  <!-- Areas Grid -->
+  <div
+    *ngIf="!loading()"
+    class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div
+      *ngFor="let area of areas()"
+      (click)="onAreaClick(area)"
+      class="transform cursor-pointer rounded-lg border-l-4 border-blue-500 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-blue-600 hover:shadow-lg">
+      <div class="p-6">
+        <div class="mb-4 flex items-center justify-between">
+          <div
+            class="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
+            <svg
+              class="h-6 w-6 text-blue-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+          </div>
+          <div class="text-right">
+            <span class="text-sm text-gray-500"
+              >{{ area.machines.length || 0 }} machine(s)</span
+            >
+          </div>
+        </div>
+
+        <h3 class="mb-2 text-xl font-semibold text-gray-800">
+          {{ area.name }}
+        </h3>
+
+        <div class="flex items-center text-sm text-gray-600">
+          <svg
+            class="mr-2 h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+          </svg>
+          View Details
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading() && areas().length === 0" class="py-12 text-center">
+    <div
+      class="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-gray-100">
+      <svg
+        class="h-12 w-12 text-gray-400"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+      </svg>
+    </div>
+    <h3 class="mb-2 text-lg font-medium text-gray-900">No Areas Found</h3>
+    <p class="text-gray-500">There are no production areas configured yet.</p>
+  </div>
+</div>

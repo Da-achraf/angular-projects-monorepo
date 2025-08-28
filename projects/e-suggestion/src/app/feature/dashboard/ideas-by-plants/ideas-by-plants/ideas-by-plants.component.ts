@@ -8,6 +8,7 @@ import { DashboardFilterComponent } from 'projects/e-suggestion/src/app/pattern/
 import { FilterButtonComponent } from 'projects/e-suggestion/src/app/ui/components/filter-button/filter-button.component';
 import { IdeasByPlantService } from '../ideas-by-plants.service';
 import { IdeasByPlantStore } from '../ideas-by-plants.store';
+import { TranslatePipe } from '@ba/core/data-access';
 
 @Component({
   selector: 'ba-ideas-by-plants',
@@ -18,6 +19,7 @@ import { IdeasByPlantStore } from '../ideas-by-plants.store';
     FilterButtonComponent,
     PopoverModule,
     NgClass,
+    TranslatePipe
   ],
   providers: [IdeasByPlantService, IdeasByPlantStore],
 })

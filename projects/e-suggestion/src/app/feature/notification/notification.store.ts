@@ -34,7 +34,7 @@ export const NotificationStore = signalStore(
 
   withComputed(({ isSystemAdmin, isTeoaMember, isCommitteeMember }) => ({
     showNotificationFilter: computed(
-      () => isSystemAdmin() || isTeoaMember() || isCommitteeMember()
+      () => true
     ),
   })),
 

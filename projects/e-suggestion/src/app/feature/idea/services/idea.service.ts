@@ -64,9 +64,9 @@ export class IdeaService {
       .pipe(map(resp => resp as ApiResponse<Idea>));
   }
 
-  update(userBody: Partial<IdeaUpdate>) {
+  update(ideaBody: Partial<IdeaUpdate>) {
     return this.#apiService
-      .put<Idea>(`/ideas/${userBody.id}`, userBody)
+      .put<Idea>(`/ideas/${ideaBody.id}?action=${ideaBody.action}`, ideaBody)
       .pipe(map(resp => resp as ApiResponse<Idea>));
   }
 

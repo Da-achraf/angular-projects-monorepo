@@ -4,7 +4,8 @@
       <div
         class="sticky top-[var(--header-height)] z-10 flex flex-col gap-y-2 py-2 sm:flex-row sm:items-center sm:justify-end">
         @if (id(); as id) {
-          <div class="flex items-center gap-x-3">
+          <div
+            class="flex flex-wrap items-center justify-center gap-3 sm:justify-start">
             @if (store.withIdeaEdit()) {
               <ba-button
                 [label]="'edit-idea' | translate"
@@ -18,6 +19,14 @@
                 icon="fa-trash"
                 buttonClass="text-sm bg-red-50 ring-red-400 text-red-500 border border-red-100 hover:border-red-300 hover:bg-red-100"
                 (onClick)="delete(id)"></ba-button>
+            }
+
+            @if (store.canViewReviewPage()) {
+              <ba-button
+                [label]="'review-idea' | translate"
+                icon="fa-clipboard"
+                buttonClass="text-sm bg-white ring-primary-200 text-primary border border-primary-100 hover:border-primary-200 hover:bg-gray-50"
+                (onClick)="review(id)"></ba-button>
             }
           </div>
         }
@@ -72,7 +81,7 @@
                 >
                 <span class="h-[.4px] flex-1 bg-gray-300"></span>
               </div>
-              <ba-content-display [content]="idea.department" />
+              <ba-content-display [content]="idea.department.name" />
             </div>
             <div class="mt-10 flex flex-col gap-y-2">
               <div class="flex items-center gap-x-2">
@@ -82,7 +91,7 @@
                 >
                 <span class="h-[.4px] flex-1 bg-gray-300"></span>
               </div>
-              <ba-content-display [content]="idea.category" />
+              <ba-content-display [content]="idea.category.name" />
             </div>
             <ba-attachment-upload
               [attachments]="attachments()"

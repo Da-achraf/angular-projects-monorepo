@@ -18,8 +18,15 @@
     (edit)="onEdit($event)"
     (delete)="store.showDeleteIdeaDialog($event)"
     (search)="store.setQueryParams({ search: $event })"
+    (sort)="onSort($event)"
     (view)="onView($event)"
     (review)="onReview($event)">
+    <ng-template #titleTemplate let-idea>
+      <span [title]="idea.title">
+        {{ idea.title | truncate: 22 }}
+      </span>
+    </ng-template>
+
     <ng-template #sumbitterTemplate let-idea>
       <div class="flex items-center gap-x-2">
         <span
@@ -34,13 +41,68 @@
     </ng-template>
 
     <ng-template #categoryTemplate let-idea>
-      <span class="font-medium italic">{{ idea.category | titlecase }}</span>
+      <span class="font-medium italic">{{
+        idea?.category?.name | titlecase
+      }}</span>
     </ng-template>
+
+    <ng-template #departmentTemplate let-idea>
+      <span class="font-medium italic">{{
+        idea.department.name | titlecase
+      }}</span>
+    </ng-template>
+
+    <ng-template #actionsTemplate let-idea>
+      <td class="actions flex items-center text-gray-400">
+        @if (store.withIdeaEdit() && isIdeaOwner(idea, authStore.user.id())) {
+          <button
+            [matTooltip]="'edit' | translate"
+            matTooltipPosition="above"
+            matTooltipShowDelay="500"
+            class="rounded-md p-2 transition-all duration-150 hover:bg-blue-50 hover:text-primary-200"
+            (click)="onEdit(idea.id)">
+            <i class="fa-solid fa-edit"></i>
+          </button>
+        }
+        @if (store.withIdeaDelete() && isIdeaOwner(idea, authStore.user.id())) {
+          <button
+            [matTooltip]="'delete' | translate"
+            matTooltipPosition="above"
+            matTooltipShowDelay="500"
+            class="rounded-md p-2 transition-all duration-150 hover:bg-red-50 hover:text-red-400"
+            (click)="store.showDeleteIdeaDialog(idea.id)">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        }
+        <!-- @if (store.withViewDetail()) { -->
+        <button
+          [matTooltip]="'view-details' | translate"
+          matTooltipPosition="above"
+          matTooltipShowDelay="500"
+          class="rounded-md p-2 transition-all duration-150 hover:bg-teal-50 hover:text-primary-200"
+          (click)="onView(idea.id)">
+          <i class="fa-solid fa-eye"></i>
+        </button>
+        <!-- } -->
+        @if (store.withIdeaReview()) {
+          <button
+            [matTooltip]="'review-page' | translate"
+            matTooltipPosition="above"
+            matTooltipShowDelay="500"
+            class="rounded-md p-2 transition-all duration-150 hover:bg-cyan-50 hover:text-cyan-600"
+            (click)="onReview(idea.id)">
+            <i class="fa-solid fa-clipboard"></i>
+          </button>
+        }
+      </td>
+    </ng-template>
+
+    @if (store.showIdeasFilter()) {
+      <ba-radio-filter
+        class="additional-filters"
+        [options]="ideasFilterOptions"
+        (optionSelected)="store.setIdeasFilter($event)"
+        [initialSelected]="store.ideasFilter()" />
+    }
   </ba-generic-table>
-</div>
-
-
-
-<div>
-  
 </div>

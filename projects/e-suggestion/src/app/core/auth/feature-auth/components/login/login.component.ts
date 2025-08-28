@@ -8,13 +8,14 @@ import {
   Validators,
 } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe, TranslationService } from '@ba/core/data-access';
 import { ListErrorsComponent } from '@ba/core/forms';
 import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/button/button.component';
 import { BaInputComponent } from 'projects/e-suggestion/src/app/ui/components/form/input.component';
 import { PasswordFieldComponent } from 'projects/e-suggestion/src/app/ui/components/form/password-field.component';
-import { AuthStore } from '../../../data-access/auth.store';
 import { LogoComponent } from 'projects/e-suggestion/src/app/ui/components/logo.component';
-import { TranslatePipe, TranslationService } from '@ba/core/data-access';
+import { LanguageSwitcherComponent } from '../../../../home/language-switcher.component';
+import { AuthStore } from '../../../data-access/auth.store';
 
 @Component({
   selector: 'ba-login',
@@ -30,6 +31,7 @@ import { TranslatePipe, TranslationService } from '@ba/core/data-access';
     PasswordFieldComponent,
     TranslatePipe,
     LogoComponent,
+    LanguageSwitcherComponent,
   ],
 })
 export class LoginComponent {

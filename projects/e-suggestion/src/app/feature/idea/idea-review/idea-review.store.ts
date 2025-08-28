@@ -52,10 +52,6 @@ export const IdeaReviewStore = signalStore(
 
   withComputed(
     ({ idea, user, isCommitteeMember, connectedUserId, isTeoaMember }) => ({
-      canApprove: computed(() => isCommitteeMember() || isTeoaMember()),
-      canReject: computed(() => isCommitteeMember() || isTeoaMember()),
-      canRate: computed(() => isCommitteeMember()),
-
       /**
        * Here this boolean computed refers to whether
        * the connected user is the submitter of the idea.
@@ -65,7 +61,7 @@ export const IdeaReviewStore = signalStore(
 
       /**
        * Here this boolean computed refers to whether
-       * the connected user is an owner of the idea.
+       * the connected user is an owner of the idea (has been assigned to him).
        *
        * */
       isOwner: computed(
@@ -76,6 +72,32 @@ export const IdeaReviewStore = signalStore(
       // whether the idea has already a rating or not
       isRated: computed(() => !!idea()?.rating_matrix),
       rating: computed(() => idea()?.rating_matrix?.total_score),
+    })
+  ),
+
+  withComputed(
+    ({ idea, isCommitteeMember, isTeoaMember, isIdeaSubmitter, isOwner }) => ({
+      canApprove: computed(
+        () =>
+          (isCommitteeMember() || isTeoaMember()) &&
+          idea()?.status === IdeaStatus.CREATED &&
+          !isIdeaSubmitter() &&
+          !isOwner()
+      ),
+      canReject: computed(
+        () =>
+          (isCommitteeMember() || isTeoaMember()) &&
+          idea()?.status === IdeaStatus.CREATED &&
+          !isIdeaSubmitter() &&
+          !isOwner()
+      ),
+      canRate: computed(
+        () => isCommitteeMember() && !isIdeaSubmitter() && !isOwner()
+      ),
+
+      readonly: computed(
+        () => idea()?.status === 'closed' || idea()?.status === 'rejected'
+      ),
     })
   ),
 
@@ -117,11 +139,12 @@ export const IdeaReviewStore = signalStore(
           });
       },
 
-      rejectIdea: async () => {
+      rejectIdea: async (reason: string) => {
         const body: Partial<IdeaUpdate> = {
           id: ideaId(),
           status: IdeaStatus.REJECTED,
           action: 'rejected',
+          rejection_reason: reason,
         };
 
         startLoading('reject-idea');
@@ -274,7 +297,25 @@ export const IdeaReviewStore = signalStore(
       ),
 
       showRejectDialog: async () => {
-        _showDialog(RejectIdeaDialogComponent, rejectIdea);
+        dialog
+          .open(RejectIdeaDialogComponent, {
+            data: { ideaId: ideaId() },
+            minWidth: '40vw',
+            maxHeight: '95vh',
+          })
+          .afterClosed()
+          .pipe(takeUntilDestroyed(destroyRef))
+          .subscribe({
+            next: async (res: {
+              type: 'confirm' | 'cancel';
+              reason: string;
+            }) => {
+              if (res?.type === 'confirm') {
+                await rejectIdea(res.reason);
+              }
+            },
+          });
+        // _showDialog(RejectIdeaDialogComponent, rejectIdea);
       },
 
       showApproveDialog: async () => {

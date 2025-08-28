@@ -1,70 +1,62 @@
-const plugin = require('tailwindcss/plugin')
-const colors = require('tailwindcss/colors')
+const plugin = require('tailwindcss/plugin');
+const colors = require('tailwindcss/colors');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./projects/e-suggestion/src/**/*.{html,ts}",
+    './projects/e-suggestion/src/**/*.{html,ts}',
+    './projects/tableland/src/**/*.{html,ts}',
   ],
   theme: {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#3c5d9e',
-          light: '#7f99e0',
-          50: '#c3dbff',
-          100: '#a0b9ff',
-          200: '#5e7abf'
+          DEFAULT: '#ea580c', // Orange 600 - vibrant primary orange
+          light: '#fb923c', // Orange 400 - lighter for hover states
+          50: '#fff7ed', // Orange 50 - very light for backgrounds
+          100: '#ffedd5', // Orange 100 - subtle backgrounds
+          200: '#fed7aa', // Orange 200 - light borders/dividers
         },
         secondary: {
-          DEFAULT: '#ff6528',    // Vibrant orange
-          light: '#ffbdc9',      // Lighter orange for hover
-          50: '#ff9c98',        // Very light orange for backgrounds
-          100: '#ff7e63',       // Light orange for borders/dividers
+          DEFAULT: '#0c4a6e', // Sky 900 - deep blue complement
+          light: '#0ea5e9', // Sky 500 - lighter blue for accents
+          50: '#f0f9ff', // Sky 50 - very light blue backgrounds
+          100: '#e0f2fe', // Sky 100 - subtle blue elements
+        },
+        accent: {
+          DEFAULT: '#f97316', // Orange 500 - bright accent
+          light: '#fdba74', // Orange 300 - light accent
+          dark: '#c2410c', // Orange 700 - dark accent
         },
         neutral: {
-          DEFAULT: '#FFFFFF',    // Pure white
-          surface: '#F8F9FA',    // Off-white for backgrounds
-          100: '#F0F2F5',       // Light gray for cards/sections
-          200: '#E4E6EB',       // Border color
-          300: '#CFD1D6',       // Disabled backgrounds
+          DEFAULT: '#FFFFFF', // Pure white
+          surface: '#fefefe', // Warm white surface
+          100: '#f8fafc', // Slate 50 - clean backgrounds
+          200: '#e2e8f0', // Slate 200 - borders
+          300: '#cbd5e1', // Slate 300 - disabled states
+          400: '#94a3b8', // Slate 400 - placeholder text
         },
         text: {
-          DEFAULT: '#1A1A1A',    // Primary text color
-          secondary: '#4A4A4A',  // Secondary text
-          muted: '#737373',      // Muted text
-          onPrimary: '#FFFFFF',  // Text on primary color
-          onSecondary: '#FFFFFF' // Text on secondary color
+          DEFAULT: '#1c1917', // Stone 900 - warm dark text
+          secondary: '#57534e', // Stone 600 - secondary text
+          muted: '#78716c', // Stone 500 - muted text
+          onPrimary: '#FFFFFF', // White text on orange
+          onSecondary: '#FFFFFF', // White text on blue
+          onAccent: '#FFFFFF', // White text on bright orange
         },
         status: {
-          success: '#00875A',    // Green for success states
-          warning: '#FF8800',    // Amber for warnings
-          error: '#E11900',      // Red for errors
-          info: '#0066CC'        // Blue for information
+          success: '#16a34a', // Green 600 - success states
+          warning: '#eab308', // Yellow 500 - warnings (orange-adjacent)
+          error: '#dc2626', // Red 600 - errors
+          info: '#0ea5e9', // Sky 500 - information (matches secondary)
         },
         background: {
-          DEFAULT: '#ffffff'
-        }
-      }
+          DEFAULT: '#ffffff', // Pure white
+          warm: '#fffbeb', // Amber 50 - warm background option
+          cool: '#f8fafc', // Slate 50 - cool background option
+        },
+      },
     },
   },
-  plugins: [
-    // plugin(({ theme, addUtilities }) => {
-    //   const neonUtilities = {}
-    //   const colors = theme('colors')
-
-    //   for (const color in colors) {
-    //     if (typeof colors[color] === 'object') {
-    //       const color1 = colors[color]['500']
-    //       const color2 = colors[color]['700']
-
-    //       neonUtilities[`.neon-${color}`] = {
-    //         boxShadow: `0 0 5px ${color1}, 0 0 20px ${color2}`
-    //       }
-    //     }
-    //   }
-
-    //   addUtilities(neonUtilities)
-    // })
-  ],
-}
+  plugins: [],
+};

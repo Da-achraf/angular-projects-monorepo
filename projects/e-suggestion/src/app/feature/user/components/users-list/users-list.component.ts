@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslatePipe } from '@ba/core/data-access';
 import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -15,9 +17,12 @@ import { SelectModule } from 'primeng/select';
 import { SliderModule } from 'primeng/slider';
 import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { QueryParamType } from 'projects/e-suggestion/src/app/core/api/api.model';
 import { UpdateUser } from 'projects/e-suggestion/src/app/core/auth/data-access/auth.model';
 import { RoleStore } from 'projects/e-suggestion/src/app/core/auth/data-access/role.store';
+import { RoleNamePipe } from 'projects/e-suggestion/src/app/core/auth/feature-auth/pipes/role-name.pipe';
 import { BUStore } from 'projects/e-suggestion/src/app/core/crud/bus/bu.store';
+import { DepartmentStore } from 'projects/e-suggestion/src/app/core/crud/departments/department.store';
 import { PlantStore } from 'projects/e-suggestion/src/app/core/crud/plants/plant.store';
 import { UsersStore } from '../../../../core/auth/data-access/services/users.store';
 import { DeleteDialogComponent } from '../../../../pattern/dialogs/delete-dialog.component';
@@ -46,6 +51,9 @@ import { COLUMNS, GLOBAL_FILTER_FIELDS } from './consts';
     SliderModule,
     TagModule,
     GenericTableComponent,
+    RoleNamePipe,
+    MatTooltipModule,
+    TranslatePipe,
   ],
 
   templateUrl: './users-list.component.html',
@@ -59,6 +67,7 @@ export class UsersListComponent {
 
   private readonly buStore = inject(BUStore);
   private readonly plantStore = inject(PlantStore);
+  private readonly departmentStore = inject(DepartmentStore);
   private readonly roleStore = inject(RoleStore);
 
   protected isHoveredUser = signal<number | undefined>(undefined);
@@ -69,13 +78,12 @@ export class UsersListComponent {
   protected total = this.store.total;
 
   onToggleAccountStatus(ev: Event, id: number) {
-
     const updateUser: Partial<UpdateUser> = {
       id,
-      account_status: (ev.target as HTMLInputElement).checked
-    }
+      account_status: (ev.target as HTMLInputElement).checked,
+    };
 
-    this.store.update(updateUser)
+    this.store.update(updateUser);
   }
 
   onDelete(id: number) {
@@ -88,14 +96,14 @@ export class UsersListComponent {
       .afterClosed()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (res) => {
+        next: res => {
           if (res && res?.type === 'delete') this.store.deleteOne(id);
         },
       });
   }
 
   onEdit(id: number) {
-    const user = this.users().find((u) => u.id === id);
+    const user = this.users().find(u => u.id === id);
     if (!user) return;
 
     this.dialog
@@ -105,6 +113,7 @@ export class UsersListComponent {
           bus: this.buStore.allEntities(),
           plants: this.plantStore.allEntities(),
           roles: this.roleStore.allEntities(),
+          departments: this.departmentStore.allEntities(),
         },
         minWidth: '40vw',
         maxHeight: '95vh',
@@ -124,6 +133,20 @@ export class UsersListComponent {
           }
         },
       });
+  }
+
+  onFilter(filter: QueryParamType | null) {
+    if (filter === null) {
+      this.store.resetQueryParams();
+      return;
+    }
+
+    this.store.setQueryParams(filter);
+  }
+
+  onSearch(term: string) {
+    console.log('onSearch: ', term);
+    this.store.setQueryParams({ search: term });
   }
 
   clear(table: Table) {

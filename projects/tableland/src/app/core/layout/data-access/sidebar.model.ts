@@ -1,0 +1,98 @@
+import { RoleEnum, RoleEnumType } from '../../auth/data-access/auth.model';
+
+export interface SidebarItem {
+  label: string;
+  icon: string;
+  link: string;
+  isMenu: boolean;
+  children?: SidebarItem[];
+  allowedRoles?: RoleEnumType[];
+  menuVisible?: boolean;
+}
+
+export const SIDEBAR_ITEMS: SidebarItem[] = [
+  {
+    label: 'home',
+    icon: 'fa-house',
+    link: '/app/home',
+    isMenu: false,
+    allowedRoles: [RoleEnum.ALL],
+  },
+  // {
+  //   label: 'ideas',
+  //   icon: 'fa-list-check',
+  //   link: '/app/ideas/list',
+  //   isMenu: false,
+  //   allowedRoles: [RoleEnum.ALL],
+  // },
+  // {
+  //   label: 'assigned-ideas',
+  //   icon: 'fa-bookmark',
+  //   link: '/app/ideas/assigned',
+  //   isMenu: false,
+  //   allowedRoles: [RoleEnum.ALL],
+  // },
+  // {
+  //   label: 'users',
+  //   icon: 'fa-users',
+  //   link: '/app/users/list',
+  //   isMenu: false,
+  //   allowedRoles: [RoleEnum.SYSTEM_ADMIN, RoleEnum.TEOA],
+  // },
+
+  {
+    label: 'Treacability',
+    icon: 'fa-chart-simple',
+    link: '/app/traceability',
+    isMenu: false,
+    allowedRoles: [RoleEnum.ALL],
+  },
+
+  {
+    label: 'configuration',
+    icon: 'fa-gears',
+    link: '#',
+    isMenu: true,
+    allowedRoles: [RoleEnum.ALL],
+    children: [
+      {
+        label: 'plant',
+        icon: 'fa-building',
+        link: '/app/config/plants',
+        isMenu: false,
+      },
+      {
+        label: 'areas',
+        icon: 'fa-vector-square',
+        link: '/app/config/areas',
+        isMenu: false,
+      },
+      {
+        label: 'machines',
+        icon: 'fa-robot',
+        link: '/app/config/machines',
+        isMenu: false,
+      },
+      // {
+      //   label: 'department',
+      //   icon: 'fa-landmark',
+      //   link: '/app/config/departments',
+      //   isMenu: false,
+      // },
+      // {
+      //   label: 'category',
+      //   icon: 'fa-tags',
+      //   link: '/app/config/categories',
+      //   isMenu: false,
+      // },
+    ],
+  },
+
+  // {
+  //   label: 'Notifications',
+  //   icon: 'fa-bell',
+  //   link: '/app/notifications',
+  //   isMenu: false,
+  //   allowedRoles: [RoleEnum.ALL],
+  // },
+];

@@ -1,0 +1,184 @@
+<div class="relative w-full" [dir]="translationService.dir()">
+  <!-- Loading Overlay -->
+  @if (loading(); as loading) {
+    <div
+      class="absolute inset-0 z-10 flex items-center justify-center bg-black bg-opacity-5 backdrop-blur-sm transition-opacity duration-300"
+      [class.opacity-0]="!loading"
+      [class.opacity-100]="loading">
+      <ba-loading />
+    </div>
+  }
+  <p-table
+    #dt1
+    [value]="data()"
+    [globalFilterFields]="[]"
+    (onSort)="onSort($event)"
+    [lazy]="true"
+    (onFilter)="onFilter($event)">
+    <ng-template #caption>
+      <div class="flex items-center justify-between flex-wrap gap-y-3">
+        <div class="flex items-center gap-x-5 flex-wrap gap-y-3">
+          <ba-search-bar (search)="onSearch($event)" />
+          @if (showClearButton()) {
+            <p-button
+              [outlined]="true"
+              (click)="clear(dt1)"
+              [label]="'clear' | translate">
+              <ng-template pTemplate="icon">
+                <i class="fa-solid fa-filter-circle-xmark bg-pr"></i>
+              </ng-template>
+            </p-button>
+          }
+          <div class="flex items-center gap-x-3">
+            <ng-content select=".additional-filters"></ng-content>
+          </div>
+        </div>
+        <div class="flex items-center gap-x-2">
+          @if (withExport()) {
+            <ba-button
+              label="Export"
+              icon="fa-download"
+              buttonClass="text-gray-400 bg-gray-50 border border-gray-300 !ring-gray-300 hover:text-gray-500"
+              (onClick)="create.emit()" />
+          }
+          @if (withCreate()) {
+            <ba-button
+              [label]="'create' | translate"
+              icon="fa-plus"
+              buttonClass="text-gray-50 bg-primary border border-primary-200 hover:bg-primary hover:text-neutral-50"
+              (onClick)="create.emit()" />
+          }
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #header>
+      <tr>
+        @for (col of columns(); track $index) {
+          <th
+            [style.minWidth]="'auto'"
+            [pSortableColumn]="col.sortable ? col.sortField : undefined">
+            @if (col.filterTemplate) {
+              <ng-template [ngTemplateOutlet]="getFilterTemplate(col)" />
+            } @else {
+              <div class="flex items-center">
+                <span>
+                  {{ col.header | translate }}
+                </span>
+                @if (col.sortable) {
+                  <p-sortIcon [field]="col.sortField"></p-sortIcon>
+                }
+                @if (col.filter; as filter) {
+                  <p-columnFilter
+                    [type]="filter.type"
+                    [field]="filter.field"
+                    [hideOnClear]="true"
+                    display="menu"></p-columnFilter>
+                }
+              </div>
+            }
+          </th>
+        }
+        @if (showActionsColumn()) {
+          <th [style.minWidth]="'auto'">{{ 'actions' | translate }}</th>
+        }
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-row>
+      <tr>
+        @for (col of columns(); track $index) {
+          <td>
+            @switch (col.type) {
+              @case ('custom') {
+                <ng-template
+                  [ngTemplateOutlet]="getTableDataTemplate(col)"
+                  [ngTemplateOutletContext]="{ $implicit: row }" />
+              }
+              @case ('date') {
+                {{ row[col.field] | date: 'MMM d, y, h:mm a' }}
+              }
+              @case ('text') {
+                {{ row[col.field] | titlecase }}
+              }
+              @case ('numeric') {
+                {{ row[col.field] }}
+              }
+            }
+          </td>
+        }
+
+        <!-- Actions Column -->
+        @if (showActionsColumn()) {
+          <ng-template
+            [ngTemplateOutlet]="getTemplate('actionsTemplate')"
+            [ngTemplateOutletContext]="{ $implicit: row }">
+          </ng-template>
+          <!-- <td class="flex items-center text-gray-400">
+            @if (withEdit()) {
+              <button
+                [matTooltip]="'edit' | translate"
+                matTooltipPosition="above"
+                matTooltipShowDelay="500"
+                class="rounded-md p-2 transition-all duration-150 hover:bg-blue-50 hover:text-primary-200"
+                (click)="edit.emit(row['id'])">
+                <i class="fa-solid fa-edit"></i>
+              </button>
+            }
+            @if (withDelete()) {
+              <button
+                [matTooltip]="'delete' | translate"
+                matTooltipPosition="above"
+                matTooltipShowDelay="500"
+                class="rounded-md p-2 transition-all duration-150 hover:bg-red-50 hover:text-red-400"
+                (click)="delete.emit(row['id'])">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            }
+            @if (withViewDetail()) {
+              <button
+                [matTooltip]="'view-details' | translate"
+                matTooltipPosition="above"
+                matTooltipShowDelay="500"
+                class="rounded-md p-2 transition-all duration-150 hover:bg-teal-50 hover:text-primary-200"
+                (click)="view.emit(row['id'])">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            }
+            @if (withReview()) {
+              <button
+                [matTooltip]="'review-page' | translate"
+                matTooltipPosition="above"
+                matTooltipShowDelay="500"
+                class="rounded-md p-2 transition-all duration-150 hover:bg-cyan-50 hover:text-cyan-600"
+                (click)="review.emit(row['id'])">
+                <i class="fa-solid fa-clipboard"></i>
+              </button>
+            }
+          </td> -->
+        }
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      @if (!loading() && data().length === 0) {
+        <tr>
+          <td [attr.colspan]="columnsLength() + 1">
+            <div class="flex flex-col items-center justify-center gap-y-2">
+              <i class="fa-solid fa-ban text-lg text-red-400"></i>
+              <span class="text-sm font-semibold text-gray-500">{{
+                'no-data' | translate
+              }}</span>
+            </div>
+          </td>
+        </tr>
+      }
+    </ng-template>
+  </p-table>
+
+  <ba-paginator
+    [total]="total()"
+    (page)="page.emit($event)"
+    [pageSizeOptions]="pageSizeOptions()"
+    (pageSize)="pageSize.emit($event)" />
+</div>

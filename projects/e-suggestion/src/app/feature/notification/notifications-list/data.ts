@@ -5,7 +5,8 @@ export const COLUMNS: TableColumn[] = [
   {
     header: 'Notifications',
     type: 'custom',
-    field: '',
+    field: 'title',
+    filter: { type: 'text', field: 'title' },
     template: 'notificationTemplate',
   },
 ];

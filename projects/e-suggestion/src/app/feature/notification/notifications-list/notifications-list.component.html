@@ -8,6 +8,7 @@
     [showActionsColumn]="false"
     [showClearButton]="false"
     (page)="store.setPage($event)"
+    (filter)="onFilter($event)"
     (pageSize)="store.setPageSize($event)"
     (search)="store.setQueryParams({ search: $event })">
     <ng-template #notificationTemplate let-notification>

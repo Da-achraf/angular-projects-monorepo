@@ -18,5 +18,11 @@ import { ExpandedSidebarComponent } from './sidebar/expanded-sidebar/expanded-si
   ],
 })
 export class LayoutComponent {
-  protected isOpen = inject(SidebarService).sideNavOpened;
+  private readonly sidebarService = inject(SidebarService);
+
+  protected isOpen = this.sidebarService.sideNavOpened;
+
+  toggleSidebar() {
+    this.sidebarService.toggleSideNav();
+  }
 }

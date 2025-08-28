@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { API_URL } from '@ba/core/http-client';
-import { Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { QueryParamType } from '../../../core/api/api.model';
 import { ActionsCount } from './actions-count.model';
 
@@ -18,8 +18,10 @@ export class ActionsCountService {
       }
     });
 
-    return this.http.get<ActionsCount>(`${this.baseUrl}/kpis/actions-count`, {
-      params: httpParams,
-    });
+    return this.http
+      .get<{ data: ActionsCount }>(`${this.baseUrl}/kpis/actions-count`, {
+        params: httpParams,
+      })
+      .pipe(map(r => r.data));
   }
 }

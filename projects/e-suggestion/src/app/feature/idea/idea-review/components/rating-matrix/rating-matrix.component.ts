@@ -78,7 +78,7 @@ export class RatingMatrixComponent implements OnInit {
     });
 
     // Add form controls for each criterion
-    this.resultCriteria.concat(this.processCriteria).forEach((criterion) => {
+    this.resultCriteria.concat(this.processCriteria).forEach(criterion => {
       this.ratingForm.addControl(
         criterion.key,
         this.fb.control(0, Validators.required)
@@ -96,8 +96,8 @@ export class RatingMatrixComponent implements OnInit {
 
   calculateMaxTotalScore(): number {
     let maxScore = 0;
-    ResultCriteria.concat(ProcessCriteria).forEach((criterion) => {
-      maxScore += Math.max(...criterion.options.map((opt) => opt.value));
+    ResultCriteria.concat(ProcessCriteria).forEach(criterion => {
+      maxScore += Math.max(...criterion.options.map(opt => opt.value));
     });
     return maxScore;
   }
@@ -121,6 +121,7 @@ export class RatingMatrixComponent implements OnInit {
         this.updateRating.emit({
           ...this.data(),
           ...ratingData,
+          idea_id: this.ideaId(),
         });
       } else {
         this.createRating.emit({

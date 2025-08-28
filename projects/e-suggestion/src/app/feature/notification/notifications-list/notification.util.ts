@@ -8,11 +8,13 @@ export const loadNotificationInitialQueryParams = (loggedInUser: User) => {
     userRoles.includes(RoleEnum.SYSTEM_ADMIN) ||
     userRoles.includes(RoleEnum.TEOA)
   )
-    return {};
-    
+    return {
+      sort__created_at: 'desc',
+    };
   // other users => only their comments
   else
     return {
       user_id__eq: loggedInUser.id,
+      sort__created_at: 'desc',
     };
 };

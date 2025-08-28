@@ -1,0 +1,39 @@
+<div class="container decorative-pattern mx-auto max-w-5xl px-4 py-6 lg:px-6 lg:py-8">
+  <div class="mb-6 lg:mb-8">
+    <button
+      (click)="goBack()"
+      class="mb-4 inline-flex touch-manipulation items-center text-blue-600 transition-colors duration-200 hover:text-blue-800">
+      <svg
+        class="mr-2 h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M15 19l-7-7 7-7"></path>
+      </svg>
+      Back to Machines
+    </button>
+
+    <h1 class="mb-2 text-2xl font-bold text-gray-800 lg:text-3xl">
+      {{ machine()?.name || 'Machine Details' }}
+    </h1>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="flex items-center justify-center py-12">
+      <ba-loading />
+    </div>
+  }
+
+  @if (showScanning()) {
+    <ba-scanner (scanned)="onScanned($event)" />
+  }
+
+  @if (bom.length > 0) {
+    <ba-bom [bomItems]="bom" />
+  }
+</div>

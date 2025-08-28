@@ -1,0 +1,66 @@
+<div
+  class="decorative-pattern flex h-screen w-screen flex-wrap items-center justify-center text-slate-800">
+  <div
+    class="mx-auto my-auto flex h-full w-full max-w-[45rem] flex-col justify-center px-8 pt-2">
+    <p class="text-left text-xl font-bold md:leading-tight">
+      {{ 'sign in to your account' | translate }}
+    </p>
+
+    <p class="mt-6 text-center font-medium md:text-left">
+      {{ 'donot-have-account' | translate }}
+      <a
+        [routerLink]="['/register']"
+        class="whitespace-nowrap border-b-2 border-b-transparent font-semibold text-primary-200 transition-all duration-300 hover:border-b-primary-200">
+        {{ 'register-here' | translate }}
+      </a>
+    </p>
+
+    <ba-list-errors />
+
+    <form
+      class="flex flex-col items-stretch gap-y-5 py-3"
+      [formGroup]="form"
+      (ngSubmit)="onSubmit()">
+      <div class="flex flex-col gap-y-1">
+        <ba-input [control]="form.controls.te_id">
+          <input
+            type="text"
+            id="te-id"
+            formControlName="te_id"
+            placeholder="TEXXXXXX"
+            pattern="TE\d{6}"
+            title="TE ID should be in the format TEXXXXXX where X is a number" />
+        </ba-input>
+
+        <div class="flex items-center gap-x-2">
+          <span class="h-[.4px] flex-1 bg-gray-300"></span>
+          <span
+            class="text-sm font-semibold uppercase tracking-wide text-primary">
+            {{ 'or' | translate }}
+          </span>
+          <span class="h-[.4px] flex-1 bg-gray-300"></span>
+        </div>
+
+        <ba-input [control]="form.controls.email">
+          <input
+            type="email"
+            formControlName="email"
+            [placeholder]="'email' | translate" />
+        </ba-input>
+      </div>
+
+      <span class="my-3 block h-[1px] w-full bg-gray-300 shadow-xl"></span>
+
+      <ba-password [control]="form.controls.password" />
+
+      <ba-button
+        [label]="'login' | translate"
+        type="submit"
+        [disabled]="!form.valid"
+        [isLoading]="store.isLoginIn()"
+        icon="fa-user"
+        buttonClass="bg-primary-light text-gray-100 hover:bg-secondary"
+        (onClick)="onSubmit()" />
+    </form>
+  </div>
+</div>

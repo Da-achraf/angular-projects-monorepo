@@ -1,4 +1,5 @@
 import { BU } from '../../crud/bus/bu.model';
+import { Department } from '../../crud/departments/department.model';
 import { Plant } from '../../crud/plants/plant.model';
 import { Role } from './role.model';
 
@@ -18,6 +19,7 @@ export type User = BaseUser & {
   roles: Role[];
   bu: BU | null;
   plant: Plant | null;
+  department: Department | null;
 };
 
 export type UpdateUser = BaseUser & {
@@ -26,6 +28,7 @@ export type UpdateUser = BaseUser & {
   role_id: number;
   bu_id: number | null;
   plant_id: number | null;
+  department_id: number | null;
 };
 
 export type LoginUser = {
@@ -37,6 +40,7 @@ export type RegisterUser = BaseUser & {
   password: string;
   bu_id: number | null;
   plant_id: number | null;
+  department_id: number | null;
   role_id: number | null;
 };
 
@@ -84,6 +88,7 @@ export const initialUserValue: UserState = {
   updated_at: '',
   bu: null,
   plant: null,
+  department: null,
 };
 
 export const authInitialState: AuthState = {

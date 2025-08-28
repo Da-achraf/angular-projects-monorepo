@@ -1,0 +1,166 @@
+<div
+  class="decorative-pattern flex w-screen h-screen flex-wrap items-center justify-center text-slate-800">
+  <div class="flex w-full flex-col md:w-2/3">
+    <div
+      class="mx-auto my-auto flex w-full max-w-[45rem] flex-col justify-center px-6 pt-2">
+      <p class="text-center text-xl font-bold md:text-left md:leading-tight">
+        {{ 'create-free-account' | translate }}
+      </p>
+      <p class="mt-6 text-center font-medium md:text-left">
+        {{ 'already-have-account' | translate }}
+        <a
+          [routerLink]="['/login']"
+          class="whitespace-nowrap border-b-2 border-b-transparent font-semibold text-primary-200 transition-all duration-300 hover:border-b-primary-200"
+          >{{ 'login-here' | translate }}</a
+        >
+      </p>
+
+      <ba-list-errors />
+
+      <form class="flex flex-col items-stretch gap-y-3 py-3" [formGroup]="form">
+        <div class="flex items-center gap-x-2">
+          <ba-input class="flex-1" [control]="form.controls.first_name">
+            <input
+              type="text"
+              formControlName="first_name"
+              [placeholder]="'first-name' | translate" />
+          </ba-input>
+
+          <ba-input class="flex-1" [control]="form.controls.last_name">
+            <input
+              type="text"
+              formControlName="last_name"
+              [placeholder]="'last-name' | translate" />
+          </ba-input>
+        </div>
+
+        <ba-input class="flex-1" [control]="form.controls.te_id">
+          <input
+            type="text"
+            id="te-id"
+            formControlName="te_id"
+            placeholder="TEXXXXXX"
+            value="TE"
+            pattern="TE\d{6}"
+            title="TE Id should be in the format TEXXXXXX where X is a number." />
+        </ba-input>
+
+        <ba-input [control]="form.controls.email">
+          <input
+            type="email"
+            formControlName="email"
+            [placeholder]="'email-placeholder' | translate" />
+        </ba-input>
+
+        <p-select
+          [options]="roles()"
+          formControlName="role_id"
+          optionValue="id"
+          optionLabel="name"
+          [filter]="true"
+          filterBy="name"
+          [showClear]="true"
+          [placeholder]="'select-role' | translate"
+          class="flex-1">
+          <ng-template #selectedItem let-selectedOption>
+            <div class="flex items-center gap-2">
+              <div>{{ selectedOption.name | rolename }}</div>
+            </div>
+          </ng-template>
+          <ng-template let-role #item>
+            <div class="flex items-center gap-2">
+              <div>{{ role.name | rolename }}</div>
+            </div>
+          </ng-template>
+        </p-select>
+
+        <ba-input [control]="form.controls.password">
+          <input
+            #input
+            type="password"
+            formControlName="password"
+            [placeholder]="'password-placeholder' | translate" />
+          <i
+            #icon
+            class="fa-solid fa-eye absolute right-2 top-[50%] translate-y-[-50%] rounded-lg p-2 text-gray-400 transition-all duration-300 hover:cursor-pointer hover:bg-gray-100"></i>
+        </ba-input>
+
+        <div class="flex items-center gap-x-2">
+          <p-select
+            [options]="bus()"
+            formControlName="bu_id"
+            optionLabel="name"
+            optionValue="id"
+            [filter]="true"
+            filterBy="name"
+            [showClear]="true"
+            placeholder="Select a BU"
+            class="flex-1">
+            <ng-template #selectedItem let-selectedOption>
+              <div class="flex items-center gap-2">
+                <div>{{ selectedOption.name }}</div>
+              </div>
+            </ng-template>
+            <ng-template let-bu #item>
+              <div class="flex items-center gap-2">
+                <div>{{ bu.name }}</div>
+              </div>
+            </ng-template>
+          </p-select>
+
+          <p-select
+            [options]="plants()"
+            formControlName="plant_id"
+            optionLabel="name"
+            optionValue="id"
+            [filter]="true"
+            filterBy="name"
+            [showClear]="true"
+            placeholder="Select a Plant"
+            class="flex-1">
+            <ng-template #selectedItem let-selectedOption>
+              <div class="flex items-center gap-2">
+                <div>{{ selectedOption.name }}</div>
+              </div>
+            </ng-template>
+            <ng-template let-plant #item>
+              <div class="flex items-center gap-2">
+                <div>{{ plant.name }}</div>
+              </div>
+            </ng-template>
+          </p-select>
+        </div>
+
+        <p-select
+          [options]="departments()"
+          formControlName="department_id"
+          optionLabel="name"
+          optionValue="id"
+          [filter]="true"
+          filterBy="name"
+          [showClear]="true"
+          placeholder="Select a Department"
+          class="flex-1">
+          <ng-template #selectedItem let-selectedOption>
+            <div class="flex items-center gap-2">
+              <div>{{ selectedOption.name }}</div>
+            </div>
+          </ng-template>
+          <ng-template let-department #item>
+            <div class="flex items-center gap-2">
+              <div>{{ department.name }}</div>
+            </div>
+          </ng-template>
+        </p-select>
+
+        <ba-button
+          [label]="'register' | translate"
+          [disabled]="!form.valid"
+          [isLoading]="store.isRegistering()"
+          icon="fa-user-plus"
+          buttonClass="bg-secondary-100 text-gray-50 hover:bg-secondary"
+          (onClick)="onSubmit()"></ba-button>
+      </form>
+    </div>
+  </div>
+</div>

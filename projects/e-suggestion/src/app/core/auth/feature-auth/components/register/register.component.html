@@ -117,6 +117,9 @@
     </div>
   </div>
   <div class="flex w-full flex-col md:w-2/3">
+    <div class="w-full px-2 py-5">
+      <ba-language-switcher class="float-right" />
+    </div>
     <div
       class="mx-auto my-auto flex w-full max-w-[45rem] flex-col justify-center px-6 pt-2 md:justify-start">
       <p class="text-center text-xl font-bold md:text-left md:leading-tight">
@@ -162,7 +165,10 @@
         </ba-input>
 
         <ba-input [control]="form.controls.email">
-          <input type="email" formControlName="email" placeholder="Email" />
+          <input
+            type="email"
+            formControlName="email"
+            [placeholder]="'email-placeholder' | translate" />
         </ba-input>
 
         <p-select
@@ -243,6 +249,28 @@
             </ng-template>
           </p-select>
         </div>
+
+        <p-select
+          [options]="departments()"
+          formControlName="department_id"
+          optionLabel="name"
+          optionValue="id"
+          [filter]="true"
+          filterBy="name"
+          [showClear]="true"
+          placeholder="Select a Department"
+          class="flex-1">
+          <ng-template #selectedItem let-selectedOption>
+            <div class="flex items-center gap-2">
+              <div>{{ selectedOption.name }}</div>
+            </div>
+          </ng-template>
+          <ng-template let-department #item>
+            <div class="flex items-center gap-2">
+              <div>{{ department.name }}</div>
+            </div>
+          </ng-template>
+        </p-select>
 
         <ba-button
           [label]="'register' | translate"

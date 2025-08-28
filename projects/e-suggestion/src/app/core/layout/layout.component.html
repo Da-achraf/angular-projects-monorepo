@@ -1,9 +1,9 @@
-<div class="flex flex-col gap-0">
+<!-- <div class="flex flex-col gap-0">
   <app-header />
 
   <div class="flex h-[calc(100vh-var(--header-height))]">
     <div
-      class="relative min-h-[calc(100vh-var(--header-height))] transition-all duration-300 ease-in-out"
+      class="relative hidden min-h-[calc(100vh-var(--header-height))] transition-all duration-300 ease-in-out sm:block"
       [style.width]="
         isOpen()
           ? 'var(--expanded-sidebar-width)'
@@ -16,6 +16,47 @@
       }
     </div>
 
+    <div class="min-h-[calc(100vh-var(--header-height))] w-full overflow-auto">
+      <div class="mx-auto h-full w-full bg-white">
+        <ba-breadcrumb class="sticky top-0 z-[200] backdrop-blur-[.5rem]" />
+
+        <router-outlet />
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+
+<div class="flex flex-col gap-0">
+  <app-header />
+
+  <div class="flex h-[calc(100vh-var(--header-height))]">
+    <!-- Desktop Sidebar -->
+    <div
+      class="relative hidden min-h-[calc(100vh-var(--header-height))] transition-all duration-300 ease-in-out sm:block"
+      [style.width]="
+        isOpen()
+          ? 'var(--expanded-sidebar-width)'
+          : 'var(--collapsed-sidebar-width)'
+      ">
+      @if (isOpen()) {
+        <app-expanded-sidebar />
+      } @else {
+        <app-collapsed-sidebar />
+      }
+    </div>
+
+    <!-- Mobile Sidebar Overlay -->
+    @if (isOpen()) {
+      <div class="fixed inset-0 z-[300] bg-black bg-opacity-50 sm:hidden" (click)="toggleSidebar()">
+        <div class="h-full w-full bg-white" (click)="$event.stopPropagation()">
+          <app-expanded-sidebar />
+        </div>
+      </div>
+    }
+
+    <!-- Main Content -->
     <div class="min-h-[calc(100vh-var(--header-height))] w-full overflow-auto">
       <div class="mx-auto h-full w-full bg-white">
         <ba-breadcrumb class="sticky top-0 z-[200] backdrop-blur-[.5rem]" />

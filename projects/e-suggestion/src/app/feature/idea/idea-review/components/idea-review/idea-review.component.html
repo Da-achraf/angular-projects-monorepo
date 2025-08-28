@@ -9,9 +9,10 @@
     [dir]="translationService.dir()"
     id="style-4"
     class="min-h-full bg-gray-50/80">
-    <div class="mx-auto flex max-w-[95rem] flex-col gap-y-5 px-10 py-4">
+    <div class="mx-auto flex max-w-[95rem] flex-col gap-y-5 px-2 py-4 sm:px-10">
       <div
         id="_buttons"
+        [ngClass]="{ 'pointer-events-none opacity-80': store.readonly() }"
         class="relative flex flex-col gap-y-2 py-2 sm:flex-row sm:items-center sm:justify-end">
         @if (id(); as id) {
           <div class="flex items-center gap-x-3">
@@ -65,16 +66,18 @@
           <ba-assignment
             [assignment]="idea.assignment"
             [ideaId]="idea.id"
-            class="assignment blur-[.01rem]" />
+            class="assignment blur-[.01rem]"
+            [readonly]="store.readonly()" />
 
-          <ba-teoa-review
+          <!-- <ba-teoa-review
             [ideaId]="idea.id"
             [teoaReview]="idea.teoa_review"
-            class="teoa-review" />
+            class="teoa-review" /> -->
 
           <ba-idea-comments
             [ideaId]="idea.id"
             [comments]="idea.comments"
+            [ngClass]="{ 'pointer-events-none opacity-80': store.readonly() }"
             class="comments" />
         </div>
       } @placeholder (minimum 500ms) {

@@ -1,0 +1,16 @@
+<ul
+  class="list-none m-0 px-5 py-3 w-full border-b border-b-gray-300 bg-white/30 !text-gray-500 tracking-wider"
+>
+  @for (breadcrumb of breadcrumbs$ | async; track $index) {
+    <li class="group transition duration-200 hover:text-gray-900">
+        <a class="group-last:font-bold" [routerLink]="breadcrumb.url">
+        <span class="flex items-center gap-x-2">
+            @if (breadcrumb.icon; as icon) {
+            <span class="fa-solid fa-{{ icon }} text-gray-400"></span>
+            }
+            <span>{{ breadcrumb.label }}</span>
+        </span>
+        </a>
+    </li>
+  }
+</ul>

@@ -1,0 +1,26 @@
+/* Custom Material Overrides */
+.mat-form-field-appearance-outline .mat-form-field-outline {
+    color: #e5e7eb !important; /* Match border-gray-300 */
+  }
+  
+  .mat-form-field-appearance-outline .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+  }
+  
+  .mat-form-field-appearance-outline .mat-form-field-infix {
+    padding: 0.5em 0 !important;
+    border-top: 0 !important;
+  }
+  
+  .mat-form-field-appearance-outline .mat-form-field-flex {
+    padding: 0 0.75em !important;
+    margin-top: -0.25em !important;
+  }
+  
+  .mat-datepicker-toggle {
+    color: #6b7280 !important; /* Match text-gray-500 */
+  }
+  
+  .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+    color: #4f46e5 !important; /* Match indigo-600 */
+  }

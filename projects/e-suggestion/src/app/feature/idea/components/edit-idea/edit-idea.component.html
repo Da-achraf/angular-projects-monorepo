@@ -4,7 +4,8 @@
       <div
         class="flex flex-col gap-y-2 py-2 sm:flex-row sm:items-center sm:justify-end">
         @if (id(); as id) {
-          <div class="flex items-center gap-x-3">
+          <div
+            class="flex flex-wrap items-center justify-center gap-3 sm:justify-start">
             <ba-button
               [label]="'save-changes' | translate"
               [isLoading]="store.isUpdating()"
@@ -84,19 +85,21 @@
               </div>
               <p-select
                 [options]="categories()"
-                formControlName="category"
+                formControlName="category_id"
+                [optionValue]="'id'"
+                [optionLabel]="'name'"
                 [filter]="true"
                 [showClear]="true"
                 [placeholder]="'select-category' | translate"
                 class="flex-1">
                 <ng-template #selectedItem let-selectedOption>
                   <div class="flex items-center gap-2">
-                    <div>{{ selectedOption | titlecase }}</div>
+                    <div>{{ selectedOption.name | titlecase }}</div>
                   </div>
                 </ng-template>
                 <ng-template let-category #item>
                   <div class="flex items-center gap-2">
-                    <div>{{ category | titlecase }}</div>
+                    <div>{{ category.name | titlecase }}</div>
                   </div>
                 </ng-template>
               </p-select>
@@ -112,19 +115,21 @@
               </div>
               <p-select
                 [options]="departments()"
-                formControlName="department"
+                formControlName="department_id"
+                [optionValue]="'id'"
+                [optionLabel]="'name'"
                 [filter]="true"
                 [showClear]="true"
                 [placeholder]="'select-department' | translate"
                 class="flex-1">
                 <ng-template #selectedItem let-selectedOption>
                   <div class="flex items-center gap-2">
-                    <div>{{ selectedOption | titlecase }}</div>
+                    <div>{{ selectedOption.name | titlecase }}</div>
                   </div>
                 </ng-template>
                 <ng-template let-department #item>
                   <div class="flex items-center gap-2">
-                    <div>{{ department | titlecase }}</div>
+                    <div>{{ department.name | titlecase }}</div>
                   </div>
                 </ng-template>
               </p-select>

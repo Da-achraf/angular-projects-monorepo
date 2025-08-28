@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/auth/data-access/services/auth.guard';
-import { NonAuthGuard } from './core/auth/data-access/services/non-auth.guard';
+import { NonAuthGuard } from './core/auth/data-access/services/non-auth.guard'
 
 export const routes: Routes = [
   {

@@ -1,0 +1,264 @@
+<!-- Scanner Instructions -->
+<!-- <div class="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
+  <p class="text-gray-600">Scan PO and Part Number for production tracking</p>
+
+  <div class="flex items-start">
+    <div class="mr-3 flex-shrink-0">
+      <svg
+        class="h-6 w-6 text-blue-600"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+    </div>
+    <div>
+      <h3 class="text-sm font-medium text-blue-800">Scanner Instructions</h3>
+      <div class="mt-2 text-sm text-blue-700">
+        <p class="mb-1">1. Click on an input field to select it</p>
+        <p class="mb-1">2. Use your barcode scanner to scan the code</p>
+        <p>
+          3. The scanned value will automatically appear in the selected field
+        </p>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<!-- Barcode Scanner Section -->
+<div class="mb-8 rounded-lg border border-gray-200 bg-white shadow-lg">
+  <div class="p-6">
+    <h2 class="mb-6 flex items-center text-xl font-bold text-gray-800">
+      <svg
+        class="mr-2 h-6 w-6 text-blue-600"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h.01"></path>
+      </svg>
+      Barcode Scanner Input
+    </h2>
+
+    <!-- Input Section -->
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <!-- Production Order Input -->
+      <div class="space-y-4">
+        <label class="block text-sm font-semibold text-gray-700">
+          Production Order (PO)
+        </label>
+        <div class="flex space-x-2">
+          <div class="relative flex-1">
+            <input
+              #poInput
+              type="text"
+              [value]="po()"
+              (input)="onManualInput('po', $event)"
+              (focus)="onInputFocus('po')"
+              (blur)="onInputBlur()"
+              placeholder="Click here and scan PO barcode"
+              class="w-full touch-manipulation rounded-lg border border-gray-300 px-4 py-3 text-lg transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+              [class.bg-green-50]="po()"
+              [class.border-green-300]="po()"
+              [class.ring-2]="activeInputType() === 'po'"
+              [class.ring-blue-300]="activeInputType() === 'po'" />
+            <!-- Focus indicator -->
+            <div
+              *ngIf="activeInputType() === 'po'"
+              class="absolute -right-2 -top-2 h-4 w-4 animate-pulse rounded-full bg-blue-500"></div>
+          </div>
+          <button
+            (click)="onInputFocus('po')"
+            class="min-w-[60px] touch-manipulation rounded-lg bg-blue-600 px-4 py-3 text-white transition-colors hover:bg-blue-700"
+            title="Focus PO input for scanning">
+            <i class="fa fa-solid fa-barcode"></i>
+          </button>
+          <button
+            *ngIf="po()"
+            (click)="clearInput('po')"
+            class="touch-manipulation rounded-lg bg-gray-500 px-4 py-3 text-white transition-colors hover:bg-gray-600"
+            title="Clear PO">
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <div *ngIf="po()" class="flex items-center text-sm text-green-600">
+          <svg
+            class="mr-1 h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"></path>
+          </svg>
+          PO captured: {{ po() }}
+        </div>
+      </div>
+
+      <!-- Part Number Input -->
+      <div class="space-y-4">
+        <label class="block text-sm font-semibold text-gray-700">
+          Part Number (PN)
+        </label>
+        <div class="flex space-x-2">
+          <div class="relative flex-1">
+            <input
+              #pnInput
+              type="text"
+              [value]="pn()"
+              (input)="onManualInput('pn', $event)"
+              (focus)="onInputFocus('pn')"
+              (blur)="onInputBlur()"
+              placeholder="Click here and scan PN barcode"
+              class="w-full touch-manipulation rounded-lg border border-gray-300 px-4 py-3 text-lg transition-all duration-200 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+              [class.bg-green-50]="pn()"
+              [class.border-green-300]="pn()"
+              [class.ring-2]="activeInputType() === 'pn'"
+              [class.ring-blue-300]="activeInputType() === 'pn'" />
+            <!-- Focus indicator -->
+            <div
+              *ngIf="activeInputType() === 'pn'"
+              class="absolute -right-2 -top-2 h-4 w-4 animate-pulse rounded-full bg-blue-500"></div>
+          </div>
+          <button
+            (click)="onInputFocus('pn')"
+            class="min-w-[60px] touch-manipulation rounded-lg bg-blue-600 px-4 py-3 text-white transition-colors hover:bg-blue-700"
+            title="Focus PN input for scanning">
+            <i class="fa fa-solid fa-barcode"></i>
+          </button>
+          <button
+            *ngIf="pn()"
+            (click)="clearInput('pn')"
+            class="touch-manipulation rounded-lg bg-gray-500 px-4 py-3 text-white transition-colors hover:bg-gray-600"
+            title="Clear PN">
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <div *ngIf="pn()" class="flex items-center text-sm text-green-600">
+          <svg
+            class="mr-1 h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"></path>
+          </svg>
+          Part Number captured: {{ pn() }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Focus Buttons -->
+    <div class="mt-6 flex flex-wrap gap-3">
+      <button
+        (click)="onInputFocus('po')"
+        class="inline-flex items-center rounded-lg border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-100"
+        [class.bg-blue-100]="activeInputType() === 'po'"
+        [class.ring-2]="activeInputType() === 'po'"
+        [class.ring-blue-300]="activeInputType() === 'po'">
+        <svg
+          class="mr-2 h-4 w-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+        </svg>
+        Scan PO
+      </button>
+      <button
+        (click)="onInputFocus('pn')"
+        class="inline-flex items-center rounded-lg border border-green-200 bg-green-50 px-4 py-2 text-sm font-medium text-green-700 transition-colors hover:bg-green-100"
+        [class.bg-green-100]="activeInputType() === 'pn'"
+        [class.ring-2]="activeInputType() === 'pn'"
+        [class.ring-green-300]="activeInputType() === 'pn'">
+        <svg
+          class="mr-2 h-4 w-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+        </svg>
+        Scan PN
+      </button>
+    </div>
+
+    <!-- Action Buttons -->
+    <div
+      class="mt-8 flex flex-col space-y-3 sm:flex-row sm:space-x-4 sm:space-y-0">
+      <button
+        (click)="processOrder()"
+        [disabled]="!canProceed()"
+        class="flex-1 touch-manipulation rounded-lg bg-green-600 px-6 py-4 text-lg font-semibold text-white transition-colors hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50">
+        <svg
+          class="mr-2 inline h-5 w-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        Process
+      </button>
+      <button
+        (click)="clearInputs()"
+        class="touch-manipulation rounded-lg bg-gray-500 px-6 py-4 text-lg font-semibold text-white transition-colors hover:bg-gray-600">
+        <svg
+          class="mr-2 inline h-5 w-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        </svg>
+        Clear All
+      </button>
+    </div>
+  </div>
+</div>
+<!-- </div> -->

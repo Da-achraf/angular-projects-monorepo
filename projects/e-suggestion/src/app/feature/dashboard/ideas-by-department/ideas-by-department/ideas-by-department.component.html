@@ -1,0 +1,24 @@
+<div
+  class="flex w-auto min-w-0 flex-col gap-3 rounded-md bg-white p-3 shadow-md"
+  [ngClass]="{ 'blur-sm': store.loading() }">
+  <div class="mb-8 flex items-center gap-4">
+    <h4
+      class="text-xl font-semibold tracking-tighter text-gray-400 xl:text-2xl">
+      {{ 'ideas-by-department' | translate }}
+    </h4>
+
+    <ba-filter-button (onClick)="op.toggle($event)" />
+    <p-popover #op>
+      <ba-dashboard-filter
+        [departments]="store.departments()"
+        (filterChanged)="onFilter($event); op.hide()" />
+    </p-popover>
+  </div>
+
+  <div
+    echarts
+    [options]="store.chartOptions()"
+    [loading]="store.loading()"
+    [autoResize]="true"
+    class="h-96 w-auto"></div>
+</div>

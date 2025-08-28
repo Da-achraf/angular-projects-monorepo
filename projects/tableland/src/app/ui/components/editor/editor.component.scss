@@ -1,0 +1,38 @@
+
+:host ::ng-deep .custom-editor {
+	max-width: 1200px;
+	.p-editor-content {
+		overflow-y: hidden;
+		font-size: 1em;
+	}
+}
+
+
+:host ::ng-deep .p-editor .p-editor-content .ql-editor {
+	min-height: var(--editor-min-height, auto);
+	max-height: var(--editor-max-height, auto);
+}
+
+/* Track */
+:host ::ng-deep .p-editor .p-editor-content .ql-editor::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+	border-radius: 4px;
+  }
+  
+  /* Scrollbar */
+  :host ::ng-deep .p-editor .p-editor-content .ql-editor::-webkit-scrollbar {
+	width: 4px;
+	background-color: #F5F5F5;
+  }
+  
+  /* Thumb */
+  :host ::ng-deep .p-editor .p-editor-content .ql-editor::-webkit-scrollbar-thumb {
+	background-color: #60a5fa; /* bg-blue-400 in Tailwind */
+	border-radius: 4px;
+	background-image: -webkit-gradient(linear, 
+					 0 0, 0 100%,
+					 color-stop(.5, rgba(255, 255, 255, .2)),
+					 color-stop(.5, transparent), 
+					 to(transparent));
+  }

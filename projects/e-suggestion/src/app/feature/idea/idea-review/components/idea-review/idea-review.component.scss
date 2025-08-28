@@ -43,9 +43,9 @@ ba-button.has-rating::after {
   gap: 2rem;
   grid-template-columns: 1fr;
   grid-template-areas:
-    "comments"
-    "assignment"
-    "teoa";
+    'comments'
+    'assignment'
+    'teoa';
 }
 
 @media screen and (min-width: 60rem) {
@@ -55,16 +55,12 @@ ba-button.has-rating::after {
 
   /* Default desktop layout */
   .review-container.desktop-default {
-    grid-template-areas:
-      "assignment comments"
-      "teoa comments";
+    grid-template-areas: 'assignment comments';
   }
 
   /* Alternate desktop layout */
   .review-container.desktop-alternate {
-    grid-template-areas:
-      "teoa comments"
-      "assignment comments";
+    grid-template-areas: 'assignment comments';
   }
 }
 

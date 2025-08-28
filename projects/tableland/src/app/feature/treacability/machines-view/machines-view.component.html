@@ -1,0 +1,113 @@
+<!-- src/app/features/traceability/components/machines-list/machines-list.component.html -->
+@if (area(); as area) {
+  <div class="container mx-auto px-6 py-8">
+    <!-- Header with Go Back Button -->
+    <div class="mb-8">
+      <button
+        (click)="goBack()"
+        class="mb-4 inline-flex items-center text-blue-600 transition-colors duration-200 hover:text-blue-800">
+        <svg
+          class="mr-2 h-5 w-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Back to Areas
+      </button>
+
+      <h1 class="mb-2 text-3xl font-bold text-gray-800">
+        {{ area?.name || 'Area' }} Machines
+      </h1>
+      <p class="text-gray-600">Select a machine to view its details</p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex items-center justify-center py-12">
+      <ba-loading />
+    </div>
+
+    <!-- Machines Grid -->
+    @if (!loading && machines(); as machineList) {
+      <div
+        class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        @for (machine of machineList; track machine.id) {
+          <div
+            (click)="onMachineClick(machine)"
+            class="transform cursor-pointer rounded-lg border-l-4 border-green-500 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-green-600 hover:shadow-lg">
+            <div class="p-6">
+              <div class="mb-4 flex items-center justify-between">
+                <div
+                  class="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
+                  <svg
+                    class="h-6 w-6 text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+                <div
+                  class="h-3 w-3 animate-pulse rounded-full bg-green-400"
+                  title="Active"></div>
+              </div>
+
+              <h3 class="mb-2 text-xl font-semibold text-gray-800">
+                {{ machine.name }}
+              </h3>
+
+              <div class="flex items-center text-sm text-gray-600">
+                <svg
+                  class="mr-2 h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+                View Details
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Empty State -->
+      @if (machineList.length === 0) {
+        <div class="py-12 text-center">
+          <div
+            class="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-gray-100">
+            <svg
+              class="h-12 w-12 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <h3 class="mb-2 text-lg font-medium text-gray-900">
+            No Machines Found
+          </h3>
+          <p class="text-gray-500">
+            There are no machines configured in this area yet.
+          </p>
+        </div>
+      }
+    }
+  </div>
+}

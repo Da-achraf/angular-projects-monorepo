@@ -1,0 +1,164 @@
+<div class="scanner-container">
+  <div class="form-section">
+    <!-- Row 1: Component 1 and RM 1 -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="component1">Component 1:</label>
+        <div class="input-with-scan">
+          <input
+            id="component1"
+            name="component1"
+            [(ngModel)]="formData.component1"
+            placeholder="Enter or scan component 1">
+          <button (click)="startScanning('component1')" [disabled]="isScanning">
+            {{ isScanning && activeInputId === 'component1' ? 'Scanning...' : 'Scan' }}
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="rm1">RM 1:</label>
+        <div class="input-with-scan">
+          <input
+            id="rm1"
+            name="rm1"
+            [(ngModel)]="formData.rm1"
+            placeholder="Enter or scan raw material 1">
+          <button (click)="startScanning('rm1')" [disabled]="isScanning">
+            {{ isScanning && activeInputId === 'rm1' ? 'Scanning...' : 'Scan' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: Component 2 and RM 2 -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="component2">Component 2:</label>
+        <div class="input-with-scan">
+          <input
+            id="component2"
+            name="component2"
+            [(ngModel)]="formData.component2"
+            placeholder="Enter or scan component 2">
+          <button (click)="startScanning('component2')" [disabled]="isScanning">
+            {{ isScanning && activeInputId === 'component2' ? 'Scanning...' : 'Scan' }}
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="rm2">RM 2:</label>
+        <div class="input-with-scan">
+          <input
+            id="rm2"
+            name="rm2"
+            [(ngModel)]="formData.rm2"
+            placeholder="Enter or scan raw material 2">
+          <button (click)="startScanning('rm2')" [disabled]="isScanning">
+            {{ isScanning && activeInputId === 'rm2' ? 'Scanning...' : 'Scan' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: Component 3 and RM 3 -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="component3">Component 3:</label>
+        <div class="input-with-scan">
+          <input
+            id="component3"
+            name="component3"
+            [(ngModel)]="formData.component3"
+            placeholder="Enter or scan component 3">
+          <button (click)="startScanning('component3')" [disabled]="isScanning">
+            {{ isScanning && activeInputId === 'component3' ? 'Scanning...' : 'Scan' }}
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="rm3">RM 3:</label>
+        <div class="input-with-scan">
+          <input
+            id="rm3"
+            name="rm3"
+            [(ngModel)]="formData.rm3"
+            placeholder="Enter or scan raw material 3">
+          <button (click)="startScanning('rm3')" [disabled]="isScanning">
+            {{ isScanning && activeInputId === 'rm3' ? 'Scanning...' : 'Scan' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- JSON Payload -->
+    <div class="form-group full-width">
+      <label for="jsonPayload">JSON Payload:</label>
+      <textarea
+        id="jsonPayload"
+        name="jsonPayload"
+        [(ngModel)]="formData.jsonPayload"
+        rows="8"
+        readonly
+        placeholder="JSON data from QR codes will appear here"></textarea>
+    </div>
+  </div>
+
+  <!-- Scanner Modal -->
+  <div *ngIf="isScanning" class="scanner-modal">
+    <div class="scanner-content">
+      <h3>Scanning {{activeInputId || 'code'}}...</h3>
+      <video id="video-preview" width="100%" height="auto"></video>
+
+      <div *ngIf="isLoading" class="loading-indicator">
+        <p>Loading JSON data from URL...</p>
+        <div class="spinner"></div>
+      </div>
+
+      <button (click)="stopScanning()" class="cancel-button">Cancel Scan</button>
+    </div>
+  </div>
+
+  <!-- Scan Results -->
+  <div *ngIf="rawScanResult" class="results-section">
+    <h4>Scan Results</h4>
+
+    <div *ngIf="scanType === 'qrcode'">
+      <p><strong>QR Code Content:</strong></p>
+
+      <div *ngIf="parsedJson" class="json-result">
+        <p class="success">✅ JSON Data Successfully Loaded:</p>
+        <pre>{{ parsedJson | json }}</pre>
+      </div>
+
+      <div *ngIf="!parsedJson && isPotentialJsonUrl(rawScanResult)" class="url-result">
+        <p class="warning">⚠️ JSON URL Detected (CORS restricted):</p>
+        <div class="url-container">
+          <a [href]="rawScanResult" target="_blank" rel="noopener noreferrer">
+            {{ rawScanResult }}
+          </a>
+          <button (click)="copyToClipboard(rawScanResult)" class="copy-btn">Copy URL</button>
+        </div>
+        <p class="help-text">Click the link above to open the JSON data in a new tab, or copy the URL.</p>
+      </div>
+
+      <div *ngIf="!parsedJson && !isPotentialJsonUrl(rawScanResult)" class="text-result">
+        <p>Text Content:</p>
+        <pre>{{ rawScanResult }}</pre>
+      </div>
+    </div>
+
+    <div *ngIf="scanType === 'barcode'" class="barcode-result">
+      <p class="success">✅ Barcode Detected:</p>
+      <pre>{{ rawScanResult }}</pre>
+      <div class="scan-info">
+        <p><strong>Populated Field:</strong> {{ activeInputId }}</p>
+        <p><strong>Value:</strong> {{ rawScanResult }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Messages -->
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+</div>

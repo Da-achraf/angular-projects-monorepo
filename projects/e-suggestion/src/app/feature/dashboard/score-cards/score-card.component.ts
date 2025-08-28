@@ -1,5 +1,6 @@
 import { NgClass, NgStyle } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
+import { TranslationService } from '@ba/core/data-access';
 
 @Component({
   selector: 'ba-score-card',
@@ -10,6 +11,7 @@ import { Component, computed, input } from '@angular/core';
         <div class="relative p-3">
           <div
             [ngStyle]="gradientStyle()"
+            [ngClass]="{'left-2': isRtl()}"
             class="absolute -mt-10 h-12 w-12 rounded-xl bg-gradient-to-tr text-center text-white shadow-lg">
             <i
               [ngClass]="icon()"
@@ -22,13 +24,6 @@ import { Component, computed, input } from '@angular/core';
             </h4>
           </div>
         </div>
-        <!-- <hr class="opacity-50" />
-      <div class="p-4">
-        <p class="font-light">
-          <span class="text-sm font-bold text-green-600">+22% </span>vs last
-          month
-        </p>
-      </div> -->
       </div>
     </div>
   `,
@@ -39,6 +34,9 @@ export class ScoreCardComponent {
   score = input.required<number>();
   icon = input.required<string>();
   color = input.required<string>();
+
+  private readonly dir = inject(TranslationService).dir
+  protected readonly isRtl = computed(() => this.dir() === 'rtl')
 
   gradientStyle = computed(() => ({
     backgroundImage: `linear-gradient(to top right, ${this.color()}aa, ${this.color()})`,

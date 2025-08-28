@@ -12,14 +12,18 @@
     #dt1
     [value]="data()"
     [globalFilterFields]="[]"
+    (onSort)="onSort($event)"
     [lazy]="true"
     (onFilter)="onFilter($event)">
     <ng-template #caption>
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-x-5">
+      <div class="flex items-center justify-between flex-wrap gap-y-3">
+        <div class="flex items-center gap-x-5 flex-wrap gap-y-3">
           <ba-search-bar (search)="onSearch($event)" />
           @if (showClearButton()) {
-            <p-button [outlined]="true" (click)="clear(dt1)" label="Clear">
+            <p-button
+              [outlined]="true"
+              (click)="clear(dt1)"
+              [label]="'clear' | translate">
               <ng-template pTemplate="icon">
                 <i class="fa-solid fa-filter-circle-xmark bg-pr"></i>
               </ng-template>
@@ -106,7 +110,11 @@
 
         <!-- Actions Column -->
         @if (showActionsColumn()) {
-          <td class="flex items-center text-gray-400">
+          <ng-template
+            [ngTemplateOutlet]="getTemplate('actionsTemplate')"
+            [ngTemplateOutletContext]="{ $implicit: row }">
+          </ng-template>
+          <!-- <td class="flex items-center text-gray-400">
             @if (withEdit()) {
               <button
                 [matTooltip]="'edit' | translate"
@@ -147,7 +155,7 @@
                 <i class="fa-solid fa-clipboard"></i>
               </button>
             }
-          </td>
+          </td> -->
         }
       </tr>
     </ng-template>

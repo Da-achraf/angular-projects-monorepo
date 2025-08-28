@@ -17,6 +17,8 @@ import { Router } from '@angular/router';
 import { TranslatePipe, TranslationService } from '@ba/core/data-access';
 import { EditorModule } from 'primeng/editor';
 import { SelectModule } from 'primeng/select';
+import { CategoryStore } from 'projects/e-suggestion/src/app/core/crud/categories/category.store';
+import { DepartmentStore } from 'projects/e-suggestion/src/app/core/crud/departments/department.store';
 import { AttachmentUploadComponent } from 'projects/e-suggestion/src/app/pattern/attachment-upload/components/attachment-upload.component';
 import { DeleteDialogComponent } from 'projects/e-suggestion/src/app/pattern/dialogs/delete-dialog.component';
 import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/button/button.component';
@@ -28,6 +30,7 @@ import { Idea, IdeaUpdate } from '../../../../core/idea/models/idea.model';
 import { IdeaCaptionComponent } from '../../idea-review/components/idea-caption.component';
 import { IdeaService } from '../../services/idea.service';
 import { IdeaStore } from '../../services/idea.store';
+import { nonZeroValidator } from '../../utils/form.util';
 
 @Component({
   selector: 'ba-edit-idea',
@@ -52,7 +55,10 @@ export class EditIdeaComponent {
   id = input<number>();
 
   protected readonly store = inject(IdeaStore);
+  private readonly departmentStore = inject(DepartmentStore);
+  private readonly categoryStore = inject(CategoryStore);
   private readonly ideaService = inject(IdeaService);
+
   private readonly dialog = inject(MatDialog);
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
@@ -66,31 +72,13 @@ export class EditIdeaComponent {
   protected form = inject(FormBuilder).nonNullable.group({
     title: ['', Validators.required],
     description: ['', Validators.required],
-    category: ['', Validators.required],
-    department: ['', Validators.required],
+    department_id: [0, [Validators.required, nonZeroValidator]],
+    category_id: [0, [Validators.required, nonZeroValidator]],
     actual_situation: ['', [Validators.required]],
   });
 
-  categories = signal([
-    'Qualité',
-    'Coût (Waste)',
-    'Efficience',
-    'Sécurité',
-    'Environment',
-    '5S',
-  ]);
-
-  departments = signal([
-    'Production',
-    'Quality',
-    'Process',
-    'Tools Shop',
-    'Maintenance',
-    'Tool & Die',
-    'Warehouse',
-    'SC',
-    'Other',
-  ]);
+  protected categories = this.categoryStore.allEntities;
+  protected departments = this.departmentStore.allEntities;
 
   private readonly loadIdeaEffect = effect(async () => {
     const id = this.id();
@@ -123,7 +111,11 @@ export class EditIdeaComponent {
   });
 
   private patchForm(idea: Idea) {
-    this.form.patchValue(idea);
+    this.form.patchValue({
+      ...idea,
+      department_id: idea.department.id,
+      category_id: idea.category.id,
+    });
   }
 
   handleFiles(files: File[]) {

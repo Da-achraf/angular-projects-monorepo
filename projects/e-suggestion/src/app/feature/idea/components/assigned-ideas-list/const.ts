@@ -1,16 +1,15 @@
-import { TableColumn } from "projects/e-suggestion/src/app/ui/components/table/table-types.interface";
+import { TableColumn } from 'projects/e-suggestion/src/app/ui/components/table/table-types.interface';
 
 export const COLUMNS: TableColumn[] = [
   {
-    header: 'Title',
-    type: 'text',
+    header: 'idea-title',
+    type: 'custom',
     field: 'title',
-    sortable: true,
-    sortField: 'title',
     filter: { type: 'text', field: 'title' },
+    template: 'titleTemplate'
   },
   {
-    header: 'Created At',
+    header: 'created-at',
     field: 'created_at',
     sortable: true,
     sortField: 'created_at',
@@ -18,22 +17,33 @@ export const COLUMNS: TableColumn[] = [
     type: 'date',
   },
   {
-    header: 'Status',
+    header: 'status',
     field: 'status',
     type: 'custom',
     sortField: 'status',
     filter: { type: 'text', field: 'status' },
     template: 'statusTemplate',
-    // filterTemplate: 'statusFilterTemplate',
   },
   {
     header: 'Submitter',
     type: 'custom',
     field: 'submitter.first_name',
-    sortable: true,
-    sortField: 'submitter.first_name',
     filter: { type: 'text', field: 'submitter.first_name' },
     template: 'sumbitterTemplate',
+  },
+  {
+    header: 'category',
+    type: 'custom',
+    field: 'category',
+    filter: { type: 'text', field: 'category' },
+    template: 'categoryTemplate',
+  },
+  {
+    header: 'department',
+    type: 'custom',
+    field: 'department.name',
+    filter: { type: 'text', field: 'department.name' },
+    template: 'departmentTemplate',
   },
 ];
 

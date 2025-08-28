@@ -2,13 +2,15 @@ import { computed, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { withPagedEntities } from '@ba/core/data-access';
+import { LocalStorageService, withPagedEntities } from '@ba/core/data-access';
 import {
   patchState,
   signalStore,
   withComputed,
+  withHooks,
   withMethods,
   withProps,
+  withState,
 } from '@ngrx/signals';
 import { setEntity } from '@ngrx/signals/entities';
 import { withAuth } from '../../../core/auth/data-access/auth.store';
@@ -22,8 +24,11 @@ import { AttachementService } from '../../../pattern/attachment-upload/services/
 import { DeleteDialogComponent } from '../../../pattern/dialogs/delete-dialog.component';
 import { IdeaService } from './idea.service';
 
+const IDEAS_FILTER_TOKEN = 'e-sugeestion-ideas-filter';
+
 export const IdeaStore = signalStore(
   withPagedEntities<Idea, IdeaCreate, IdeaUpdate>(IdeaService),
+  withState<{ ideasFilter: string | undefined }>({ ideasFilter: undefined }),
 
   withAuth(),
 
@@ -33,6 +38,7 @@ export const IdeaStore = signalStore(
     router: inject(Router),
     dialog: inject(MatDialog),
     destroyRef: inject(DestroyRef),
+    localStorage: inject(LocalStorageService),
   })),
 
   withComputed(({ entities, user, loadingStates }) => ({
@@ -50,16 +56,19 @@ export const IdeaStore = signalStore(
    * Users permissions on ideas.
    *
    */
-  withComputed(({ isSubmitter }) => ({
-    withIdeaCreate: computed(() => isSubmitter()),
+  withComputed(({ isSubmitter, isCommitteeMember, isTeoaMember }) => ({
+    withIdeaCreate: computed(() => true),
     withIdeaViewDetail: computed(() => true),
     withIdeaEdit: computed(() => isSubmitter()),
     withIdeaDelete: computed(() => isSubmitter()),
     withIdeaExport: computed(() => false),
     withIdeaReview: computed(() => true),
+
+    canViewReviewPage: computed(() => isCommitteeMember() || isTeoaMember()),
+    showIdeasFilter: computed(() => isCommitteeMember() || isTeoaMember()),
   })),
 
-  withMethods(({ _userId, attachmentService }) => ({
+  withMethods(({ _userId, attachmentService, localStorage }) => ({
     _uploadAttachments: async (
       ideaId: number,
       attachements: File[]
@@ -76,6 +85,10 @@ export const IdeaStore = signalStore(
       }
       return lastUploadResult as Promise<Idea>;
     },
+
+    _saveFilterToLocalStorage: (filter: string) => {
+      localStorage.saveItem(IDEAS_FILTER_TOKEN, filter);
+    },
   })),
 
   withMethods(
@@ -83,6 +96,7 @@ export const IdeaStore = signalStore(
       ideaService,
       attachmentService,
       _uploadAttachments,
+      setQueryParams,
       router,
       dialog,
       startLoading,
@@ -91,6 +105,7 @@ export const IdeaStore = signalStore(
       stopLoading,
       _showSuccess,
       _showError,
+      _saveFilterToLocalStorage,
       _userId,
       ...store
     }) => ({
@@ -188,8 +203,37 @@ export const IdeaStore = signalStore(
           stopLoading('delete-attachment');
         }
       },
+
+      setIdeasFilter: (f: string) => {
+        if (f === 'all') {
+          setQueryParams({
+            submitter__id__eq: undefined,
+            submitter__id__ne: undefined,
+          });
+        } else if (f === 'only_yours') {
+          setQueryParams({
+            submitter__id__eq: _userId(),
+            submitter__id__ne: undefined,
+          });
+        } else if (f === 'only_others') {
+          setQueryParams({
+            submitter__id__ne: _userId(),
+            submitter__id__eq: undefined,
+          });
+        }
+
+        _saveFilterToLocalStorage(f);
+        patchState(store, { ideasFilter: f });
+      },
     })
-  )
+  ),
+
+  withHooks(({ localStorage, setIdeasFilter }) => ({
+    onInit: () => {
+      const savedFilter = localStorage.getItem(IDEAS_FILTER_TOKEN);
+      if (savedFilter) setIdeasFilter(savedFilter);
+    },
+  }))
 );
 
 export type IdeaStoreType = InstanceType<typeof IdeaStore>;

@@ -1,4 +1,4 @@
-<div class="max-w-[80rem] p-10">
+<div class="mx-auto max-w-[80rem] p-10">
   <ba-generic-table
     [data]="store.entities()"
     [total]="store.total()"
@@ -11,10 +11,18 @@
     (page)="store.setPage($event)"
     (pageSize)="store.setPageSize($event)"
     (view)="onView($event)"
-    (review)="onReview($event)">
+    (sort)="onSort($event)"
+    (filter)="onFilter($event)"
+    (review)="onReview($event)"
+    (search)="store.setQueryParams({ search: $event })">
+    <ng-template #titleTemplate let-idea>
+      <span [title]="idea.title">
+        {{ idea.title | truncate: 22 }}
+      </span>
+    </ng-template>
     <ng-template #sumbitterTemplate let-idea>
       <div class="flex items-center gap-x-2">
-        <span
+        <span [title]="idea.title"
           >{{ idea.submitter?.first_name | titlecase }}
           {{ idea.submitter?.last_name | titlecase }}</span
         >
@@ -23,6 +31,41 @@
 
     <ng-template #statusTemplate let-idea>
       <ba-idea-status [status]="idea.status" />
+    </ng-template>
+
+    <ng-template #categoryTemplate let-idea>
+      <span class="font-medium italic">{{
+        idea?.category?.name | titlecase
+      }}</span>
+    </ng-template>
+
+    <ng-template #departmentTemplate let-idea>
+      <span class="font-medium italic">{{
+        idea.department.name | titlecase
+      }}</span>
+    </ng-template>
+
+    <ng-template #actionsTemplate let-idea>
+      <td class="actions flex items-center text-gray-400">
+        <button
+          [matTooltip]="'view-details' | translate"
+          matTooltipPosition="above"
+          matTooltipShowDelay="500"
+          class="rounded-md p-2 transition-all duration-150 hover:bg-teal-50 hover:text-primary-200"
+          (click)="onView(idea.id)">
+          <i class="fa-solid fa-eye"></i>
+        </button>
+        @if (store.withIdeaReview()) {
+          <button
+            [matTooltip]="'review-page' | translate"
+            matTooltipPosition="above"
+            matTooltipShowDelay="500"
+            class="rounded-md p-2 transition-all duration-150 hover:bg-cyan-50 hover:text-cyan-600"
+            (click)="onReview(idea.id)">
+            <i class="fa-solid fa-clipboard"></i>
+          </button>
+        }
+      </td>
     </ng-template>
   </ba-generic-table>
 </div>

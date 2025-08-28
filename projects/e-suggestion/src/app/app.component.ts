@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ToastComponent } from '@ba/core/data-access/toaster';
 
@@ -8,4 +8,6 @@ import { ToastComponent } from '@ba/core/data-access/toaster';
   styleUrl: './app.component.scss',
   imports: [RouterOutlet, ToastComponent],
 })
-export class AppComponent {}
+export class AppComponent {
+
+}

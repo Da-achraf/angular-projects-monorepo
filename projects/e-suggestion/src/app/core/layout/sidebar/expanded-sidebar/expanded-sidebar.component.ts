@@ -3,6 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ba/core/data-access';
 import { SidebarService } from '../../data-access/sidebar.service';
+import { LogoComponent } from "projects/e-suggestion/src/app/ui/components/logo.component";
 
 /**
  * This component is the opened sidebar
@@ -19,7 +20,8 @@ import { SidebarService } from '../../data-access/sidebar.service';
     RouterLinkActive,
     CommonModule,
     TranslatePipe,
-  ],
+    LogoComponent
+],
 })
 export class ExpandedSidebarComponent {
   // Injected dependencies
