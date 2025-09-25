@@ -1,27 +1,69 @@
 # TeWorkspace
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.8.
+A workspace containing Angular projects for development and deployment.
 
-## Development server
+## 📁 Projects
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+This workspace contains two Angular applications:
 
-## Code scaffolding
+- **e-suggestion** - Suggestion management application
+- **tableland** - Data table management application
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## 🛠️ Prerequisites
 
-## Build
+- Node.js and npm installed
+- Docker and Docker Compose (for containerized deployment)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## 🚀 Development
 
-## Running unit tests
+### Local Development
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+To run projects locally in development mode:
 
-## Running end-to-end tests
+```bash
+# Run e-suggestion locally
+npm run start:e-suggestion
+# Serves at: http://localhost:4200/
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+# Run tableland locally  
+npm run start:tableland
+# Serves at: http://localhost:4201/ (or next available port)
+```
 
-## Further help
+## 🐳 Docker Deployment
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### Building Docker Images
+
+Build production-ready Docker images for each project:
+
+```bash
+# Build e-suggestion frontend image
+docker build -t e-suggestion-frontend -f e-suggestion.Dockerfile .
+
+# Build tableland frontend image
+docker build -t tableland-frontend -f tableland.Dockerfile .
+```
+
+### Running with Docker Compose
+
+Deploy both applications using Docker Compose:
+
+```bash
+# Start all services in detached mode
+docker compose -p e-suggestion up -d
+
+# Stop all services
+docker compose -p e-suggestion down
+```
+
+## 📝 Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run start:e-suggestion` | Start e-suggestion in development mode |
+| `npm run start:tableland` | Start tableland in development mode |
+
+
+## 🔧 Configuration
+
+Each project maintains its own configuration files and dependencies. Refer to individual project directories for specific setup instructions.
