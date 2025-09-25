@@ -15,7 +15,7 @@ COPY . .
 # First build the core library
 RUN npm run build core
 
-# Build the specific application (e-suggestion)
+# Build the specific application (tableland)
 RUN npm run build tableland -- --configuration production
 
 # Deploy the dist to nginx

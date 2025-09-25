@@ -45,20 +45,6 @@
     }
   }
 
-  <!-- <a
-    class="mt-auto flex w-full items-center justify-center border-t-2 border-t-[var(--sidebar-text-color)] p-2 text-orange-300/90"
-    #tooltip="matTooltip"
-    [matTooltip]="userFullName() | titlecase"
-    [matTooltipPosition]="'right'"
-    matTooltipShowDelay="500"
-    matTooltipHideDelay="100">
-    <button
-      class="hover:text-orange-300/80"
-      [routerLink]="['/app/users/profile']">
-      <i class="fa-solid fa-circle-user text-2xl"></i>
-    </button>
-  </a> -->
-
   <a
     class="mt-auto flex w-full items-center justify-center border-t-2 border-t-[var(--sidebar-text-color)] p-2 text-orange-300/90"
     [tp]="tooltipTemplate"

@@ -13,7 +13,7 @@ import {
   withInMemoryScrolling,
   withRouterConfig,
 } from '@angular/router';
-import { API_URL } from '@ba/core/http-client';
+import { API_URL, WS_URL } from '@ba/core/http-client';
 import { definePreset } from '@primeng/themes';
 import Aura from '@primeng/themes/aura';
 import { provideEchartsCore } from 'ngx-echarts';
@@ -98,6 +98,11 @@ export function provideCore({ routes }: CoreOptions) {
       useValue: environment.apiUrl,
     },
 
+    {
+      provide: WS_URL,
+      useValue: environment.wsUrl,
+    },
+
     MessageService,
     TitleCasePipe,
 
@@ -108,7 +113,7 @@ export function provideCore({ routes }: CoreOptions) {
         defaultLanguage: 'en',
         supportedLanguages: ['en'],
         rtlLanguages: ['ar'],
-        storageKey: 'e-suggestion-lang',
+        storageKey: 'tableland-lang',
 
         // Pre-load translations
         initialTranslations: {

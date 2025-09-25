@@ -1,19 +1,6 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  // {
-  //   path: '',
-  //   redirectTo: 'login',
-  //   pathMatch: 'full',
-  // },
-  // {
-  //   path: 'app',
-  //   loadComponent: () =>
-  //     import('./components/barcode-scanner/barcode-scanner.component').then(
-  //       c => c.BarcodeScannerComponent
-  //     ),
-  // },
-
   {
     path: 'register',
     loadComponent: () =>

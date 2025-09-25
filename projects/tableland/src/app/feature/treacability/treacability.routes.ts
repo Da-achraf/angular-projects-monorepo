@@ -21,7 +21,7 @@ export default <Routes>[
       ),
   },
   {
-    path: 'machines/:machineId',
+    path: 'machines/:areaId/:machineId',
     loadComponent: () =>
       import('./machine-detail/machine-detail.component').then(
         c => c.MachineDetailComponent

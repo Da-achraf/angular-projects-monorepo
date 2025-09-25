@@ -1,24 +1,26 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, inject, OnDestroy, Signal, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  OnDestroy,
+  OnInit,
+  Signal,
+  computed,
+  effect,
+  inject,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { LoadingComponent } from '../../../ui/components/loading/loading.component';
-
-import { HttpClient } from '@angular/common/http';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { ToasterService } from '@ba/core/data-access';
-import { API_URL } from '@ba/core/http-client';
-import { finalize, map, Subject } from 'rxjs';
-import { BOM } from '../../../core/crud/boms/bom.model';
-import { BOMService } from '../../../core/crud/boms/bom.service';
+import { WebSocketService } from '../../../core/services/ws-area.service';
+import { BaButtonComponent } from '../../../ui/components/button/button.component';
+import { LoadingComponent } from '../../../ui/components/loading/loading.component';
 import { BomComponent } from './bom/bom.component';
+import { ConfirmRescanDialogComponent } from './confirm-rescan-dialog.component';
+import { MachineDetailStore } from './machine-detail.store';
+import { MaterialReplenishmentComponent } from './material-replenishment/material-replenishment.component';
 import { ScannerComponent } from './scanner/scanner.component';
-
-interface Machine {
-  id: string;
-  name: string;
-  status: 'active' | 'inactive' | 'maintenance';
-}
 
 @Component({
   selector: 'ba-machine-detail',
@@ -28,75 +30,120 @@ interface Machine {
     LoadingComponent,
     ScannerComponent,
     BomComponent,
+    MaterialReplenishmentComponent,
+    BaButtonComponent,
   ],
   templateUrl: './machine-detail.component.html',
   styleUrls: ['./machine-detail.component.scss'],
 })
-export class MachineDetailComponent implements OnDestroy {
+export class MachineDetailComponent implements OnInit, OnDestroy {
   private location = inject(Location);
-  private destroy$ = new Subject<void>();
-
-  private toaster = inject(ToasterService);
-  private http = inject(HttpClient);
-  private url = inject(API_URL);
   private route = inject(ActivatedRoute);
-  private bomService = inject(BOMService);
+  private dialog = inject(MatDialog);
+  private destroyRef = inject(DestroyRef);
 
-  // Component state
-  machineId!: string | null;
-  bom: BOM[] = [];
+  // Inject the store
+  private readonly store = inject(MachineDetailStore);
+  private wsService = inject(WebSocketService);
 
-  // Booleans signals
-  showScanning = signal(true);
-  showBom = signal(false);
+  // Expose store properties to template
+  readonly machine = this.store.machine;
+  readonly status = this.store.status;
+  readonly pn = this.store.pn;
+  readonly po = this.store.po;
+  readonly bom = this.store.bom;
+  readonly verifiedRecords = this.store.verifiedRecords;
+  readonly machineName = this.store.machineName;
+  readonly error = this.store.error;
+  readonly viewState = this.store.viewState;
 
-  pn = signal('');
-  po = signal('');
+  // Template convenience properties
+  readonly isAnyLoading = this.store.isAnyLoading;
+  readonly showScanning = this.store.canShowScanning;
+  readonly showBom = this.store.canShowBom;
+  readonly showMaterialReplenishment = this.store.canShowMaterialReplenishment;
 
-  // Signals for reactive state management
-  machine: Signal<Machine | undefined>;
-  loading = signal(true);
+  // Route parameter
+  private readonly machineId = this.route.snapshot.paramMap.get('machineId');
+  private readonly areaId = this.route.snapshot.paramMap.get('areaId');
+
+  machineStatus = computed(() => {
+    const machineName = this.machineName();
+    const areaId = this.areaId ? Number.parseInt(this.areaId) : null;
+
+    if (!machineName || !areaId) return;
+
+    return this.wsService.getMachineStatus(areaId, machineName)();
+  });
+
+  machineStatusEffect = effect(async () => {
+    console.log('machineStatus: ', this.machineStatus());
+
+    await this.store.reloadAllData();
+  });
 
   constructor() {
-    const machineId = this.route.snapshot.paramMap.get('machineId');
+    if (!this.machineId) {
+      throw new Error('Machine id was not provided');
+    }
+  }
 
-    // Initialize area signal
-    this.machine = toSignal(
-      this.http.get<any>(`${this.url}/machines/${machineId}`).pipe(
-        map(r => r.data as Machine),
-        finalize(() => this.loading.set(false))
-      )
-    );
+  ngOnInit(): void {
+    // Reset store state when component initializes
+    this.store.resetState();
+
+    const areaId = this.areaId;
+    if (areaId) {
+      this.store.setAreaId(Number.parseInt(areaId));
+      this.wsService.connectToArea(Number.parseInt(areaId));
+    }
+
+    // Load machine data
+    if (this.machineId) this.store.loadMachine(this.machineId);
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    // Store will handle its own cleanup
+    // No need for manual subscription management
   }
 
-  // Navigation
-  goBack(): void {
-    this.location.back();
+  async onReload() {
+    await this.store.reloadAllData();
   }
 
-  onScanned(result: { po: string; pn: string }) {
-    // Check if the bom is found
-    this.bomService
-      .loadBom(result.pn, this.machine()?.name as string)
-      .subscribe({
-        next: bom => {
-          this.bom = bom;
-          this.showScanning.set(false);
+  // Event handlers - delegate to store
+  async onScanned(result: { po: string; pn: string }): Promise<void> {
+    await this.store.handleScannedResult(result);
+  }
 
-          this.pn.set(result.pn);
-          this.po.set(result.po);
+  async onMaterialReplenished(): Promise<void> {
+    await this.store.handleMaterialReplenishment();
+  }
+
+  onRescanClicked(): void {
+    this.dialog
+      .open(ConfirmRescanDialogComponent, {
+        minWidth: '40vw',
+        maxHeight: '95vh',
+        data: {
+          header: 'Confirm new scan',
         },
-        error: _ => {
-          this.toaster.showError('No BOM found for the request PN');
-          console.log('Bom not found');
+      })
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: async (res: { type: 'confirm' | 'cancel' }) => {
+          if (res?.type === 'confirm') {
+            const areaId = this.areaId;
+            if (areaId) {
+              await this.store.handleRescanRequest(Number.parseInt(areaId));
+            }
+          }
         },
       });
+  }
 
-    // Log a row in comparaison table (after doing comparaison)
+  goBack(): void {
+    this.location.back();
   }
 }

@@ -4,7 +4,7 @@ import { BaseDialogComponent } from 'projects/e-suggestion/src/app/pattern/dialo
 import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/button/button.component';
 
 @Component({
-  selector: 'ba-initiate-assignment-dialog',
+  selector: 'ba-confirm-reset-all-dialog',
   template: `
     <ba-base-dialog (cancel)="cancel()">
       <div class="flex w-full flex-col items-center gap-y-3 p-4">
@@ -14,11 +14,9 @@ import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/b
           </span>
         </span>
         <span class="text-[1em] font-semibold"
-          >You're about to initiate an assignment</span
+          >You're about to reset all the scanned materials</span
         >
-        <span class="text-[1em]"
-          >Are you sure you want to initiate this assignment?
-        </span>
+        <span class="text-[1em]">Are you sure you want to continue? </span>
 
         <div class="flex w-full items-center justify-center gap-x-3 py-3">
           <ba-button
@@ -29,7 +27,7 @@ import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/b
             (onClick)="cancel()" />
           <ba-button
             class="flex-1"
-            label="Confirm"
+            label="Continue"
             icon="fa-check-double"
             buttonClass="bg-green-400 text-gray-50 hover:bg-green-500"
             (onClick)="confirm()" />
@@ -39,9 +37,9 @@ import { BaButtonComponent } from 'projects/e-suggestion/src/app/ui/components/b
   `,
   imports: [BaButtonComponent, BaseDialogComponent],
 })
-export class InitiateAssignmentDialogComponent {
+export class ConfirmResetAllDialogComponent {
   private readonly dialogRef = inject(
-    MatDialogRef<InitiateAssignmentDialogComponent>
+    MatDialogRef<ConfirmResetAllDialogComponent>
   );
 
   confirm() {

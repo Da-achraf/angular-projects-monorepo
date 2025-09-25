@@ -1,4 +1,5 @@
-<div class="container decorative-pattern mx-auto max-w-5xl px-4 py-6 lg:px-6 lg:py-8">
+<div
+  class="decorative-pattern container mx-auto max-w-5xl px-4 py-6 lg:px-6 lg:py-8">
   <div class="mb-6 lg:mb-8">
     <button
       (click)="goBack()"
@@ -17,23 +18,98 @@
       Back to Machines
     </button>
 
-    <h1 class="mb-2 text-2xl font-bold text-gray-800 lg:text-3xl">
-      {{ machine()?.name || 'Machine Details' }}
-    </h1>
+    <div class="mb-2 flex items-center justify-between border-b py-3">
+      <h1 class="text-2xl font-bold text-gray-800 lg:text-3xl">
+        {{ machine()?.name }}
+      </h1>
+
+      @if (!showScanning()) {
+        <ba-button
+          label="Rescan"
+          icon="fa-qrcode"
+          buttonClass="bg-neutral"
+          (onClick)="onRescanClicked()" />
+
+        <!-- <ba-button
+          label="Reload"
+          icon="fa-home"
+          buttonClass="bg-neutral"
+          (onClick)="onReload()" /> -->
+      }
+    </div>
+
+    <!-- Simple PO & PN Display -->
+    @if (po() || pn()) {
+      <div class="mb-4 flex flex-wrap gap-2">
+        @if (po()) {
+          <span
+            class="inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700">
+            <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd" />
+            </svg>
+            PO: <span class="font-semibold">{{ po() }}</span>
+          </span>
+        }
+        @if (pn()) {
+          <span
+            class="inline-flex items-center gap-1.5 rounded-lg border border-green-200 bg-green-50 px-3 py-1.5 text-sm font-medium text-green-700">
+            <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd" />
+            </svg>
+            PN: <span class="font-semibold">{{ pn() }}</span>
+          </span>
+        }
+      </div>
+    }
   </div>
 
+  <!-- Error State -->
+  @if (error()) {
+    <div class="mb-6 rounded-md bg-red-50 p-4">
+      <div class="text-sm text-red-700">{{ error() }}</div>
+    </div>
+  }
+
   <!-- Loading State -->
-  @if (loading()) {
+  @if (isAnyLoading()) {
     <div class="flex items-center justify-center py-12">
       <ba-loading />
     </div>
   }
 
-  @if (showScanning()) {
-    <ba-scanner (scanned)="onScanned($event)" />
-  }
-
-  @if (bom.length > 0) {
-    <ba-bom [bomItems]="bom" />
+  <!-- Interface States - Only show when not loading -->
+  @else {
+    @if (showScanning()) {
+      <div class="mb-6">
+        <h2 class="mb-4 text-xl font-semibold text-gray-700">
+          Scan PO/PN to Begin Verification
+        </h2>
+        <ba-scanner (scanned)="onScanned($event)" />
+      </div>
+    } @else if (showBom()) {
+      @if (machineName(); as machineName) {
+        <div class="mb-6">
+          <ba-bom
+            [machineName]="machineName"
+            [verifRecords]="verifiedRecords()"
+            [bomItems]="bom()" />
+        </div>
+      }
+    } @else if (showMaterialReplenishment()) {
+      <div class="mb-6">
+        <h2 class="mb-4 text-xl font-semibold text-gray-700">
+          Material Replenishment Required
+        </h2>
+        <!-- <ba-material-replenishment
+          [machineId]="machine()?.name || ''"
+          (replenished)="onMaterialReplenished()" /> -->
+      </div>
+    }
   }
 </div>
